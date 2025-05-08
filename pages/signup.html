@@ -1,0 +1,119 @@
+<!-- 회원가입 -->
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>숭실대학교 회원가입</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #fff;
+      flex-direction: column;
+    }
+
+    h1 {
+      font-size: 24px;
+      margin-bottom: 0;
+    }
+
+    p {
+      margin-top: 8px;
+      font-size: 18px;
+      color: #333;
+    }
+
+    .input-box {
+      width: 400px;
+      margin-top: 20px;
+    }
+
+    .input-box input {
+      width: 100%;
+      padding: 15px;
+      margin-bottom: 15px;
+      font-size: 16px;
+      border: 1px solid #000;
+      box-sizing: border-box;
+    }
+
+    .login-btn {
+      width: 100%;
+      padding: 20px;
+      background-color: #ddd;
+      border: none;
+      font-size: 20px;
+      cursor: pointer;
+    }
+
+    .separator {
+      display: flex;
+      align-items: center;
+      margin: 30px 0 10px;
+      width: 400px;
+    }
+
+    .separator::before,
+    .separator::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: #000;
+    }
+
+    .separator span {
+      margin: 0 10px;
+      color: #333;
+    }
+
+    .social-icons {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      margin-top: 10px;
+    }
+
+    .social-icons img {
+      width: 48px;
+      height: 48px;
+      cursor: pointer;
+
+    }
+
+    /* 新增返回链接样式 */
+    .back-link {
+      margin-top: 20px;
+      text-align: center;
+    }
+    .back-link a {
+      color: #333;
+      text-decoration: none;
+      font-size: 16px;
+    }
+    .back-link a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <h1>숭실대학교 회원가입</h1>
+  <p>모집 신청을 위해 회원가입을 진행해주세요</p>
+
+  <div class="input-box">
+    <input type="text" placeholder="학번">
+    <input type="password" placeholder="비밀번호">
+    <input type="password" placeholder="비밀번호 확인">
+    <input type="email" placeholder="학교 이메일">
+    <button class="login-btn" onclick="window.location.href='main.html'">회원가입</button>
+  </div>
+
+  <div class="back-link">
+    <a href="Login.html">로그인 화면으로 돌아가기</a>
+  </div>
+</body>
+</html>

@@ -1,0 +1,126 @@
+<!-- 로그인 -->
+ 
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>숭실대학교 로그인</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #fff;
+      flex-direction: column;
+    }
+
+    h1 {
+      font-size: 24px;
+      margin-bottom: 0;
+    }
+
+    p {
+      margin-top: 8px;
+      font-size: 18px;
+      color: #333;
+    }
+
+    .input-box {
+      width: 400px;
+      margin-top: 20px;
+    }
+
+    .input-box input {
+      width: 100%;
+      padding: 15px;
+      margin-bottom: 15px;
+      font-size: 16px;
+      border: 1px solid #000;
+      box-sizing: border-box;
+    }
+
+    .login-btn {
+      width: 100%;
+      padding: 20px;
+      background-color: #ddd;
+      border: none;
+      font-size: 20px;
+      cursor: pointer;
+    }
+
+    .separator {
+      display: flex;
+      align-items: center;
+      margin: 30px 0 10px;
+      width: 400px;
+    }
+
+    .separator::before,
+    .separator::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: #000;
+    }
+
+    .separator span {
+      margin: 0 10px;
+      color: #333;
+    }
+
+    .social-icons {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      margin-top: 10px;
+    }
+
+    .social-icons img {
+      width: 48px;
+      height: 48px;
+      cursor: pointer;
+
+    }
+
+      /* 新增注册链接样式 */
+      .register-link {
+      margin-top: 20px;
+      text-align: center;
+    }
+    .register-link a {
+      color: #333;
+      text-decoration: none;
+      font-size: 16px;
+    }
+    .register-link a:hover {
+      text-decoration: underline;
+    }
+    
+ </style>
+</head>
+<body>
+  <h1>숭실대학교 @@</h1>
+  <p>모집 신청을 빠르게 블라블라</p>
+
+  <div class="input-box">
+    <input type="text" placeholder="아이디">
+    <input type="password" placeholder="비밀번호">
+    <button class="login-btn" onclick="window.location.href='main.html'">로그인</button>
+  </div>
+
+  <div class="separator"><span>또는</span></div>
+
+  <div class="social-icons">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/e/e3/KakaoTalk_logo.svg" alt="Kakao">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/2/2e/Naver_Logotype.svg" alt="Naver">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" alt="Google">
+  </div>
+
+  <div class="register-link">
+    <a href="Register.html">회원가입</a>
+  </div>
+</body>
+</html>
