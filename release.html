@@ -3,11 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <title>활동 등록 - 숭실대학교 동아리 플랫폼</title>
-    <link rel="stylesheet" href="main.css">
     <style>
         .release-container {
             max-width: 800px;
-            margin: 50px auto;
+            margin: 30px auto;
             padding: 40px;
             background: white;
             border-radius: 16px;
@@ -113,17 +112,6 @@
     </style>
 </head>
 <body>
-    <header>
-        <img src="LOGO.png" class="logo" alt="SSU Logo">
-        <div class="nav-container">
-            <div class="nav-buttons">
-                <button class="nav-button">동아리</button>
-                <button class="nav-button">소모임</button>
-                <button class="nav-button">기타</button>
-            </div>
-        </div>
-        <button class="my-btn" onclick="toggleSidebar()">MY</button>
-    </header>
 
     <div class="release-container">
         <h1 style="margin-bottom: 40px;">새 활동 등록</h1>
@@ -131,7 +119,7 @@
         <form id="activity-form">
             <div class="form-group">
                 <label class="form-label">활동 제목</label>
-                <input type="text" class="form-input" placeholder="예: K-POP 댄스 동아리 모집" required>
+                <input type="text" class="form-input" placeholder="예시: K-POP 댄스 동아리 모집" required>
             </div>
 
             <div class="form-group">
@@ -153,18 +141,19 @@
             </div>
 
             <div class="form-group">
-                <label class="form-label">모집 상태</label>
-                <select class="form-input">
-                    <option value="ongoing">모집 진행중</option>
-                    <option value="full">모집 완료</option>
-                    <option value="ended">모집 마감</option>
-                </select>
+                <label class="form-label">필요 인원</label>
+                <input type="number" class="form-input" placeholder="모집할 인원 수를 입력하세요" min="1" required>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">모집 마감일</label>
+                <input type="date" class="form-input" id="deadline-date" required>
             </div>
 
             <div class="form-group">
                 <label class="form-label">대표 이미지</label>
                 <div id="image-upload" onclick="document.getElementById('file-input').click()">
-                    <span>클릭하여 이미지 업로드</span>
+                    <span>이미지를 업로드하려면 클릭하세요</span>
                     <input type="file" id="file-input" hidden accept="image/*">
                 </div>
             </div>
@@ -172,15 +161,13 @@
             <div class="form-group">
                 <label class="form-label">태그 (최대 5개)</label>
                 <div class="tag-input-container" id="tag-container">
-                    <input type="text" class="form-input" style="border: none;" 
-                           placeholder="태그 입력 후 엔터" id="tag-input">
+                    <input type="text" class="form-input" style="border: none;" placeholder="태그 입력 후 엔터 키를 누르세요" id="tag-input">
                 </div>
             </div>
 
             <div class="form-group">
                 <label class="form-label">상세 설명</label>
-                <textarea class="form-input" rows="6" 
-                          placeholder="활동에 대한 상세 설명을 작성해주세요"></textarea>
+                <textarea class="form-input" rows="6" placeholder="활동에 대한 상세한 설명을 작성해주세요" required></textarea>
             </div>
 
             <button type="submit" class="submit-btn">등록 완료</button>
@@ -188,67 +175,71 @@
     </div>
 
     <script>
-        // 카테고리 선택
+        // 날짜 선택 제한
+        document.getElementById("deadline-date").min = new Date().toISOString().split("T")[0];
+
+        // 카테고리 선택 함수
         function selectCategory(type) {
-            document.querySelectorAll('.category-card').forEach(card => {
-                card.classList.remove('active');
+            var categoryCards = document.querySelectorAll(".category-card");
+            categoryCards.forEach(function(card) {
+                card.classList.remove("active");
             });
-            event.target.closest('.category-card').classList.add('active');
+            event.target.closest(".category-card").classList.add("active");
         }
 
-        // 태그 입력
-        const tagInput = document.getElementById('tag-input');
-        const tagContainer = document.getElementById('tag-container');
+        // 태그 입력 처리
+        var tagInput = document.getElementById("tag-input");
+        var tagContainer = document.getElementById("tag-container");
         
-        tagInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter' && tagInput.value.trim()) {
-                e.preventDefault();
+        tagInput.addEventListener("keypress", function(event) {
+            if (event.key === "Enter" && tagInput.value.trim() !== "") {
+                event.preventDefault();
                 if (tagContainer.children.length < 5) {
-                    const tag = document.createElement('div');
-                    tag.className = 'tag-item';
-                    tag.innerHTML = `
-                        ${tagInput.value.trim()}
-                        <span class="tag-remove" onclick="this.parentElement.remove()">×</span>
-                    `;
-                    tagContainer.insertBefore(tag, tagInput);
-                    tagInput.value = '';
+                    var tagItem = document.createElement("div");
+                    tagItem.className = "tag-item";
+                    tagItem.innerHTML = tagInput.value.trim() + 
+                        '<span class="tag-remove" onclick="this.parentElement.remove()">×</span>';
+                    tagContainer.insertBefore(tagItem, tagInput);
+                    tagInput.value = "";
                 }
             }
         });
 
-        // 이미지 미리보기
-        document.getElementById('file-input').addEventListener('change', function(e) {
-            const file = e.target.files[0];
+        // 이미지 업로드 처리
+        document.getElementById("file-input").addEventListener("change", function(event) {
+            var file = event.target.files[0];
             if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const uploadBox = document.getElementById('image-upload');
-                    uploadBox.innerHTML = `<img src="${e.target.result}" style="max-width: 100%; max-height: 100%;">`;
-                }
+                var reader = new FileReader();
+                reader.onload = function(event) {
+                    var uploadBox = document.getElementById("image-upload");
+                    uploadBox.innerHTML = '<img src="' + event.target.result + '" style="max-width: 100%; max-height: 100%;">';
+                };
                 reader.readAsDataURL(file);
             }
         });
 
-        // 폼 제출
-        document.getElementById('activity-form').addEventListener('submit', function(e) {
-            e.preventDefault();
+        // 폼 제출 처리
+        document.getElementById("activity-form").addEventListener("submit", function(event) {
+            event.preventDefault();
             
-            const activityData = {
-                title: document.querySelector('input[type="text"]').value,
-                category: document.querySelector('.category-card.active h3').textContent,
-                status: document.querySelector('select').value,
-                tags: Array.from(document.querySelectorAll('.tag-item')).map(tag => 
-                    tag.textContent.trim().replace('×','')),
-                description: document.querySelector('textarea').value,
-                image: document.querySelector('#image-upload img')?.src || ''
+            var activityData = {
+                title: document.querySelector("input[type='text']").value,
+                category: document.querySelector(".category-card.active h3").textContent,
+                personnel: document.querySelector("input[type='number']").value,
+                deadline: document.getElementById("deadline-date").value,
+                tags: Array.from(document.querySelectorAll(".tag-item")).map(function(tag) {
+                    return tag.textContent.trim().replace("×", "");
+                }),
+                description: document.querySelector("textarea").value,
+                image: document.querySelector("#image-upload img") ? document.querySelector("#image-upload img").src : ""
             };
 
-            let existingActivities = JSON.parse(localStorage.getItem('activities') || '[]');
+            var existingActivities = JSON.parse(localStorage.getItem("activities") || "[]");
             existingActivities.push(activityData);
-            localStorage.setItem('activities', JSON.stringify(existingActivities));
+            localStorage.setItem("activities", JSON.stringify(existingActivities));
 
-            alert('활동이 성공적으로 등록되었습니다!');
-            window.location.href = 'main.html';
+            alert("활동이 정상적으로 등록되었습니다!");
+            window.location.href = "main.html";
         });
     </script>
 </body>
