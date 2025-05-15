@@ -3,10 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>활동 등록 - 숭실대학교 동아리 플랫폼</title>
-    <!-- Main.css 재사용 -->
     <link rel="stylesheet" href="main.css">
     <style>
-        /* 추가 스타일 */
         .release-container {
             max-width: 800px;
             margin: 50px auto;
@@ -115,7 +113,6 @@
     </style>
 </head>
 <body>
-    <!-- 헤더 재사용 -->
     <header>
         <img src="LOGO.png" class="logo" alt="SSU Logo">
         <div class="nav-container">
@@ -132,13 +129,11 @@
         <h1 style="margin-bottom: 40px;">새 활동 등록</h1>
         
         <form id="activity-form">
-            <!-- 제목 -->
             <div class="form-group">
                 <label class="form-label">활동 제목</label>
                 <input type="text" class="form-input" placeholder="예: K-POP 댄스 동아리 모집" required>
             </div>
 
-            <!-- 카테고리 선택 -->
             <div class="form-group">
                 <label class="form-label">카테고리</label>
                 <div class="category-selectors">
@@ -157,7 +152,6 @@
                 </div>
             </div>
 
-            <!-- 상태 선택 -->
             <div class="form-group">
                 <label class="form-label">모집 상태</label>
                 <select class="form-input">
@@ -167,7 +161,6 @@
                 </select>
             </div>
 
-            <!-- 이미지 업로드 -->
             <div class="form-group">
                 <label class="form-label">대표 이미지</label>
                 <div id="image-upload" onclick="document.getElementById('file-input').click()">
@@ -176,7 +169,6 @@
                 </div>
             </div>
 
-            <!-- 태그 입력 -->
             <div class="form-group">
                 <label class="form-label">태그 (최대 5개)</label>
                 <div class="tag-input-container" id="tag-container">
@@ -185,14 +177,12 @@
                 </div>
             </div>
 
-            <!-- 상세 설명 -->
             <div class="form-group">
                 <label class="form-label">상세 설명</label>
                 <textarea class="form-input" rows="6" 
                           placeholder="활동에 대한 상세 설명을 작성해주세요"></textarea>
             </div>
 
-            <!-- 제출 버튼 -->
             <button type="submit" class="submit-btn">등록 완료</button>
         </form>
     </div>
@@ -242,6 +232,21 @@
         // 폼 제출
         document.getElementById('activity-form').addEventListener('submit', function(e) {
             e.preventDefault();
+            
+            const activityData = {
+                title: document.querySelector('input[type="text"]').value,
+                category: document.querySelector('.category-card.active h3').textContent,
+                status: document.querySelector('select').value,
+                tags: Array.from(document.querySelectorAll('.tag-item')).map(tag => 
+                    tag.textContent.trim().replace('×','')),
+                description: document.querySelector('textarea').value,
+                image: document.querySelector('#image-upload img')?.src || ''
+            };
+
+            let existingActivities = JSON.parse(localStorage.getItem('activities') || '[]');
+            existingActivities.push(activityData);
+            localStorage.setItem('activities', JSON.stringify(existingActivities));
+
             alert('활동이 성공적으로 등록되었습니다!');
             window.location.href = 'main.html';
         });
