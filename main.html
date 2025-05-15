@@ -3,309 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <title>숭실대학교 동아리 플랫폼</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Arial', sans-serif;
-        }
-
-        body {
-            background: #f5f5f5;
-        }
-
-        /* Header Styles */
-        header {
-            position: relative;
-            padding: 20px 50px;
-            background: #fff;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .logo {
-            width: 180px;
-            height: 45px;
-            object-fit: contain;
-        }
-
-        .nav-container {
-            flex: 1;
-            display: flex;
-            justify-content: center;
-            margin: 0 50px;
-        }
-
-        .nav-buttons {
-            display: flex;
-            gap: 30px;
-            justify-content: center;
-        }
-
-        .nav-button {
-            padding: 12px 30px;
-            background: #f8f8f8;
-            border: 1px solid #e0e0e0;
-            border-radius: 10px;
-            font-size: 15px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            color: #444;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-        }
-
-        .nav-button:hover {
-            border-color: #007BFF;
-            color: #007BFF;
-        }
-
-        /* Card Styles */
-        .card-container {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 30px;
-            max-width: 1280px;
-            margin: 50px auto;
-            padding: 0 30px;
-        }
-
-        .card {
-            background: #fff;
-            border-radius: 12px;
-            overflow: hidden;
-            transition: transform 0.3s ease;
-            position: relative;
-        }
-
-        .card:hover {
-            transform: translateY(-5px);
-        }
-
-        .card-image {
-            width: 100%;
-            height: 240px;
-            background: #e0e0e0;
-            cursor: pointer;
-            position: relative;
-        }
-
-        .card-content {
-            padding: 25px;
-        }
-
-        .card-status {
-            display: inline-block;
-            padding: 6px 15px;
-            border-radius: 20px;
-            font-size: 13px;
-            margin-bottom: 15px;
-        }
-
-        .status-ongoing { background: #e8f5e9; color: #2e7d32; }
-        .status-full { background: #ffebee; color: #c62828; }
-        .status-ended { background: #f5f5f5; color: #616161; }
-
-        /* Delete Button */
-        .delete-btn {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: #ff4444;
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 28px;
-            height: 28px;
-            cursor: pointer;
-            display: none;
-            z-index: 1;
-        }
-
-        .card:hover .delete-btn {
-            display: block;
-        }
-
-        /* Modal Styles */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.5);
-            z-index: 1000;
-        }
-
-        .modal-content {
-            position: relative;
-            background: white;
-            max-width: 600px;
-            margin: 50px auto;
-            padding: 30px;
-            border-radius: 12px;
-        }
-
-        .close-btn {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            font-size: 24px;
-            cursor: pointer;
-        }
-
-        /* Filter Dropdown */
-        .dropdown {
-            display: none;
-            position: absolute;
-            top: calc(100% + 15px);
-            left: 50%;
-            transform: translateX(-50%);
-            background: #fff;
-            box-shadow: 0 12px 24px rgba(0,0,0,0.15);
-            padding: 30px 40px;
-            width: 960px;
-            z-index: 100;
-            border-radius: 16px;
-            column-count: 3;
-            column-gap: 50px;
-        }
-
-        .filter-group {
-            break-inside: avoid-column;
-            margin-bottom: 30px;
-            padding: 20px;
-            background: #f9f9f9;
-            border-radius: 12px;
-        }
-
-        .filter-group h3 {
-            margin: 0 0 15px 0;
-            color: #007BFF;
-            font-size: 16px;
-            font-weight: 600;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #eee;
-        }
-
-        .filter-item {
-            display: flex;
-            align-items: center;
-            margin: 10px 0;
-            padding: 8px 12px;
-            border-radius: 8px;
-            transition: background 0.2s;
-        }
-
-        .filter-item:hover {
-            background: rgba(0,123,255,0.05);
-        }
-
-        .status-filter-container {
-            text-align: center;
-            margin: 30px 0;
-        }
-
-        .status-filter {
-            padding: 12px 25px;
-            font-size: 14px;
-            border: 2px solid #ddd;
-            border-radius: 10px;
-            background: #fff;
-            cursor: pointer;
-            appearance: none;
-            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23007BFF' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
-            background-repeat: no-repeat;
-            background-position: right 15px center;
-            background-size: 16px;
-            padding-right: 45px;
-        }
-
-        /* Sidebar Styles */
-        .sidebar {
-            position: fixed;
-            right: -320px;
-            top: 0;
-            width: 320px;
-            height: 100%;
-            background: #fff;
-            box-shadow: -4px 0 15px rgba(0,0,0,0.1);
-            transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            z-index: 1000;
-        }
-
-        .sidebar.active {
-            right: 0;
-        }
-
-        .sidebar-menu {
-            padding: 40px 30px;
-        }
-
-        .sidebar-menu button {
-            display: block;
-            width: 100%;
-            padding: 16px;
-            margin: 12px 0;
-            background: none;
-            border: 2px solid #f0f0f0;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 15px;
-            transition: all 0.2s ease;
-        }
-
-        .overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.4);
-            z-index: 999;
-        }
-    </style>
+    <link rel="stylesheet" href="main.css">
 </head>
 <body>
     <header>
         <img src="LOGO.png" class="logo" alt="SSU Logo">
         <div class="nav-container">
             <div class="nav-buttons">
-                <button class="nav-button" onclick="toggleDropdown('club')">동아리</button>
-                <button class="nav-button" onclick="toggleDropdown('group')">소모임</button>
-                <button class="nav-button" onclick="toggleDropdown('etc')">기타</button>
+                <button class="nav-button" onclick="toggleFilter('home')">홈</button>
+                <button class="nav-button" onclick="toggleFilter('club')">동아리</button>
+                <button class="nav-button" onclick="toggleFilter('group')">소모임</button>
+                <button class="nav-button" onclick="toggleFilter('etc')">기타</button>
             </div>
 
-            <!-- Filter Dropdowns -->
-            <div id="club" class="dropdown">
-                <div class="filter-group">
-                    <h3>동아리 유형</h3>
-                    <div class="filter-item">
-                        <input type="checkbox" id="dance">
-                        <label for="dance">공연/댄스</label>
+            <!-- 통합 필터 드롭다운 -->
+            <div id="filterDropdown" class="dropdown">
+                <div class="filter-column">
+                    <div class="filter-group">
+                        <h3>분야별</h3>
+                        <div id="categoryFilters"></div>
                     </div>
-                    <!-- 其他过滤器选项... -->
+                    <div class="filter-group">
+                        <h3>접수상태</h3>
+                        <div id="statusFilters"></div>
+                    </div>
                 </div>
             </div>
-            <!-- 其他分类过滤器... -->
         </div>
         <button class="my-btn" onclick="toggleSidebar()">MY</button>
     </header>
 
-    <div class="status-filter-container">
-        <select class="status-filter">
-            <option>모집 상태 선택</option>
-            <option value="ongoing">모집 진행중</option>
-            <option value="full">모집 완료</option>
-            <option value="ended">모집 마감</option>
-        </select>
-    </div>
 
-    <!-- Sidebar -->
+    <!-- 사이드바 -->
     <div class="sidebar" id="sidebar">
         <div class="sidebar-menu">
             <button>프로필 관리</button>
@@ -316,7 +45,7 @@
     </div>
     <div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
 
-    <!-- Detail Modal -->
+    <!-- 상세 모달 -->
     <div class="modal" id="detailModal">
         <div class="modal-content">
             <span class="close-btn" onclick="closeModal()">&times;</span>
@@ -324,129 +53,9 @@
         </div>
     </div>
 
-    <!-- Card Container -->
+    <!-- 카드 컨테이너 -->
     <div class="card-container"></div>
 
-    <script>
-        // 初始化
-        document.addEventListener('DOMContentLoaded', () => {
-            generateCards();
-            setupEventListeners();
-        });
-
-        // 生成活动卡片
-        function generateCards() {
-            const container = document.querySelector('.card-container');
-            container.innerHTML = '';
-            
-            const activities = JSON.parse(localStorage.getItem('activities') || '[]');
-            
-            activities.forEach((activity, index) => {
-                const card = document.createElement('div');
-                card.className = 'card';
-                card.innerHTML = `
-                    <button class="delete-btn" onclick="deleteActivity(${index})">×</button>
-                    <div class="card-image" onclick="showDetail(${index})">
-                        ${activity.image ? 
-                            `<img src="${activity.image}" style="width:100%;height:100%;object-fit:cover;">` : 
-                            `<div style="height:100%;background:#eee;"></div>`}
-                    </div>
-                    <div class="card-content" onclick="showDetail(${index})">
-                        <span class="card-status status-${activity.status}">${getStatusText(activity.status)}</span>
-                        <h3>${activity.title}</h3>
-                        <p>${activity.description}</p>
-                        <div class="card-tags">
-                            ${activity.tags.map(tag => `<span>#${tag}</span>`).join('')}
-                        </div>
-                    </div>
-                `;
-                container.appendChild(card);
-            });
-        }
-
-        // 显示详情
-        function showDetail(index) {
-            const activities = JSON.parse(localStorage.getItem('activities') || '[]');
-            const activity = activities[index];
-            
-            const modalContent = `
-                <h2>${activity.title}</h2>
-                <p class="card-status status-${activity.status}">${getStatusText(activity.status)}</p>
-                ${activity.image ? `<img src="${activity.image}" style="max-width:100%;margin:20px 0;">` : ''}
-                <div style="margin:15px 0">
-                    ${activity.tags.map(tag => `<span>#${tag}</span>`).join(' ')}
-                </div>
-                <p>${activity.description}</p>
-            `;
-            
-            document.getElementById('modalContent').innerHTML = modalContent;
-            document.getElementById('detailModal').style.display = 'block';
-        }
-
-        // 删除功能
-        function deleteActivity(index) {
-            if(confirm('정말 삭제하시겠습니까?')) {
-                let activities = JSON.parse(localStorage.getItem('activities'));
-                activities.splice(index, 1);
-                localStorage.setItem('activities', JSON.stringify(activities));
-                generateCards();
-            }
-        }
-
-        // 状态文本转换
-        function getStatusText(status) {
-            return {
-                ongoing: '모집 진행중',
-                full: '모집 완료',
-                ended: '모집 마감'
-            }[status];
-        }
-
-        // 关闭模态框
-        function closeModal() {
-            document.getElementById('detailModal').style.display = 'none';
-        }
-
-        // 事件监听
-        function setupEventListeners() {
-            window.onclick = function(event) {
-                if (event.target == document.getElementById('detailModal')) {
-                    closeModal();
-                }
-            }
-        }
-
-        // 侧边栏功能
-        function toggleSidebar() {
-            const sidebar = document.getElementById('sidebar');
-            const overlay = document.getElementById('overlay');
-            sidebar.classList.toggle('active');
-            overlay.style.display = overlay.style.display === 'block' ? 'none' : 'block';
-        }
-
-        // 过滤器功能
-        let currentDropdown = null;
-        function toggleDropdown(type) {
-            const dropdown = document.getElementById(type);
-            const button = document.querySelector(`button[onclick="toggleDropdown('${type}')"]`);
-            
-            if (currentDropdown === type) {
-                dropdown.style.display = 'none';
-                button.classList.remove('active');
-                currentDropdown = null;
-            } else {
-                closeAllDropdowns();
-                dropdown.style.display = 'block';
-                button.classList.add('active');
-                currentDropdown = type;
-            }
-        }
-
-        function closeAllDropdowns() {
-            document.querySelectorAll('.dropdown').forEach(d => d.style.display = 'none');
-            document.querySelectorAll('.nav-button').forEach(b => b.classList.remove('active'));
-            currentDropdown = null;
-        }
-    </script>
+    <script src="main.js"></script>
 </body>
 </html>
