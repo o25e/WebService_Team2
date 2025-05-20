@@ -28,7 +28,7 @@ export default function SmallClub(): string {
                         </div>
                     </div>
                     <!-- 해시태그들 -->
-                    <div class="mt-auto flex flex-wrap gap-2 mt-2">
+                    <div class="mt-auto flex flex-wrap gap-2">
                         <span class="bg-blue-100 text-gray-700 text-xs px-2 py-1 rounded-full">#디자인</span>
                         <span class="bg-blue-100 text-gray-700 text-xs px-2 py-1 rounded-full">#화목</span>
                         <!-- 추가 해시태그 -->

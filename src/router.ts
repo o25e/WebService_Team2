@@ -1,5 +1,6 @@
 import Home from './pages/home';
 import SmallClub from './pages/small-club';
+import EtcClub from './pages/etc-club';
 
 type Route = {
     path: string;
@@ -8,7 +9,8 @@ type Route = {
 
 const routes: Route[] = [
     { path: '/', view: Home },
-    { path: '/small', view: SmallClub}
+    { path: '/small', view: SmallClub},
+    { path: '/etc', view: EtcClub}
 ];
 
 export function router(): void {
