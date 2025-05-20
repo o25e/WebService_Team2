@@ -1,61 +1,16 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <title>숭실대학교 동아리 플랫폼</title>
-    <link rel="stylesheet" href="main.css">
+  <meta charset="UTF-8" />
+  <title>메인 페이지</title>
+  <link rel="stylesheet" href="../styles/header.css" />
+  <script src="../layouts/header.js" defer></script>
 </head>
 <body>
-    <header>
-        <img src="../assets/LOGO.png" class="logo" alt="SSU Logo">
-        <div class="nav-container">
-            <div class="nav-buttons">
-                <button class="nav-button" onclick="toggleFilter('home')">홈</button>
-                <button class="nav-button" onclick="toggleFilter('club')">동아리</button>
-                <button class="nav-button" onclick="toggleFilter('group')">소모임</button>
-                <button class="nav-button" onclick="toggleFilter('etc')">기타</button>
-            </div>
+  <!-- 헤더는 JS로 자동 삽입됨 -->
 
-            <!-- 통합 필터 드롭다운 -->
-            <div id="filterDropdown" class="dropdown">
-                <div class="filter-column">
-                    <div class="filter-group">
-                        <h3>분야별</h3>
-                        <div id="categoryFilters"></div>
-                    </div>
-                    <div class="filter-group">
-                        <h3>접수상태</h3>
-                        <div id="statusFilters"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <button class="my-btn" onclick="toggleSidebar()">MY</button>
-    </header>
-
-
-    <!-- 사이드바 -->
-    <div class="sidebar" id="sidebar">
-        <div class="sidebar-menu">
-            <button>프로필 관리</button>
-            <button>관심 목록</button>
-            <button>최근 본 활동</button>
-            <button>내 게시물</button>
-        </div>
-    </div>
-    <div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
-
-    <!-- 상세 모달 -->
-    <div class="modal" id="detailModal">
-        <div class="modal-content">
-            <span class="close-btn" onclick="closeModal()">&times;</span>
-            <div id="modalContent"></div>
-        </div>
-    </div>
-
-    <!-- 카드 컨테이너 -->
-    <div class="card-container"></div>
-
-    <script src="main.js"></script>
+  <main>
+    <h1>메인 콘텐츠</h1>
+  </main>
 </body>
 </html>
