@@ -10,16 +10,6 @@ body {
     background: #f5f5f5;
 }
 
-/* 헤더 스타일 */
-header {
-    position: relative;
-    padding: 20px 50px;
-    background: #fff;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
 
 .logo {
     width: 180px;
