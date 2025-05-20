@@ -7,7 +7,7 @@ window.addEventListener("DOMContentLoaded", () => {
       headerContainer.innerHTML = html;
       document.body.insertBefore(headerContainer, document.body.firstChild);
 
-      // ✅ 헤더가 DOM에 삽입된 후 로그인 상태 확인 및 업데이트
+      // ✅ 로그인 상태 처리
       const loggedInUser = localStorage.getItem("loggedInUser");
       const authArea = headerContainer.querySelector("#auth-area");
 
@@ -23,6 +23,17 @@ window.addEventListener("DOMContentLoaded", () => {
           `;
         }
       }
+
+      // ✅ 현재 페이지에 따라 nav-link active 클래스 처리
+      const currentPage = window.location.pathname.split("/").pop(); // 예: main.html
+      const navLinks = headerContainer.querySelectorAll(".nav-link");
+
+      navLinks.forEach((link) => {
+        const linkHref = link.getAttribute("href").split("/").pop();
+        if (linkHref === currentPage) {
+          link.classList.add("active");
+        }
+      });
     })
     .catch((err) => console.error("헤더 로드 실패:", err));
 });
@@ -31,5 +42,5 @@ window.addEventListener("DOMContentLoaded", () => {
 function logout() {
   localStorage.removeItem("loggedInUser");
   alert("로그아웃 되었습니다.");
-  window.location.href = "../pages/main.html"; // 필요시 main.html 경로 수정
+  window.location.href = "../pages/main.html"; // 경로 필요 시 수정
 }
