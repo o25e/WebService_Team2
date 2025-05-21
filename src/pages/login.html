@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>동아링 로그인</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #fff;
+      flex-direction: column;
+    }
+    h1 {
+      font-size: 24px;
+      margin-bottom: 0;
+    }
+    p {
+      margin-top: 8px;
+      font-size: 18px;
+      color: #333;
+    }
+    .input-box {
+      width: 400px;
+      margin-top: 20px;
+    }
+    .input-box input {
+      width: 100%;
+      padding: 15px;
+      margin-bottom: 15px;
+      font-size: 16px;
+      border: 1px solid #000;
+      box-sizing: border-box;
+    }
+    .login-btn {
+      width: 100%;
+      padding: 20px;
+      background-color: #ddd;
+      border: none;
+      font-size: 20px;
+      cursor: pointer;
+    }
+    .separator {
+      display: flex;
+      align-items: center;
+      margin: 30px 0 10px;
+      width: 400px;
+    }
+    .separator::before,
+    .separator::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: #000;
+    }
+    .separator span {
+      margin: 0 10px;
+      color: #333;
+    }
+    .social-icons {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      margin-top: 10px;
+    }
+    .social-icons img {
+      width: 48px;
+      height: 48px;
+      cursor: pointer;
+    }
+    .register-link {
+      margin-top: 20px;
+      text-align: center;
+    }
+    .register-link a {
+      color: #333;
+      text-decoration: none;
+      font-size: 16px;
+    }
+    .register-link a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <h1>동아링 로그인</h1>
+  <p>동아링에 오신 걸 환영합니다!</p>
+
+  <div class="input-box">
+    <input type="text" id="username" placeholder="아이디" autocomplete="username" />
+    <input type="password" id="password" placeholder="비밀번호" autocomplete="off" />
+    <button class="login-btn" id="loginBtn">로그인</button>
+  </div>
+
+  <div class="separator"><span>또는</span></div>
+
+  <div class="social-icons">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/e/e3/KakaoTalk_logo.svg" alt="Kakao" />
+    <img src="https://th.bing.com/th/id/R.c0d68dc7f3c8a56ef69149abb993bcbf?rik=rZHP%2fwwIizBr0g&riu=http%3a%2f%2fpluspng.com%2fimg-png%2fnaver-logo-png-naver-300.png&ehk=GAsZ%2bEmwsAfWq9%2bMXcVCXFkcZ%2bjOQWtG6BGpNINIIXs%3d&risl=&pid=ImgRaw&r=0" alt="Naver" />
+    <img src="https://p16.tiktokcdn-us.com/tos-useast5-avt-0068-tx/73c90de9d342041ce02bf9c6fb886e82~c5_720x720.jpeg" alt="Google" />
+  </div>
+
+  <div class="register-link">
+    <a href="Register.html">회원가입</a>
+  </div>
+
+  <script>
+    // 임시 사용자 정보 (실제 서비스에서는 서버 인증 필요)
+    const dummyUser = {
+      username: "testuser",
+      password: "1234",
+    };
+
+    const loginBtn = document.getElementById("loginBtn");
+
+    loginBtn.addEventListener("click", () => {
+      const enteredId = document.getElementById("username").value.trim();
+      const enteredPw = document.getElementById("password").value.trim();
+
+      if (!enteredId || !enteredPw) {
+        alert("아이디와 비밀번호를 모두 입력해주세요.");
+        return;
+      }
+
+      if (enteredId === dummyUser.username && enteredPw === dummyUser.password) {
+        alert("로그인 성공!");
+        localStorage.setItem("loggedInUser", enteredId);
+        window.location.href = "main.html";
+      } else {
+        alert("아이디 또는 비밀번호가 올바르지 않습니다.");
+      }
+    });
+
+    // 엔터키 눌렀을 때 로그인 버튼 클릭 동작 추가 (UX 개선)
+    document.getElementById("password").addEventListener("keypress", (e) => {
+      if (e.key === "Enter") {
+        loginBtn.click();
+      }
+    });
+  </script>
+</body>
+</html>
