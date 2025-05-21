@@ -1,7 +1,7 @@
 window.addEventListener("DOMContentLoaded", () => {
   const headerContainer = document.createElement("div");
 
-  fetch("../layouts/Header.html")
+  fetch("./layouts/Header.html")
     .then((res) => res.text())
     .then((html) => {
       headerContainer.innerHTML = html;
