@@ -42,7 +42,7 @@ const path = require('path');
 app.use(express.static(path.join(__dirname, 'src')));
 
 // 소개 페이지 요청
-app.get('/', function (req, res) {
+app.get('/aboutus', function (req, res) {
     res.render("aboutus.ejs");
 });
 
@@ -59,6 +59,11 @@ app.get('/login', function (req, res) {
 // 등록 페이지 요청
 app.get('/register', function (req, res) {
     res.render("register.ejs");
+});
+
+// 알림 페이지 요청
+app.get('/notifications', function (req, res) {
+    res.render("notifications.ejs");
 });
 
 // 소모임 페이지 요청
