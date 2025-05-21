@@ -58,11 +58,11 @@ window.addEventListener("DOMContentLoaded", () => {
       }
 
       // 활성 링크 표시
-      const currentPage = window.location.pathname.split("/").pop();
+      const currentPage = window.location.href.split("/").pop();
       const navLinks = headerContainer.querySelectorAll(".nav-link");
 
       navLinks.forEach((link) => {
-        const linkHref = link.getAttribute("href")?.split("/").pop();
+        const linkHref = link.getAttribute("href") ?? '';
         if (linkHref === currentPage) {
           link.classList.add("active");
         }
