@@ -206,100 +206,188 @@ header {
     z-index: 999;
 }
 
-/* 활동 카드 */
-.card-container {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 30px;
-    max-width: 1280px;
-    margin: 50px auto;
-    padding: 0 30px;
-}
-
+/* 소모임 카드 */
 .card {
-    background: #fff;
-    border-radius: 12px;
+    margin: auto;
+    width: 1000px;
+    background: white;
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+    border-radius: 0.5rem;
+    /* rounded */
     overflow: hidden;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    position: relative;
+    display: flex;
+    flex-direction: column;
 }
 
-.card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
-}
-
-.card-image {
-    width: 100%;
-    height: 240px;
-    background: #e0e0e0;
-    position: relative;
-    overflow: hidden;
-}
-
-.card-image::after {
-    content: "Image Preview";
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    color: #999;
-    font-size: 14px;
-}
-
+/* 이미지와 정보 묶음 */
 .card-content {
-    padding: 25px;
+    display: flex;
+    padding: 1rem;
 }
 
-.card-status {
-    display: inline-block;
-    padding: 6px 15px;
-    border-radius: 20px;
-    font-size: 13px;
+/* 이미지와 상태 */
+.image-wrapper {
+    position: relative;
+    width: 160px;
+    /* 40 * 4 */
+    height: 160px;
+    flex-shrink: 0;
+}
+
+.image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 0.75rem;
+    /* rounded-xl */
+    display: block;
+}
+
+/* 모집중 상태 */
+.status-left {
+    position: absolute;
+    top: 0.25rem;
+    /* top-1 */
+    left: 0.25rem;
+    /* left-1 */
+    background: white;
+    color: black;
+    font-size: 0.75rem;
+    /* text-xs */
+    padding: 0.25rem 0.25rem;
+    border-radius: 0.375rem;
+    /* rounded-md */
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
     font-weight: 500;
-    margin-bottom: 15px;
 }
 
-.status-ongoing {
-    background: #e8f5e9;
-    color: #2e7d32;
+.status-dot {
+    width: 0.5rem;
+    /* w-2 */
+    height: 0.5rem;
+    /* h-2 */
+    background-color: #3b82f6;
+    /* blue-500 */
+    border-radius: 9999px;
+    display: inline-block;
 }
 
-.status-full {
-    background: #ffebee;
-    color: #c62828;
+/* 마감 상태 */
+.status-right {
+    position: absolute;
+    top: 0.25rem;
+    /* top-1 */
+    right: 0.25rem;
+    /* right-1 */
+    background: white;
+    color: black;
+    font-size: 0.75rem;
+    padding: 0.25rem 0.25rem;
+    border-radius: 0.375rem;
+    font-weight: 500;
 }
 
-.status-ended {
-    background: #f5f5f5;
-    color: #616161;
+/* 소모임 정보 */
+.info {
+    flex-grow: 1;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
 }
 
-.card-title {
-    font-size: 18px;
-    margin: 0 0 12px 0;
-    color: #333;
-    line-height: 1.4;
+.title {
+    font-size: 1.25rem;
+    /* text-xl */
+    font-weight: 600;
+    color: #1f2937;
+    /* gray-800 */
+    margin: 0;
 }
 
-.card-description {
-    font-size: 14px;
-    color: #666;
-    line-height: 1.6;
-    margin-bottom: 15px;
+.description {
+    font-size: 0.875rem;
+    /* text-sm */
+    color: #4b5563;
+    /* gray-600 */
+    margin: 0;
 }
 
-.card-tags {
+/* 모집 기간 */
+.period-wrapper {
+    font-size: 0.875rem;
+    /* text-sm */
+    color: #374151;
+    /* gray-700 */
+    display: flex;
+    flex-direction: column;
+}
+
+.period {
+    display: flex;
+    gap: 0.5rem;
+    align-items: baseline; /* 바닥기준선에 글자 맞추기 */
+}
+
+.period-label {
+    font-weight: 500;
+}
+
+/* 해시태그들 */
+.hashtags {
+    margin-top: auto;
     display: flex;
     flex-wrap: wrap;
-    gap: 8px;
+    gap: 0.5rem;
 }
 
-.card-tags span {
-    display: inline-block;
-    padding: 4px 12px;
-    background: #f0f0f0;
-    border-radius: 15px;
-    font-size: 12px;
-    color: #666;
+.hashtag {
+    background-color: #dbeafe;
+    /* blue-100 */
+    color: #374151;
+    /* gray-700 */
+    font-size: 0.75rem;
+    /* text-xs */
+    padding: 0.25rem 0.5rem;
+    border-radius: 9999px;
+    user-select: none;
+}
+
+/* 최신 글 */
+.latest-posts {
+    padding: 1rem 1rem 1rem 1rem;
+}
+
+.latest-title {
+    font-size: 1.125rem;
+    /* text-lg */
+    font-weight: 600;
+    color: #1f2937;
+    /* gray-800 */
+    margin: 0 0 0.5rem 0;
+}
+
+.divider {
+    border: none;
+    border-bottom: 1px solid #d1d5db;
+    /* gray-300 */
+    margin: 0.5rem 0;
+}
+
+/* 게시글 리스트 */
+.post-list {
+    font-size: 0.875rem;
+    color: #374151;
+    /* gray-700 */
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.post-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }

@@ -18,11 +18,11 @@ time.sleep(1)
 # 아이디 입력
 et_login = driver.find_element(By.NAME, "id")
 et_login.clear()
-et_login.send_keys('bruce1016')
+et_login.send_keys('') # 아이디
 # 비밀번호 입력
 et_login = driver.find_element(By.NAME, "password")
 et_login.clear()
-et_login.send_keys('7125vi#$')
+et_login.send_keys('') # 비밀번호
 # 로그인 버튼 클릭
 driver.find_element(By.CSS_SELECTOR ,"body > div:nth-child(2) > div > form > input[type=submit]").click()
 time.sleep(2)

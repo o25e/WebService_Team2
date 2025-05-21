@@ -1,310 +1,16 @@
 <!DOCTYPE html>
 <html lang="ko">
+
 <head>
     <meta charset="UTF-8">
     <title>숭실대학교 동아리 플랫폼</title>
-    <link rel="stylesheet" href="/src/style.css">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Arial', sans-serif;
-        }
-
-        body {
-            background: #f5f5f5;
-        }
-
-        /* 헤더 스타일 */
-        header {
-            position: relative;
-            padding: 20px 50px;
-            background: #fff;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .logo {
-            width: 180px;
-            height: 45px;
-            object-fit: contain;
-        }
-
-        /* 네비게이션 버튼 컨테이너 */
-        .nav-container {
-            flex: 1;
-            display: flex;
-            justify-content: center;
-            margin: 0 50px;
-        }
-
-        .nav-buttons {
-            display: flex;
-            gap: 30px;
-            justify-content: center;
-        }
-
-        .nav-button {
-            padding: 12px 30px;
-            background: #f8f8f8;
-            border: 1px solid #e0e0e0;
-            border-radius: 10px;
-            font-size: 15px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            color: #444;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-            white-space: nowrap;
-        }
-
-        .nav-button:hover {
-            border-color: #007BFF;
-            color: #007BFF;
-            box-shadow: 0 4px 12px rgba(0,123,255,0.15);
-        }
-
-        .nav-button.active {
-            background: #007BFF;
-            color: white;
-            border-color: #007BFF;
-        }
-
-        /* 드롭다운 필터 */
-        .dropdown {
-            display: none;
-            position: absolute;
-            top: calc(100% + 15px);
-            left: 50%;
-            transform: translateX(-50%);
-            background: #fff;
-            box-shadow: 0 12px 24px rgba(0,0,0,0.15);
-            padding: 30px 40px;
-            width: 960px;
-            z-index: 100;
-            border-radius: 16px;
-            column-count: 3;
-            column-gap: 50px;
-        }
-
-        .filter-group {
-            break-inside: avoid-column;
-            margin-bottom: 30px;
-            padding: 20px;
-            background: #f9f9f9;
-            border-radius: 12px;
-        }
-
-        .filter-group h3 {
-            margin: 0 0 15px 0;
-            color: #007BFF;
-            font-size: 16px;
-            font-weight: 600;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #eee;
-        }
-
-        .filter-item {
-            display: flex;
-            align-items: center;
-            margin: 10px 0;
-            padding: 8px 12px;
-            border-radius: 8px;
-            transition: background 0.2s;
-        }
-
-        .filter-item:hover {
-            background: rgba(0,123,255,0.05);
-        }
-
-        .filter-item input {
-            width: 18px;
-            height: 18px;
-            margin-right: 15px;
-            accent-color: #007BFF;
-            cursor: pointer;
-        }
-
-        .filter-item label {
-            font-size: 14px;
-            color: #444;
-            cursor: pointer;
-            flex-grow: 1;
-        }
-
-        /* 상태 필터 */
-        .status-filter-container {
-            text-align: center;
-            margin: 30px 0;
-        }
-
-        .status-filter {
-            padding: 12px 25px;
-            font-size: 14px;
-            border: 2px solid #ddd;
-            border-radius: 10px;
-            background: #fff;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            appearance: none;
-            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23007BFF' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
-            background-repeat: no-repeat;
-            background-position: right 15px center;
-            background-size: 16px;
-            padding-right: 45px;
-        }
-
-        .status-filter:hover {
-            border-color: #007BFF;
-            box-shadow: 0 4px 12px rgba(0,123,255,0.1);
-        }
-
-        /* MY 사이드바 */
-        .sidebar {
-            position: fixed;
-            right: -320px;
-            top: 0;
-            width: 320px;
-            height: 100%;
-            background: #fff;
-            box-shadow: -4px 0 15px rgba(0,0,0,0.1);
-            transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            z-index: 1000;
-        }
-
-        .sidebar.active {
-            right: 0;
-        }
-
-        .sidebar-menu {
-            padding: 40px 30px;
-        }
-
-        .sidebar-menu button {
-            display: block;
-            width: 100%;
-            padding: 16px;
-            margin: 12px 0;
-            background: none;
-            border: 2px solid #f0f0f0;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 15px;
-            transition: all 0.2s ease;
-        }
-
-        .sidebar-menu button:hover {
-            border-color: #007BFF;
-            color: #007BFF;
-            background: rgba(0,123,255,0.05);
-        }
-
-        /* 오버레이 */
-        .overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.4);
-            z-index: 999;
-        }
-
-        /* 활동 카드 */
-        .card-container {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 30px;
-            max-width: 1280px;
-            margin: 50px auto;
-            padding: 0 30px;
-        }
-
-        .card {
-            background: #fff;
-            border-radius: 12px;
-            overflow: hidden;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            position: relative;
-        }
-
-        .card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 12px 24px rgba(0,0,0,0.1);
-        }
-
-        .card-image {
-            width: 100%;
-            height: 240px;
-            background: #e0e0e0;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .card-image::after {
-            content: "Image Preview";
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            color: #999;
-            font-size: 14px;
-        }
-
-        .card-content {
-            padding: 25px;
-        }
-
-        .card-status {
-            display: inline-block;
-            padding: 6px 15px;
-            border-radius: 20px;
-            font-size: 13px;
-            font-weight: 500;
-            margin-bottom: 15px;
-        }
-
-        .status-ongoing { background: #e8f5e9; color: #2e7d32; }
-        .status-full { background: #ffebee; color: #c62828; }
-        .status-ended { background: #f5f5f5; color: #616161; }
-
-        .card-title {
-            font-size: 18px;
-            margin: 0 0 12px 0;
-            color: #333;
-            line-height: 1.4;
-        }
-
-        .card-description {
-            font-size: 14px;
-            color: #666;
-            line-height: 1.6;
-            margin-bottom: 15px;
-        }
-
-        .card-tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-        }
-
-        .card-tags span {
-            display: inline-block;
-            padding: 4px 12px;
-            background: #f0f0f0;
-            border-radius: 15px;
-            font-size: 12px;
-            color: #666;
-        }
-    </style>
+    <link rel="stylesheet" href="/styles/small-club.css">
 </head>
+
 <body>
     <header>
         <img src="LOGO.png" class="logo" alt="SSU Logo">
-        
+
         <div class="nav-container">
             <div class="nav-buttons">
                 <button class="nav-button" onclick="toggleDropdown('club')">동아리</button>
@@ -429,27 +135,63 @@
     </div>
     <div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
 
-    <!-- 메인 기타 모임 목록 -->
+    <!-- 메인 소모임 목록 -->
     <main>
-        <!-- 모임 카드 -->
-        <div class="">
-            <!-- 이미지 -->
-            <img src="" alt="이미지">
-            <!-- 모임 정보 -->
-            <div>
-                <h2>소모임 이름</h2>
-                <p>소모임 설명</p>
-                <div>
-                    <span>#디자인</span>
-                    <span>#화목</span>
-                    <!-- 추가 해시태그 -->
+        <!-- 소모임 카드 -->
+        <div class="card">
+            <!-- 이미지와 정보 묶음 -->
+            <div class="card-content">
+                <!-- 이미지와 상태 -->
+                <div class="image-wrapper">
+                    <img src="../assets/gameworks.png" alt="이미지" class="image">
+                    <div class="status-left">
+                        <span class="status-dot"></span>
+                        모집중
+                    </div>
+                    <div class="status-right">마감 D-17</div>
                 </div>
+
+                <!-- 소모임 정보 -->
+                <div class="info">
+                    <h2 class="title">소모임 이름</h2>
+                    <p class="description">소모임 설명</p>
+
+                    <div class="period-wrapper">
+                        <div class="period">
+                            <span class="period-label">모집 기간</span>
+                            <span class="period-dates">2025.05.01 ~ 2025.05.11</span>
+                        </div>
+                    </div>
+
+                    <!-- 해시태그들 -->
+                    <div class="hashtags">
+                        <span class="hashtag">#디자인</span>
+                        <span class="hashtag">#화목</span>
+                        <!-- 추가 해시태그 -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- 최신 글 -->
+            <div class="latest-posts">
+                <h3 class="latest-title">최신 글</h3>
+                <hr class="divider">
+
+                <!-- 게시글 -->
+                <div class="post-list">
+                    <div class="post-item">
+                        <span>소모임 모집</span>
+                        <span>2025.05.01</span>
+                    </div>
+                    <hr class="divider">
+                </div>
+                <!-- 추가 게시글 -->
             </div>
         </div>
 
         <!-- 추가 카드... -->
     </main>
-b
+
     <script>
         // 사이드바 토글
         function toggleSidebar() {
@@ -465,7 +207,7 @@ b
         function toggleDropdown(type) {
             const dropdown = document.getElementById(type);
             const button = document.querySelector(`button[onclick="toggleDropdown('${type}')"]`);
-            
+
             if (currentDropdown === type) {
                 dropdown.style.display = 'none';
                 button.classList.remove('active');
@@ -486,8 +228,8 @@ b
 
         // 외부 클릭 감지
         document.addEventListener('click', (e) => {
-            if (!e.target.closest('.nav-button') && 
-                !e.target.closest('.dropdown') && 
+            if (!e.target.closest('.nav-button') &&
+                !e.target.closest('.dropdown') &&
                 !e.target.closest('.sidebar')) {
                 closeAllDropdowns();
             }
@@ -536,4 +278,5 @@ b
         generateCards();
     </script>
 </body>
+
 </html>
