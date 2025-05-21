@@ -24,4 +24,4 @@ dist-ssr
 *.sw?
 
 # 추가
-sangho
+/sangho/
