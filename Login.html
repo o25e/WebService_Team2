@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <title>숭실대학교 로그인</title>
   <style>
-    body {
+    body { 
       font-family: 'Arial', sans-serif;
       display: flex;
       justify-content: center;
@@ -14,23 +14,9 @@
       background-color: #fff;
       flex-direction: column;
     }
-
-    h1 {
-      font-size: 24px;
-      margin-bottom: 0;
-    }
-
-    p {
-      margin-top: 8px;
-      font-size: 18px;
-      color: #333;
-    }
-
-    .input-box {
-      width: 400px;
-      margin-top: 20px;
-    }
-
+    h1 { font-size: 24px; margin-bottom: 0; }
+    p { margin-top: 8px; font-size: 18px; color: #333; }
+    .input-box { width: 400px; margin-top: 20px; }
     .input-box input {
       width: 100%;
       padding: 15px;
@@ -39,7 +25,6 @@
       border: 1px solid #000;
       box-sizing: border-box;
     }
-
     .login-btn {
       width: 100%;
       padding: 20px;
@@ -48,14 +33,12 @@
       font-size: 20px;
       cursor: pointer;
     }
-
     .separator {
       display: flex;
       align-items: center;
       margin: 30px 0 10px;
       width: 400px;
     }
-
     .separator::before,
     .separator::after {
       content: '';
@@ -63,62 +46,65 @@
       height: 1px;
       background: #000;
     }
-
-    .separator span {
-      margin: 0 10px;
-      color: #333;
-    }
-
+    .separator span { margin: 0 10px; color: #333; }
     .social-icons {
       display: flex;
       justify-content: center;
       gap: 30px;
       margin-top: 10px;
     }
-
-    .social-icons img {
-      width: 48px;
-      height: 48px;
-      cursor: pointer;
-
-    }
-
-      /* 新增注册链接样式 */
-      .register-link {
-      margin-top: 20px;
-      text-align: center;
-    }
-    .register-link a {
-      color: #333;
-      text-decoration: none;
-      font-size: 16px;
-    }
-    .register-link a:hover {
-      text-decoration: underline;
-    }
-    
- </style>
+    .social-icons img { width: 48px; height: 48px; cursor: pointer; }
+    .register-link { margin-top: 20px; text-align: center; }
+    .register-link a { color: #333; text-decoration: none; font-size: 16px; }
+    .register-link a:hover { text-decoration: underline; }
+  </style>
 </head>
 <body>
-  <h1>숭실대학교 @@</h1>
-  <p>모집 신청을 빠르게 블라블라</p>
+  <h1>숭실대학교 동아리 플랫폼</h1>
+  <p>모집 신청을 빠르게</p>
 
+  <!-- 로그인 폼 -->
   <div class="input-box">
-    <input type="text" placeholder="아이디">
-    <input type="password" placeholder="비밀번호">
-    <button class="login-btn" onclick="window.location.href='main.html'">로그인</button>
+    <form id="loginForm" onsubmit="return handleLogin(event)">
+      <input type="text" id="username" placeholder="아이디" required>
+      <input type="password" id="password" placeholder="비밀번호" required>
+      <button type="submit" class="login-btn">로그인</button>
+    </form>
   </div>
 
+  <!-- 소셜 로그인 구분선 -->
   <div class="separator"><span>또는</span></div>
 
+  <!-- 소셜 로그인 아이콘 -->
   <div class="social-icons">
     <img src="https://upload.wikimedia.org/wikipedia/commons/e/e3/KakaoTalk_logo.svg" alt="Kakao">
     <img src="https://upload.wikimedia.org/wikipedia/commons/2/2e/Naver_Logotype.svg" alt="Naver">
     <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" alt="Google">
   </div>
 
+  <!-- 회원가입 링크 -->
   <div class="register-link">
     <a href="Register.html">회원가입</a>
   </div>
+
+  <script>
+    // 로그인 처리 함수
+    function handleLogin(e) {
+      e.preventDefault();
+      const users = JSON.parse(localStorage.getItem('users') || '[]');
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+
+      // 사용자 확인
+      const user = users.find(u => u.username === username && u.password === password);
+      if (user) {
+        sessionStorage.setItem('currentUser', JSON.stringify(user)); // 세션 저장
+        sessionStorage.setItem('loggedIn', 'true');
+        window.location.href = 'main.html';
+      } else {
+        alert('잘못된 아이디 또는 비밀번호입니다');
+      }
+    }
+  </script>
 </body>
 </html>
