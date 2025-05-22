@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>동아리</title>
+    <link rel="stylesheet" href="/styles/club.css">
+    <link rel="stylesheet" href="../styles/header.css" />
+    <script src="../layouts/header.js" defer></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
+        integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+
+<body>
+    <div class="nav">
+        <div class="menu active" onclick="showFilter('field', this)">분야별</div>
+        <div class="menu" onclick="showFilter('status', this)">접수상태</div>
+    </div>
+
+    
+    <div class="filter-box field active">
+        <input type='checkbox' name='field' value='공연/댄스' class="category-filter" />공연/댄스
+        <input type='checkbox' name='field' value='학술/전공' class="category-filter" />학술/전공
+        <input type='checkbox' name='field' value='체육' class="category-filter" />체육
+        <input type='checkbox' name='field' value='여행/사진/산악' class="category-filter" />여행/사진/산악
+        <input type='checkbox' name='field' value='창업/비즈니스/홍보' class="category-filter" />창업/비즈니스/홍보
+        <input type='checkbox' name='field' value='국제/교류' class="category-filter" />국제/교류
+        <input type='checkbox' name='field' value='예술/문화' class="category-filter" />예술/문화
+        <input type='checkbox' name='field' value='봉사' class="category-filter" />봉사
+        <input type='checkbox' name='field' value='게임/보드/취미' class="category-filter" />게임/보드/취미
+        <input type='checkbox' name='field' value='사회참여/시사/토론' class="category-filter" />사회참여/시사/토론
+    </div>
+
+    
+    <div class="filter-box status">
+        <input type='checkbox' name='application' value='ing' class="status-filter" />모집중
+        <input type='checkbox' name='application' value='done' class="status-filter" />모집완료
+    </div>
+
+
+
+    <form class="search-box" action="" method="get">
+        <input class="search-txt" type="text" name="" placeholder="검색어를 입력하세요" id="searchInput">
+        <button class="search-btn" type="submit">
+            <i class="fa-solid fa-magnifying-glass"></i>
+        </button>
+    </form>
+
+    <div id="contentArea" style="display: flex; flex-wrap: wrap;"></div>
+
+    <script src="/pages/club.js"></script>
+
+</body>
