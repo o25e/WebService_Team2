@@ -1,17 +1,28 @@
 {
-  "name": "vite-project",
-  "private": true,
-  "version": "0.0.0",
-  "type": "module",
+  "name": "webservice_team2",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
   "scripts": {
-    "dev": "vite",
-    "build": "tsc && vite build",
-    "preview": "vite preview"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
   },
-  "devDependencies": {
-    "@tailwindcss/vite": "^4.1.6",
-    "connect-history-api-fallback": "^2.0.0",
-    "typescript": "~5.8.3",
-    "vite": "^6.3.5"
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/o25e/WebService_Team2.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/o25e/WebService_Team2/issues"
+  },
+  "homepage": "https://github.com/o25e/WebService_Team2#readme",
+  "dependencies": {
+    "body-parser": "^2.2.0",
+    "cookie-parser": "^1.4.7",
+    "ejs": "^3.1.10",
+    "express": "^5.1.0",
+    "mongodb": "^6.16.0",
+    "nodemon": "^3.1.10"
   }
 }

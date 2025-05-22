@@ -52,17 +52,17 @@ window.addEventListener("DOMContentLoaded", () => {
           `;
         } else {
           authArea.innerHTML = `
-            <a href="../pages/login.html" class="login-button">로그인</a>
+            <a href="/login" class="login-button">로그인</a>
           `;
         }
       }
 
       // 활성 링크 표시
-      const currentPage = window.location.pathname.split("/").pop();
+      const currentPage = window.location.href.split("/").pop();
       const navLinks = headerContainer.querySelectorAll(".nav-link");
 
       navLinks.forEach((link) => {
-        const linkHref = link.getAttribute("href")?.split("/").pop();
+        const linkHref = link.getAttribute("href") ?? '';
         if (linkHref === currentPage) {
           link.classList.add("active");
         }
@@ -74,9 +74,9 @@ window.addEventListener("DOMContentLoaded", () => {
 function logout() {
   localStorage.removeItem("loggedInUser");
   alert("로그아웃 되었습니다.");
-  window.location.href = "../pages/main.html";
+  window.location.href = "/main";
 }
 
 function goToNotifications() {
-  window.location.href = "../pages/notifications.html";
+  window.location.href = "/notifications";
 }
