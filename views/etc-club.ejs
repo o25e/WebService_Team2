@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <title>숭실대학교 동아리 플랫폼</title>
+    <link rel="stylesheet" href="/styles/etc-club.css">
+    <!-- 공통 헤더 CSS -->
+    <link rel="stylesheet" href="/styles/header.css" />
+    <!-- 헤더 js -->
+    <script src="/layouts/header.js" defer></script>
+</head>
+
+<body>
+    <!-- 모집 상태 선택창 -->
+    <div class="status-filter-container">
+        <select class="status-filter">
+            <option>모집 상태 선택</option>
+            <option value="ongoing">모집 진행중</option>
+            <option value="full">모집 완료</option>
+            <option value="ended">모집 마감</option>
+        </select>
+    </div>
+    <!-- 메인 소모임 목록 -->
+    <main>
+        <!-- 모임 카드 -->
+        <div class="meeting-card">
+            <!-- 이미지 -->
+            <img class="meeting-image" src="../assets/gameworks.png" alt="이미지">
+            <!-- 모임 정보 -->
+            <div class="meeting-info">
+                <h2 class="meeting-title">모임 이름</h2>
+                <p class="meeting-description">모임 설명</p>
+                <!-- 해시태그들 -->
+                <div class="hashtags">
+                    <span class="hashtag">#디자인</span>
+                    <span class="hashtag">#화목</span>
+                    <!-- 추가 해시태그 -->
+                </div>
+            </div>
+        </div>
+
+        <!-- 추가 카드... -->
+    </main>
+
+</body>
+
+</html>

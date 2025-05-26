@@ -1,0 +1,401 @@
+/* 기본 리셋 및 공통 스타일 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Arial', sans-serif;
+}
+
+body {
+    background: #f5f5f5;
+}
+
+
+.logo {
+    width: 180px;
+    height: 45px;
+    object-fit: contain;
+}
+
+/* 헤더 스타일 */
+header {
+    position: relative;
+    padding: 20px 50px;
+    background: #fff;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.logo {
+    width: 180px;
+    height: 45px;
+    object-fit: contain;
+}
+
+/* 네비게이션 버튼 컨테이너 */
+.nav-container {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    margin: 0 50px;
+}
+
+.nav-buttons {
+    display: flex;
+    gap: 30px;
+    justify-content: center;
+}
+
+.nav-button {
+    padding: 12px 30px;
+    background: #f8f8f8;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    font-size: 15px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: #444;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    white-space: nowrap;
+}
+
+.nav-button:hover {
+    border-color: #007BFF;
+    color: #007BFF;
+    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.15);
+}
+
+.nav-button.active {
+    background: #007BFF;
+    color: white;
+    border-color: #007BFF;
+}
+
+/* 드롭다운 필터 */
+.dropdown {
+    display: none;
+    position: absolute;
+    top: calc(100% + 15px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: #fff;
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+    padding: 30px 40px;
+    width: 960px;
+    z-index: 100;
+    border-radius: 16px;
+    column-count: 3;
+    column-gap: 50px;
+}
+
+.filter-group {
+    break-inside: avoid-column;
+    margin-bottom: 30px;
+    padding: 20px;
+    background: #f9f9f9;
+    border-radius: 12px;
+}
+
+.filter-group h3 {
+    margin: 0 0 15px 0;
+    color: #007BFF;
+    font-size: 16px;
+    font-weight: 600;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #eee;
+}
+
+.filter-item {
+    display: flex;
+    align-items: center;
+    margin: 10px 0;
+    padding: 8px 12px;
+    border-radius: 8px;
+    transition: background 0.2s;
+}
+
+.filter-item:hover {
+    background: rgba(0, 123, 255, 0.05);
+}
+
+.filter-item input {
+    width: 18px;
+    height: 18px;
+    margin-right: 15px;
+    accent-color: #007BFF;
+    cursor: pointer;
+}
+
+.filter-item label {
+    font-size: 14px;
+    color: #444;
+    cursor: pointer;
+    flex-grow: 1;
+}
+
+/* 상태 필터 */
+.status-filter-container {
+    text-align: center;
+    margin: 30px 0;
+}
+
+.status-filter {
+    padding: 12px 25px;
+    font-size: 14px;
+    border: 2px solid #ddd;
+    border-radius: 10px;
+    background: #fff;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23007BFF' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 15px center;
+    background-size: 16px;
+    padding-right: 45px;
+}
+
+.status-filter:hover {
+    border-color: #007BFF;
+    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.1);
+}
+
+/* MY 사이드바 */
+.sidebar {
+    position: fixed;
+    right: -320px;
+    top: 0;
+    width: 320px;
+    height: 100%;
+    background: #fff;
+    box-shadow: -4px 0 15px rgba(0, 0, 0, 0.1);
+    transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 1000;
+}
+
+.sidebar.active {
+    right: 0;
+}
+
+.sidebar-menu {
+    padding: 40px 30px;
+}
+
+.sidebar-menu button {
+    display: block;
+    width: 100%;
+    padding: 16px;
+    margin: 12px 0;
+    background: none;
+    border: 2px solid #f0f0f0;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 15px;
+    transition: all 0.2s ease;
+}
+
+.sidebar-menu button:hover {
+    border-color: #007BFF;
+    color: #007BFF;
+    background: rgba(0, 123, 255, 0.05);
+}
+
+/* 오버레이 */
+.overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 999;
+}
+
+/* 소모임 카드 */
+.card {
+    margin: auto;
+    width: 1000px;
+    background: white;
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+    border-radius: 0.5rem;
+    /* rounded */
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+/* 이미지와 정보 묶음 */
+.card-content {
+    display: flex;
+    padding: 1rem;
+}
+
+/* 이미지와 상태 */
+.image-wrapper {
+    position: relative;
+    width: 160px;
+    /* 40 * 4 */
+    height: 160px;
+    flex-shrink: 0;
+}
+
+.image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 0.75rem;
+    /* rounded-xl */
+    display: block;
+}
+
+/* 모집중 상태 */
+.status-left {
+    position: absolute;
+    top: 0.25rem;
+    /* top-1 */
+    left: 0.25rem;
+    /* left-1 */
+    background: white;
+    color: black;
+    font-size: 0.75rem;
+    /* text-xs */
+    padding: 0.25rem 0.25rem;
+    border-radius: 0.375rem;
+    /* rounded-md */
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-weight: 500;
+}
+
+.status-dot {
+    width: 0.5rem;
+    /* w-2 */
+    height: 0.5rem;
+    /* h-2 */
+    background-color: #3b82f6;
+    /* blue-500 */
+    border-radius: 9999px;
+    display: inline-block;
+}
+
+/* 마감 상태 */
+.status-right {
+    position: absolute;
+    top: 0.25rem;
+    /* top-1 */
+    right: 0.25rem;
+    /* right-1 */
+    background: white;
+    color: black;
+    font-size: 0.75rem;
+    padding: 0.25rem 0.25rem;
+    border-radius: 0.375rem;
+    font-weight: 500;
+}
+
+/* 소모임 정보 */
+.info {
+    flex-grow: 1;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.title {
+    font-size: 1.25rem;
+    /* text-xl */
+    font-weight: 600;
+    color: #1f2937;
+    /* gray-800 */
+    margin: 0;
+}
+
+.description {
+    font-size: 0.875rem;
+    /* text-sm */
+    color: #4b5563;
+    /* gray-600 */
+    margin: 0;
+}
+
+/* 모집 기간 */
+.period-wrapper {
+    font-size: 0.875rem;
+    /* text-sm */
+    color: #374151;
+    /* gray-700 */
+    display: flex;
+    flex-direction: column;
+}
+
+.period {
+    display: flex;
+    gap: 0.5rem;
+    align-items: baseline; /* 바닥기준선에 글자 맞추기 */
+}
+
+.period-label {
+    font-weight: 500;
+}
+
+/* 해시태그들 */
+.hashtags {
+    margin-top: auto;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.hashtag {
+    background-color: #dbeafe;
+    /* blue-100 */
+    color: #374151;
+    /* gray-700 */
+    font-size: 0.75rem;
+    /* text-xs */
+    padding: 0.25rem 0.5rem;
+    border-radius: 9999px;
+    user-select: none;
+}
+
+/* 최신 글 */
+.latest-posts {
+    padding: 1rem 1rem 1rem 1rem;
+}
+
+.latest-title {
+    font-size: 1.125rem;
+    /* text-lg */
+    font-weight: 600;
+    color: #1f2937;
+    /* gray-800 */
+    margin: 0 0 0.5rem 0;
+}
+
+.divider {
+    border: none;
+    border-bottom: 1px solid #d1d5db;
+    /* gray-300 */
+    margin: 0.5rem 0;
+}
+
+/* 게시글 리스트 */
+.post-list {
+    font-size: 0.875rem;
+    color: #374151;
+    /* gray-700 */
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.post-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}

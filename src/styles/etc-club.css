@@ -1,0 +1,122 @@
+/* 기본 리셋 및 공통 스타일 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Arial', sans-serif;
+}
+
+body {
+    background: #f5f5f5;
+}
+
+
+.logo {
+    width: 180px;
+    height: 45px;
+    object-fit: contain;
+}
+
+/* 상태 필터 */
+.status-filter-container {
+    text-align: center;
+    margin: 30px 0;
+}
+
+.status-filter {
+    padding: 12px 25px;
+    font-size: 14px;
+    border: 2px solid #ddd;
+    border-radius: 10px;
+    background: #fff;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23007BFF' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 15px center;
+    background-size: 16px;
+    padding-right: 45px;
+}
+
+.status-filter:hover {
+    border-color: #007BFF;
+    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.1);
+}
+
+/* 메인 컨테이너 너비 중앙 정렬 */
+.meeting-card {
+    max-width: 48rem;
+    /* 약 768px */
+    margin: 0 auto;
+    display: flex;
+    background-color: white;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    border-radius: 0.5rem;
+    /* 둥근 모서리 */
+}
+
+/* 이미지 크기와 둥근 모서리 */
+.meeting-image {
+    width: 7.5rem;
+    /* 120px */
+    height: 7.5rem;
+    /* 120px */
+    border-radius: 0.75rem;
+    /* 12px 둥근 모서리 */
+    object-fit: cover;
+}
+
+/* 모임 정보 영역 */
+.meeting-info {
+    flex-grow: 1;
+    padding: 0.75rem;
+    /* 12px */
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+/* 제목 */
+.meeting-title {
+    font-size: 1.25rem;
+    /* text-xl */
+    font-weight: 600;
+    color: #1f2937;
+    /* gray-800 */
+    margin: 0;
+}
+
+/* 설명 */
+.meeting-description {
+    font-size: 0.875rem;
+    /* text-sm */
+    color: #4b5563;
+    /* gray-600 */
+    margin: 0;
+    flex-grow: 1;
+}
+
+/* 해시태그 컨테이너 */
+.hashtags {
+    margin-top: auto;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+/* 해시태그 스타일 */
+.hashtag {
+    background-color: #dbeafe;
+    /* bg-blue-100 */
+    color: #374151;
+    /* text-gray-700 */
+    font-size: 0.75rem;
+    /* text-xs */
+    padding: 0.25rem 0.5rem;
+    /* px-2 py-1 */
+    border-radius: 9999px;
+    /* rounded-full */
+    user-select: none;
+}
