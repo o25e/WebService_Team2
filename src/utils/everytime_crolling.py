@@ -32,3 +32,5 @@ driver.find_element(By.XPATH, '//*[@id="submenu"]/div/div[3]/ul/li[2]').click()
 time.sleep(0.3)
 # 교내 클릭
 driver.find_element(By.CSS_SELECTOR, '#container > div.wrap.categories > div.category.selected > span').click()
+
+# python src/utils/everytime_crolling.py
