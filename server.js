@@ -101,7 +101,9 @@ app.get('/etcclub', function (req, res) {
 
 // 글쓰기 페이지 라우팅
 app.get('/enter', function (req, res){
-    res.render("enter.ejs");
+    const selected = req.query.selected || '';
+    console.log(selected);
+    res.render("enter.ejs", {selected: selected});
 });
 
 // 글쓰기 요청
