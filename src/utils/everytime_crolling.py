@@ -39,14 +39,9 @@ for _ in range(5):
 
 # 게시글 리스트 파싱
 soup = BeautifulSoup(driver.page_source, "html.parser")
-articles = soup.select("article.item > a.article")
+articles = soup.select("article.list > a.article")
 
-post_links = []
-for a in articles:
-    href = a.get("href")
-    if href:
-        full_link = "https://everytime.kr" + href
-        post_links.append(full_link)
+post_links = ["https://everytime.kr" + a["href"] for a in articles]
 
 detailed_club_info = []
 
@@ -56,49 +51,54 @@ for idx, link in enumerate(post_links, 1):
 
     detail_soup = BeautifulSoup(driver.page_source, "html.parser")
 
-    # 제목
-    title_tag = detail_soup.select_one("article.view h2.medium.bold") or detail_soup.select_one("article.view h2.large")
-    title = title_tag.text.strip() if title_tag else "제목없음"
+    # 상세 제목 (대개 h2.medium.bold)
+    title_tag = detail_soup.select_one("article.view h2.medium.bold")
+    title = title_tag.text.strip() if title_tag else ""
 
-    # 본문 내용 (p.large 기준)
-    content_tag = detail_soup.select_one("article.view p.large")
-    content_html = content_tag.decode_contents() if content_tag else ""
-    content_text = content_tag.get_text(separator="\n").strip() if content_tag else ""
+    # 상세 내용 (대개 article.view 내 p.medium 또는 div.description 등)
+    content_tag = detail_soup.select_one("article.view > p.medium")
+    content = content_tag.text.strip() if content_tag else ""
 
+    # 모집 기간, 회비, 신청 방식 등은 보통 내용 중에 텍스트 형태로 있음
+    # 예를 들어, 내용에서 '모집 기간:', '회비:', '신청 방식:' 등의 키워드로 파싱 시도
     모집기간 = ""
     회비 = ""
     신청방식 = ""
     구글폼링크 = ""
     이미지링크 = ""
 
-    # <br> 기준으로 줄 분리 후 키워드 검색
-    if content_html:
-        lines = [line.strip() for line in content_html.split("<br>") if line.strip()]
+    # 내용 내 줄 단위로 나누어 파싱 (키워드 기반)
+    if content:
+        lines = content.split('\n')
         for line in lines:
-            line_soup = BeautifulSoup(line, "html.parser")
-            text_line = line_soup.get_text()
+            if '모집 기간' in line:
+                모집기간 = line.split(':', 1)[-1].strip()
+            elif '회비' in line:
+                회비 = line.split(':', 1)[-1].strip()
+            elif '신청 방식' in line or '신청방법' in line:
+                신청방식 = line.split(':', 1)[-1].strip()
+            if 'docs.google.com/forms' in line or 'forms.gle' in line:
+                # 구글폼 링크가 텍스트로 있으면 추출
+                parts = line.split()
+                for part in parts:
+                    if 'docs.google.com/forms' in part or 'forms.gle' in part:
+                        구글폼링크 = part.strip()
 
-            # 키워드별 값 추출
-            if "모집 기간" in text_line or "모집기간" in text_line:
-                모집기간 = text_line.split(":", 1)[-1].strip()
-            elif "회비" in text_line:
-                회비 = text_line.split(":", 1)[-1].strip()
-            elif "신청 방식" in text_line or "신청방법" in text_line:
-                신청방식 = text_line.split(":", 1)[-1].strip()
-
-            # 구글폼 링크 추출
-            a_tag = line_soup.select_one("a[href*='docs.google.com/forms'], a[href*='forms.gle']")
-            if a_tag:
-                구글폼링크 = a_tag["href"]
-
-    # 이미지 링크 추출
-    img_tag = detail_soup.select_one("article.view div.attaches figure.attach img")
-    if img_tag and img_tag.get("src"):
-        이미지링크 = img_tag["src"]
+    # 이미지 URL 추출 (article.view 내 div.attachthumbnail 혹은 img 태그)
+    img_div = detail_soup.select_one("article.view div.attachthumbnail")
+    if img_div:
+        style = img_div.get("style", "")
+        if "background-image" in style:
+            이미지링크 = style.split('url("')[1].split('")')[0]
+    else:
+        # img 태그가 있을 경우
+        img_tag = detail_soup.select_one("article.view img")
+        if img_tag and img_tag.get("src"):
+            이미지링크 = img_tag["src"]
 
     detailed_club_info.append({
         "제목": title,
-        "활동 내용": content_text,
+        "활동 내용": content,
         "모집 기간": 모집기간,
         "회비": 회비,
         "신청 방식": 신청방식,
@@ -117,3 +117,5 @@ for idx, link in enumerate(post_links, 1):
     print("----\n")
 
 driver.quit()
+
+# python src/utils/everytime_crolling.py
