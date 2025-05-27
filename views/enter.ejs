@@ -14,7 +14,7 @@
     <form action="/save" method="post" class="wrapper">
         <h1>글쓰기</h1>
         <div>
-            <label for="clubType">동아리 종류</label>
+            <label for="clubType">글 종류</label>
             <select name="clubType" id="clubType">
                 <option value="club_post">동아리</option>
                 <option value="smclub_post">소모임</option>
@@ -45,5 +45,11 @@
             <button type="submit">저장</button>
         </div>
     </form>
+
+    <script>
+        const selectedOption = document.querySelector("select");
+        console.log(selectedOption);
+        selectedOption.value = "<%= selected %>_post";
+    </script>
 </body>
 </html>

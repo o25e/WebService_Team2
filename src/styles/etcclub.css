@@ -120,3 +120,22 @@ body {
     /* rounded-full */
     user-select: none;
 }
+
+/* 글쓰기 버튼 */
+.btn {
+  display: inline-block;
+  padding: 5px 10px;
+  background-color: #007bff;
+  color: white;
+  text-decoration: none;
+  border-radius: 5px;
+  font-weight: bold;
+  transition: background-color 0.2s;
+  position: fixed; 
+  bottom: 10px; 
+  right: 30px;
+}
+
+.btn:hover {
+  background-color: #0056b3;
+}
