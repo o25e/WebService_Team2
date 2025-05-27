@@ -1,9 +1,30 @@
+// 서버
+const express = require('express');
+const app = express();
+
+//이미지 저장
+const multer = require('multer');
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'uploads/'); // 이미지 저장 폴더
+  },
+  filename: function (req, file, cb) {
+    const uniqueName = Date.now() + '-' + file.originalname;
+    cb(null, uniqueName);
+  }
+});
+
+const upload = multer({ storage: storage });
+
+//이미지 업로드
+app.use('/uploads', express.static('uploads'));
 // 몽고 DB 접속 코드
 const mongoclient = require('mongodb').MongoClient;
 const ObjId = require('mongodb').ObjectId;
-const url = 'mongodb+srv://sangho:1016@cluster0.xwq0xe8.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
+//const url = 'mongodb+srv://sangho:1016@cluster0.xwq0xe8.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
 // const url = 'mongodb+srv://eeeon:0915@cluster0.oz5ftkr.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
-//const url = 'mongodb+srv://kimnarin572:0000@cluster0.sn9kshr.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
+const url = 'mongodb+srv://kimnarin572:0000@cluster0.sn9kshr.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
 let mydb;
 mongoclient.connect(url)
 .then(client => {
@@ -19,9 +40,7 @@ mongoclient.connect(url)
     console.log(err);
 });
 
-// 서버
-const express = require('express');
-const app = express();
+
 
 // body-parser 라이브러리 추가
 const bodyParser = require('body-parser');
@@ -105,15 +124,17 @@ app.get('/enter', function (req, res){
 });
 
 // 글쓰기 요청
-app.post('/save', function (req, res){
+app.post('/save',upload.single('image'), function (req, res){
     console.log("==================");
     console.log(req.body.clubType);
     console.log(req.body.title);
     console.log(req.body.content);
     console.log(req.body.category);
     console.log(req.body.deadline);
-    console.log(req.body.image);
+    console.log(req.file);
     console.log("");
+
+    const imagePath = req.file ? '/uploads/' + req.file.filename : '';
     // mongoDB
     mydb.collection(req.body.clubType).insertOne(
         {
@@ -121,7 +142,7 @@ app.post('/save', function (req, res){
             content : req.body.content,
             category : req.body.category,
             deadline : req.body.deadline,
-            image : req.body.image
+            image : imagePath
         }
     ).then(result => {
         console.log(result);
@@ -130,3 +151,5 @@ app.post('/save', function (req, res){
     const redirect_page = req.body.clubType.replace('_post', '');
     res.redirect("/"+redirect_page);
 });
+
+
