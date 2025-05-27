@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>메인 페이지</title>
+  <!-- 공통 헤더 CSS -->
+  <link rel="stylesheet" href="/styles/header.css" />
+  <!-- 전용 CSS -->
+  <link rel="stylesheet" href="/styles/enter.css" />
+  <!-- 헤더 js -->
+  <script src="/layouts/header.js" defer></script>
+</head>
+<body>
+    <form action="/save" method="post" class="wrapper">
+        <h1>글쓰기</h1>
+        <div>
+            <label for="clubType">동아리 종류</label>
+            <select name="clubType" id="clubType">
+                <option value="club_post">동아리</option>
+                <option value="smclub_post">소모임</option>
+                <option value="etcclub_post">기타</option>
+            </select>
+        </div>
+        <div>
+            <label for="title">동아리 이름</label>
+            <input type="text" id="title" name="title">
+        </div>
+        <div>
+            <label for="content">동아리 설명</label>
+            <input type="text" id="content" name="content">
+        </div>
+        <div>
+            <label for="category">카테고리</label>
+            <input type="text" id="category" name="category">
+        </div>
+        <div>
+            <label for="deadline">모집 마감일</label>
+            <input type="text" id="deadline" name="deadline">
+        </div>
+        <div>
+            <label for="image">이미지</label>
+            <input type="text" id="image" name="image">
+        </div>
+        <div>
+            <button type="submit">저장</button>
+        </div>
+    </form>
+</body>
+</html>

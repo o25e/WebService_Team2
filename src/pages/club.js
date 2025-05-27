@@ -10,35 +10,44 @@ function showFilter(type, element) {
     const target = document.querySelector(`.${type}`);
     if (target) target.classList.add('active');
 }
+// 글 데이터 서버로부터 가져오기
+let posts = [];
+fetch("/club/data")
+.then(res=>res.json())
+.then(data=>{
+    console.log(data);
+    posts = data;
+    renderPosts(posts);
+});
 
 //글 임시로 보여주기
-const posts = [
-    {
-        "title": "공연 동아리",
-        "content": "춤추자.",
-        "category": "공연/댄스",
-        "deadline": "2025-05-20",
-        "image": "../assets/club.png"
-    }
-    ,
-    {
-        "title": "산악 동아리",
-        "content": "등산하자.",
-        "category": "여행/사진/산악",
-        "deadline": "2025-06-10",
-        "image": "../assets/club.png"
-    }
-    ,
-    {
-        "title": "국제 교류 동아리",
-        "content": "렛츠교류.",
-        "category": "국제/교류",
-        "deadline": "2025-05-30",
-        "image": "../assets/club.png"
-    }
-    ,
+// const posts = [
+//     {
+//         "title": "공연 동아리",
+//         "content": "춤추자.",
+//         "category": "공연/댄스",
+//         "deadline": "2025-05-20",
+//         "image": "../assets/club.png"
+//     }
+//     ,
+//     {
+//         "title": "산악 동아리",
+//         "content": "등산하자.",
+//         "category": "여행/사진/산악",
+//         "deadline": "2025-06-10",
+//         "image": "../assets/club.png"
+//     }
+//     ,
+//     {
+//         "title": "국제 교류 동아리",
+//         "content": "렛츠교류.",
+//         "category": "국제/교류",
+//         "deadline": "2025-05-30",
+//         "image": "../assets/club.png"
+//     }
+//     ,
 
-];
+// ];
 
 //posts에서 쓴 deadline dday로 보여주기기
 function getDDay(deadline) {
