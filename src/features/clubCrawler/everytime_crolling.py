@@ -20,8 +20,8 @@ driver = webdriver.Chrome(service=service, options=options)
 # 로그인
 driver.get("https://account.everytime.kr/login")
 time.sleep(1)
-driver.find_element(By.NAME, "id").send_keys("eeeon")
-driver.find_element(By.NAME, "password").send_keys("Julliet0915!")
+driver.find_element(By.NAME, "id").send_keys("")
+driver.find_element(By.NAME, "password").send_keys("")
 driver.find_element(By.CSS_SELECTOR, "form > input[type=submit]").click()
 time.sleep(2)
 
