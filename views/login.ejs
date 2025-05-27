@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <title>숭실대학교 로그인</title>
+  <title>동아링 로그인</title>
   <style>
     body { 
       font-family: 'Arial', sans-serif;
@@ -60,8 +60,8 @@
   </style>
 </head>
 <body>
-  <h1>숭실대학교 동아리 플랫폼</h1>
-  <p>모집 신청을 빠르게</p>
+  <h1>동아링 로그인</h1>
+  <p>동아링에 오신 걸 환영합니다!</p>
 
   <!-- 로그인 폼 -->
   <div class="input-box">
@@ -84,7 +84,7 @@
 
   <!-- 회원가입 링크 -->
   <div class="register-link">
-    <a href="Register.html">회원가입</a>
+    <a href="/register">회원가입</a>
   </div>
 
   <script>
@@ -100,7 +100,8 @@
       if (user) {
         sessionStorage.setItem('currentUser', JSON.stringify(user)); // 세션 저장
         sessionStorage.setItem('loggedIn', 'true');
-        window.location.href = 'main.html';
+        localStorage.setItem('loggedInUser', user.username); // ✅ 로그인된 사용자 이름 저장
+        window.location.href = '/main';
       } else {
         alert('잘못된 아이디 또는 비밀번호입니다');
       }
