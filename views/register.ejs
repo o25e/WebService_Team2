@@ -14,23 +14,9 @@
       background-color: #fff;
       flex-direction: column;
     }
-
-    h1 {
-      font-size: 24px;
-      margin-bottom: 0;
-    }
-
-    p {
-      margin-top: 8px;
-      font-size: 18px;
-      color: #333;
-    }
-
-    .input-box {
-      width: 400px;
-      margin-top: 20px;
-    }
-
+    h1 { font-size: 24px; margin-bottom: 0; }
+    p { margin-top: 8px; font-size: 18px; color: #333; }
+    .input-box { width: 400px; margin-top: 20px; }
     .input-box input {
       width: 100%;
       padding: 15px;
@@ -39,7 +25,6 @@
       border: 1px solid #000;
       box-sizing: border-box;
     }
-
     .login-btn {
       width: 100%;
       padding: 20px;
@@ -48,70 +33,65 @@
       font-size: 20px;
       cursor: pointer;
     }
-
-    .separator {
-      display: flex;
-      align-items: center;
-      margin: 30px 0 10px;
-      width: 400px;
-    }
-
-    .separator::before,
-    .separator::after {
-      content: '';
-      flex: 1;
-      height: 1px;
-      background: #000;
-    }
-
-    .separator span {
-      margin: 0 10px;
-      color: #333;
-    }
-
-    .social-icons {
-      display: flex;
-      justify-content: center;
-      gap: 30px;
-      margin-top: 10px;
-    }
-
-    .social-icons img {
-      width: 48px;
-      height: 48px;
-      cursor: pointer;
-
-    }
-
-    /* 新增返回链接样式 */
-    .back-link {
-      margin-top: 20px;
-      text-align: center;
-    }
-    .back-link a {
-      color: #333;
-      text-decoration: none;
-      font-size: 16px;
-    }
-    .back-link a:hover {
-      text-decoration: underline;
-    }
+    .back-link { margin-top: 20px; text-align: center; }
+    .back-link a { color: #333; text-decoration: none; font-size: 16px; }
+    .back-link a:hover { text-decoration: underline; }
   </style>
 </head>
 <body>
-  <h1>동아링 회원가입</h1>
-  <p>당신의 새로운 연결, 동아링과 함께</p>
+  <h1>숭실대학교 회원가입</h1>
+  <p>모집 신청을 위해 회원가입을 진행해주세요</p>
 
+  <!-- 회원가입 폼 -->
   <div class="input-box">
-    <input type="text" placeholder="학번">
-    <input type="password" placeholder="비밀번호">
-    <input type="password" placeholder="비밀번호 확인">
-    <input type="email" placeholder="학교 이메일">
-    <button class="login-btn" onclick="window.location.href='/main'">회원가입</button>
+    <form id="registerForm" onsubmit="return handleRegister(event)">
+      <input type="text" id="studentId" placeholder="학번" required>
+      <input type="password" id="password" placeholder="비밀번호" required>
+      <input type="password" id="confirmPassword" placeholder="비밀번호 확인" required>
+      <input type="email" id="email" placeholder="학교 이메일" required>
+      <button type="submit" class="login-btn">회원가입</button>
+    </form>
   </div>
 
+  <!-- 로그인 화면 링크 -->
   <div class="back-link">
-    <a href="/login">로그인 화면으로 돌아가기</a>
+    <a href="Login.html">로그인 화면으로 돌아가기</a>
   </div>
+
+  <script>
+    // 회원가입 처리 함수
+    function handleRegister(e) {
+      e.preventDefault();
+      const users = JSON.parse(localStorage.getItem('users') || '[]');
+      const studentId = document.getElementById('studentId').value;
+      const password = document.getElementById('password').value;
+      const confirmPassword = document.getElementById('confirmPassword').value;
+      const email = document.getElementById('email').value;
+
+      // 비밀번호 일치 검증
+      if (password !== confirmPassword) {
+        alert('비밀번호가 일치하지 않습니다');
+        return;
+      }
+      
+      // 학번 중복 검사
+      if (users.some(u => u.studentId === studentId)) {
+        alert('이미 등록된 학번입니다');
+        return;
+      }
+
+      // 사용자 데이터 저장
+      users.push({
+        studentId,
+        username: studentId,  // 학번을 아이디로 사용
+        password,
+        email,
+        avatar: '' // 프로필 사진 초기값
+      });
+      localStorage.setItem('users', JSON.stringify(users));
+      alert('회원가입 성공!');
+      window.location.href = 'Login.html';
+    }
+  </script>
 </body>
 </html>
