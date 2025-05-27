@@ -117,4 +117,4 @@ for idx, link in enumerate(post_links, 1):
 
 driver.quit()
 
-# python src/utils/everytime_crolling.py
+# python src/features/clubCrawler/everytime_crolling.py
