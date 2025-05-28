@@ -7,61 +7,134 @@
     <link rel="stylesheet" href="/styles/header.css" />
     <!-- 메인 페이지 전용 CSS -->
     <link rel="stylesheet" href="/styles/home.css" />
+    <!-- 캘린더 css -->
+    <link rel="stylesheet" href="/styles/home_calendar.css" />
     <!-- 헤더 js -->
     <script src="/layouts/header.js" defer></script>
+    <!-- 달력 css -->
+    <script src="/features/calendar/home_calendar.js" defer></script>
   </head>
 <body>
-  <!-- 헤더 제외 -->
-  <main class="container">
-    <!-- 왼쪽: 실시간 인기 동아리 & 즐겨찾기 -->
-    <aside class="sidebar-left">
-      <section class="popular-clubs">
+  <div class="home-page">
+  <div class="home-page-container">
+    <!-- 왼쪽 영역 -->
+    <div class="home-sidebar-left">
+      <div class="home-popular">
         <h3>실시간 인기 동아리</h3>
-        <ul id="popularList">
-          <!-- 조회수 높은 동아리 글 3개 (JS로 랜덤 표시) -->
+        <ul>
+          <li>동아리 모집 글 A</li>
+          <li>동아리 모집 글 B</li>
+          <li>동아리 모집 글 C</li>
         </ul>
-      </section>
-      <section class="favorites">
+      </div>
+      <div class="home-bookmarks">
         <h3>즐겨찾기</h3>
-        <ul id="favoriteList">
-          <!-- 즐겨찾기한 동아리 2개 -->
+        <ul>
+          <li>즐겨찾은 동아리 1</li>
+          <li>즐겨찾은 동아리 2</li>
         </ul>
-      </section>
-    </aside>
+      </div>
+    </div>
 
-    <!-- 중앙: 동아리, 소모임, 기타 글 제목 -->
-    <section class="main-content">
-      <div class="club-section">
+    <!-- 중앙 콘텐츠 -->
+    <div class="home-main-content">
+      <div class="home-section">
         <h3>동아리</h3>
-        <ul id="clubPosts">
-          <!-- 동아리 글 제목 목록 -->
+        <h5>동아리의 모집 공고를 확인하고, 관심있는 동아리에 지원해보세요.</h5>
+        <ul>
+          <li>동아리 글 제목 1</li>
+          <li>동아리 글 제목 2</li>
         </ul>
       </div>
-      <div class="club-section">
+      <div class="home-section">
         <h3>소모임</h3>
-        <ul id="groupPosts">
-          <!-- 소모임 글 제목 목록 -->
+        <h5>소모임의 여러 행사를 확인하고, 관심있는 행사에 참여해보세요.</h5>
+        <ul>
+          <li>소모임 글 제목 1</li>
+          <li>소모임 글 제목 2</li>
         </ul>
       </div>
-      <div class="club-section">
+      <div class="home-section">
         <h3>기타</h3>
-        <ul id="etcPosts">
-          <!-- 기타 글 제목 목록 -->
+        <h5>모든 분야의 스터디글을 확인하고, 함께 할 팀원을 모집해보세요.</h5>
+        <ul>
+          <li>기타 글 제목 1</li>
+          <li>기타 글 제목 2</li>
         </ul>
       </div>
-    </section>
+    </div>
 
-    <!-- 오른쪽: 캘린더 -->
-    <aside class="sidebar-right">
-      <section class="calendar">
-        <h3>내 캘린더</h3>
-        <div id="calendar">
-          <!-- JavaScript 캘린더 렌더링 -->
+    <!-- 오른쪽 영역 -->
+    <div class="home-sidebar-right">
+      <div class="home-calendar">
+        <div class="calendar-header">
+            <button id="prevMonth">&lt;</button>
+            <span id="monthYear"></span>
+            <button id="nextMonth">&gt;</button>
         </div>
-      </section>
-    </aside>
-  </main>
+        <table class="calendar-table">
+            <thead>
+            <tr>
+                <th>Su</th><th>Mo</th><th>Tu</th><th>We</th><th>Th</th><th>Fr</th><th>Sa</th>
+            </tr>
+            </thead>
+            <tbody id="calendar-body">
+            <!-- 동적으로 채워짐 -->
+            </tbody>
+        </table>
+        </div>
 
-  <script src="script.js"></script>
+        <!-- 일정 등록 팝업 -->
+        <div id="event-modal" class="modal hidden">
+        <div class="modal-content">
+            <span id="close-modal">&times;</span>
+            <h3 id="modal-date"></h3>
+            <input type="text" id="event-input" placeholder="일정을 입력하세요" />
+            <button id="save-event">저장</button>
+        </div>
+        </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  // ✅ 오늘 날짜 강조
+  const today = new Date();
+  const currentDate = today.getDate();
+  const allCalendarCells = document.querySelectorAll('.home-calendar td');
+
+  allCalendarCells.forEach(cell => {
+    if (parseInt(cell.textContent) === currentDate) {
+      cell.classList.add('today');
+    }
+  });
+
+  // ✅ 더미 데이터 삽입
+  const popularList = ["AI 연구회 모집", "프론트엔드 소모임", "자율주행 프로젝트"];
+  const bookmarkList = ["React 스터디", "영상 제작 동아리"];
+  const clubList = ["연합 창업동아리 X 모집", "고양이 사진 모임"];
+  const groupList = ["스터디 그룹 - 자료구조", "디자인 커뮤니티"];
+  const etcList = ["기타 행사 안내", "학교 소식"];
+
+  function populateList(selector, items) {
+    const ul = document.querySelector(selector);
+    if (!ul) return;
+    ul.innerHTML = '';
+    items.forEach(item => {
+      const li = document.createElement('li');
+      li.textContent = item;
+      ul.appendChild(li);
+    });
+  }
+
+  populateList('.home-popular ul', popularList);
+  populateList('.home-bookmarks ul', bookmarkList);
+  populateList('.home-section:nth-child(1) ul', clubList);
+  populateList('.home-section:nth-child(2) ul', groupList);
+  populateList('.home-section:nth-child(3) ul', etcList);
+});
+</script>
 </body>
 </html>
