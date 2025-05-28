@@ -9,6 +9,12 @@
   align-items: center;
 }
 
+.section-link {
+  text-decoration: none;   /* 밑줄 제거 */
+  color: inherit;
+  cursor: pointer;
+}
+
 .container {
   max-width: 1200px;
   width: 100%;

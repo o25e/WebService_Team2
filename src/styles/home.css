@@ -116,6 +116,16 @@ body {
   margin-bottom: 10px;
 }
 
+.section-link {
+  text-decoration: none;   /* 밑줄 제거 */
+  color: inherit;          /* 글자색은 부모(h3)의 색상 사용 */
+  cursor: pointer;         /* 마우스 올리면 손가락 모양 */
+}
+
+.section-link h3:hover {
+  // text-decoration: underline; /* hover 시 강조 원하면 유지 */
+}
+
 .home-sidebar-right {
   width: 25%;
   display: flex;
