@@ -80,7 +80,7 @@ function renderPosts(data) {
                     ${post.image ? `<img src="${post.image}" alt="동아리 이미지">` : ''}
                 </div>
                 ${post.deadline ? `<div class="d-day">${getDDay(post.deadline)}</div>` : ''}
-                <div class="club_name">${post.title}</div>
+                <div class="club_name" onclick="location.href='/content/${post._id}'">${post.title}</div>
                 <div class="club_exp">${post.content.length > 50 ? post.content.slice(0, 50)+"..." : post.content}</div>`;
         area.appendChild(box);
     });
