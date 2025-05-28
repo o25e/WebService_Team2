@@ -7,7 +7,7 @@
 }
 
 body {
-    background: #f5f5f5;
+    background: #ffffff;
 }
 
 
@@ -24,6 +24,7 @@ body {
     border-radius: 10px;
     margin: auto;
 }
+
 .wrapper h1, .wrapper div {
     text-align: center;
 }

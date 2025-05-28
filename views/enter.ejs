@@ -1,17 +1,19 @@
 <!DOCTYPE html>
 <html lang="ko">
+
 <head>
-  <meta charset="UTF-8" />
-  <title>메인 페이지</title>
-  <!-- 공통 헤더 CSS -->
-  <link rel="stylesheet" href="/styles/header.css" />
-  <!-- 전용 CSS -->
-  <link rel="stylesheet" href="/styles/enter.css" />
-  <!-- 헤더 js -->
-  <script src="/layouts/header.js" defer></script>
+    <meta charset="UTF-8" />
+    <title>메인 페이지</title>
+    <!-- 공통 헤더 CSS -->
+    <link rel="stylesheet" href="/styles/header.css" />
+    <!-- 전용 CSS -->
+    <link rel="stylesheet" href="/styles/enter.css" />
+    <!-- 헤더 js -->
+    <script src="/layouts/header.js" defer></script>
 </head>
+
 <body>
-    <form action="/save" method="post" class="wrapper">
+    <form action="/save" method="post" enctype="multipart/form-data" class="wrapper">
         <h1>글쓰기</h1>
         <div>
             <label for="clubType">글 종류</label>
@@ -30,16 +32,27 @@
             <input type="text" id="content" name="content">
         </div>
         <div>
-            <label for="category">카테고리</label>
-            <input type="text" id="category" name="category">
+            <label for="category">카테고리</label><br>
+            <select id="category" name="category">
+                <option value="공연/댄스">공연/댄스</option>
+                <option value="학술/전공">학술/전공</option>
+                <option value="체육">체육</option>
+                <option value="여행/사진/산악">여행/사진/산악</option>
+                <option value="창업/비즈니스/홍보">창업/비즈니스/홍보</option>
+                <option value="국제/교류">국제/교류</option>
+                <option value="예술/문화">예술/문화</option>
+                <option value="봉사">봉사</option>
+                <option value="게임/보드/취미">게임/보드/취미</option>
+                <option value="사회참여/시사/토론">사회참여/시사/토론</option>
+            </select>
         </div>
         <div>
             <label for="deadline">모집 마감일</label>
-            <input type="text" id="deadline" name="deadline">
+            <input type="date" id="deadline" name="deadline">
         </div>
         <div>
             <label for="image">이미지</label>
-            <input type="text" id="image" name="image">
+            <input type="file" id="image" name="image" accept="image/*">
         </div>
         <div>
             <button type="submit">저장</button>
@@ -52,4 +65,5 @@
         selectedOption.value = "<%= selected %>_post";
     </script>
 </body>
+
 </html>
