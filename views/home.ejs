@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <title>About Us - 동아링</title>
+    <!-- 공통 헤더 CSS -->
+    <link rel="stylesheet" href="/styles/header.css" />
+    <!-- 메인 페이지 전용 CSS -->
+    <link rel="stylesheet" href="/styles/home.css" />
+    <!-- 헤더 js -->
+    <script src="/layouts/header.js" defer></script>
+  </head>
+<body>
+  <!-- 헤더 제외 -->
+  <main class="container">
+    <!-- 왼쪽: 실시간 인기 동아리 & 즐겨찾기 -->
+    <aside class="sidebar-left">
+      <section class="popular-clubs">
+        <h3>실시간 인기 동아리</h3>
+        <ul id="popularList">
+          <!-- 조회수 높은 동아리 글 3개 (JS로 랜덤 표시) -->
+        </ul>
+      </section>
+      <section class="favorites">
+        <h3>즐겨찾기</h3>
+        <ul id="favoriteList">
+          <!-- 즐겨찾기한 동아리 2개 -->
+        </ul>
+      </section>
+    </aside>
+
+    <!-- 중앙: 동아리, 소모임, 기타 글 제목 -->
+    <section class="main-content">
+      <div class="club-section">
+        <h3>동아리</h3>
+        <ul id="clubPosts">
+          <!-- 동아리 글 제목 목록 -->
+        </ul>
+      </div>
+      <div class="club-section">
+        <h3>소모임</h3>
+        <ul id="groupPosts">
+          <!-- 소모임 글 제목 목록 -->
+        </ul>
+      </div>
+      <div class="club-section">
+        <h3>기타</h3>
+        <ul id="etcPosts">
+          <!-- 기타 글 제목 목록 -->
+        </ul>
+      </div>
+    </section>
+
+    <!-- 오른쪽: 캘린더 -->
+    <aside class="sidebar-right">
+      <section class="calendar">
+        <h3>내 캘린더</h3>
+        <div id="calendar">
+          <!-- JavaScript 캘린더 렌더링 -->
+        </div>
+      </section>
+    </aside>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
