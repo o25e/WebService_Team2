@@ -13,12 +13,12 @@ function showFilter(type, element) {
 // 글 데이터 서버로부터 가져오기
 let posts = [];
 fetch("/club/data")
-.then(res=>res.json())
-.then(data=>{
-    console.log(data);
-    posts = data;
-    renderPosts(posts);
-});
+    .then(res => res.json())
+    .then(data => {
+        console.log(data);
+        posts = data;
+        renderPosts(posts);
+    });
 
 //글 임시로 보여주기
 // const posts = [
@@ -73,6 +73,10 @@ function renderPosts(data) {
     area.innerHTML = '';
 
     data.forEach(post => {
+        const rawHtml = post.content; // 글 내용 가져오기
+        const plainText = rawHtml.replace(/<[^>]*>?/gm, ''); // 모든 HTML 태그 제거
+        const length = plainText.trim().length; 
+
         const box = document.createElement('div');
         box.className = 'contentbox';
         box.innerHTML =
@@ -80,8 +84,8 @@ function renderPosts(data) {
                     ${post.image ? `<img src="${post.image}" alt="동아리 이미지">` : ''}
                 </div>
                 ${post.deadline ? `<div class="d-day">${getDDay(post.deadline)}</div>` : ''}
-                <div class="club_name" onclick="location.href='/content/${post._id}'">${post.title}</div>
-                <div class="club_exp">${post.content.length > 50 ? post.content.slice(0, 50)+"..." : post.content}</div>`;
+                <div class="club_name" onclick="location.href='/content/${post._id}?type=club'">${post.title}</div>
+                <div class="club_exp">${length > 50 ? plainText.slice(0, 50) + "..." : plainText}</div>`;
         area.appendChild(box);
     });
 }

@@ -22,8 +22,8 @@ app.use('/uploads', express.static('uploads'));
 // 몽고 DB 접속 코드
 const mongoclient = require('mongodb').MongoClient;
 const ObjId = require('mongodb').ObjectId;
-//const url = 'mongodb+srv://sangho:1016@cluster0.xwq0xe8.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
-const url = 'mongodb+srv://eeeon:0915@cluster0.oz5ftkr.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
+const url = 'mongodb+srv://sangho:1016@cluster0.xwq0xe8.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
+// const url = 'mongodb+srv://eeeon:0915@cluster0.oz5ftkr.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
 //const url = 'mongodb+srv://kimnarin572:0000@cluster0.sn9kshr.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
 let mydb;
 mongoclient.connect(url)
@@ -147,7 +147,7 @@ app.get('/enter', function (req, res){
     res.render("enter.ejs", {selected: selected});
 });
 
-// 글쓰기 요청
+// 글쓰기 저장
 app.post('/save',upload.single('image'), function (req, res){
     console.log("==================");
     console.log(req.body.clubType);
@@ -176,4 +176,16 @@ app.post('/save',upload.single('image'), function (req, res){
     res.redirect("/"+redirect_page);
 });
 
-
+// 모집 글 상세 페이지 라우팅
+app.get('/content/:id', function(req, res){
+    // collection 선택
+    const collection = req.query.type + "_post";
+    req.params.id = new ObjId(req.params.id);
+    mydb
+    .collection(collection)
+    .findOne({_id : req.params.id})
+    .then((result)=>{
+        console.log(result);
+        res.render("content.ejs", { post : result });
+    });
+});

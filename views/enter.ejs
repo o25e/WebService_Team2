@@ -27,11 +27,11 @@
         </div><br>
         <div>
             <label for="title">동아리 이름</label><br>
-            <input type="text" id="title" name="title" class="text-box">
+            <input type="text" id="title" name="title" class="text-box" required>
         </div><br>
         <div>
             <label for="content">내용</label><br>
-            <textarea hidden id="content" name="content" class="text-box"></textarea>
+            <textarea hidden id="content" name="content" class="text-box" required></textarea>
             <!-- 에디터 컨테이너 -->
             <div id="editor" style="height: 400px;"></div>
         </div><br>
@@ -99,7 +99,7 @@
         const form = document.getElementById('myForm');
         form.onsubmit = function () {
             // 에디터 내용 HTML을 숨겨진 input에 넣음
-            document.getElementById('content').value = quill.getText();
+            document.getElementById('content').value = quill.root.innerHTML;
         }
     </script>
 </body>

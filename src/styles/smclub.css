@@ -272,6 +272,9 @@ header {
     /* gray-800 */
     margin: 0;
 }
+.title:hover {
+    cursor: pointer;
+}
 
 .description {
     font-size: 0.875rem;
