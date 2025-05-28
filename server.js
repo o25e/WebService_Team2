@@ -1,8 +1,8 @@
 // 몽고 DB 접속 코드
 const mongoclient = require('mongodb').MongoClient;
 const ObjId = require('mongodb').ObjectId;
-//const url = 'mongodb+srv://sangho:1016@cluster0.xwq0xe8.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
-const url = 'mongodb+srv://eeeon:0915@cluster0.oz5ftkr.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
+const url = 'mongodb+srv://sangho:1016@cluster0.xwq0xe8.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
+// const url = 'mongodb+srv://eeeon:0915@cluster0.oz5ftkr.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
 //const url = 'mongodb+srv://kimnarin572:0000@cluster0.sn9kshr.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
 let mydb;
 mongoclient.connect(url)
@@ -93,16 +93,33 @@ app.get('/club/data', function (req, res) {
 app.get('/smclub', function (req, res) {
     res.render("smclub.ejs");
 });
+app.get('/smclub/data', function (req, res) {
+    mydb
+    .collection('smclub_post')
+    .find().toArray().then(result=>{
+        res.json(result);
+    }).catch((err)=>{
+        console.log(err);
+    });
+});
 
 // 기타 페이지 라우팅
 app.get('/etcclub', function (req, res) {
     res.render("etcclub.ejs");
 });
+app.get('/etcclub/data', function (req, res) {
+    mydb
+    .collection('etcclub_post')
+    .find().toArray().then(result=>{
+        res.json(result);
+    }).catch((err)=>{
+        console.log(err);
+    });
+});
 
 // 글쓰기 페이지 라우팅
 app.get('/enter', function (req, res){
     const selected = req.query.selected || '';
-    console.log(selected);
     res.render("enter.ejs", {selected: selected});
 });
 
