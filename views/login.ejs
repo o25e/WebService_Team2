@@ -101,7 +101,7 @@
         sessionStorage.setItem('currentUser', JSON.stringify(user)); // 세션 저장
         sessionStorage.setItem('loggedIn', 'true');
         localStorage.setItem('loggedInUser', user.username); // ✅ 로그인된 사용자 이름 저장
-        window.location.href = '/main';
+        window.location.href = '/home';
       } else {
         alert('잘못된 아이디 또는 비밀번호입니다');
       }

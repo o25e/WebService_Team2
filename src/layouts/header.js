@@ -76,7 +76,7 @@ function logout() {
   sessionStorage.removeItem("currentUser");         // 세션 저장 사용자 정보 제거
   sessionStorage.removeItem("loggedIn");            // 로그인 상태 제거
   alert("로그아웃 되었습니다.");
-  window.location.href = "/main";                   // 메인 페이지로 이동
+  window.location.href = "/home";                   // 홈 페이지로 이동
 }
 
 function goToNotifications() {
