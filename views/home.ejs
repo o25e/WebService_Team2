@@ -13,7 +13,9 @@
     <script src="/layouts/header.js" defer></script>
     <!-- 달력 js -->
     <script src="/features/calendar/home_calendar.js" defer></script>
-    <!-- 스케줄 js -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
+        integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
   </head>
 <body>
   <div class="home-page">
@@ -35,6 +37,10 @@
         <div class="home-section">
           <h3>동아리</h3>
           <h5>동아리의 모집 공고를 확인하고, 관심있는 동아리에 지원해보세요.</h5>
+          <!-- 내용 영역 -->
+          <div id="contentArea"></div>
+          <script src="/pages/home.js"></script>
+
           <ul id="club-list"></ul>
         </div>
         <div class="home-section">

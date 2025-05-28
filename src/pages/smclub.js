@@ -83,9 +83,11 @@ function renderPosts(data) {
                 <!-- 이미지와 상태 -->
                 <div class="image-wrapper">
                     ${post.image ? `<img src="${post.image}" alt="이미지" class="image">` : ''}
+                    ${post.deadline ? `
                     <div class="status-left">
                         ${getDDay(post.deadline)}
                     </div>
+                    ` : ''}
                 </div>
 
                 <!-- 소모임 정보 -->
@@ -96,7 +98,7 @@ function renderPosts(data) {
                     <div class="period-wrapper">
                         <div class="period">
                             <span class="period-label">모집 기간</span>
-                            <span class="period-dates">2025.05.01 ~ 2025.05.11</span>
+                            <span class="period-dates"> ~ ${post.deadline}</span>
                         </div>
                     </div>
 

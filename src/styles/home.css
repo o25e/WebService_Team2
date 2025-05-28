@@ -182,3 +182,48 @@ body {
   margin-bottom: 6px;
   color: #333;
 }
+
+.contentbox {
+  width: 100%; /* 부모 요소 너비에 맞게 */
+  max-width: 100%; /* 최대 폭 제한 */
+  height: auto; /* 고정 높이 제거 */
+  border-radius: 15px;
+  background-color: #E3F4FF;
+  margin: 15px 0;
+  padding: 15px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* 왼쪽 정렬로 변경 */
+}
+
+.contentbox .d-day {
+  width: fit-content;
+  font-family: "Pretendard Variable";
+  font-weight: bold;
+  color: #333;
+  background-color: white;
+  font-size: 14px;
+  padding: 8px;
+  border-radius: 15px;
+  margin-bottom: 10px;
+  text-align: left;
+}
+
+.contentbox .club_name {
+  width: 100%;
+  font-family: "Pretendard Variable";
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 5px;
+  text-align: left;
+}
+
+.contentbox .club_exp {
+  width: 100%;
+  font-family: "Pretendard Variable";
+  font-size: 16px;
+  color: #444;
+  text-align: left;
+  margin-bottom: 0;
+}

@@ -79,9 +79,9 @@ function renderPosts(data) {
             `<div class="club_pic">
                     ${post.image ? `<img src="${post.image}" alt="동아리 이미지">` : ''}
                 </div>
-                <div class="d-day">${getDDay(post.deadline)}</div>
+                ${post.deadline ? `<div class="d-day">${getDDay(post.deadline)}</div>` : ''}
                 <div class="club_name">${post.title}</div>
-                <div class="club_exp">${post.content.slice(0, 20)}...</div>`;
+                <div class="club_exp">${post.content.length > 50 ? post.content.slice(0, 50)+"..." : post.content}</div>`;
         area.appendChild(box);
     });
 }

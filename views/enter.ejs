@@ -10,30 +10,34 @@
     <link rel="stylesheet" href="/styles/enter.css" />
     <!-- 헤더 js -->
     <script src="/layouts/header.js" defer></script>
+    <!-- Quill 스타일 시트 -->
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
 </head>
 
 <body>
-    <form action="/save" method="post" enctype="multipart/form-data" class="wrapper">
-        <h1>글쓰기</h1>
+    <form action="/save" method="post" enctype="multipart/form-data" class="wrapper" id="myForm">
+        <h1>글쓰기</h1><br>
         <div>
-            <label for="clubType">글 종류</label>
-            <select name="clubType" id="clubType">
+            <label for="clubType">글 종류</label><br>
+            <select name="clubType" id="clubType" class="text-box">
                 <option value="club_post">동아리</option>
                 <option value="smclub_post">소모임</option>
                 <option value="etcclub_post">기타</option>
             </select>
-        </div>
+        </div><br>
         <div>
-            <label for="title">동아리 이름</label>
-            <input type="text" id="title" name="title">
-        </div>
+            <label for="title">동아리 이름</label><br>
+            <input type="text" id="title" name="title" class="text-box">
+        </div><br>
         <div>
-            <label for="content">동아리 설명</label>
-            <input type="text" id="content" name="content">
-        </div>
+            <label for="content">내용</label><br>
+            <textarea hidden id="content" name="content" class="text-box"></textarea>
+            <!-- 에디터 컨테이너 -->
+            <div id="editor" style="height: 400px;"></div>
+        </div><br>
         <div>
             <label for="category">카테고리</label><br>
-            <select id="category" name="category">
+            <select id="category" name="category" class="text-box">
                 <option value="공연/댄스">공연/댄스</option>
                 <option value="학술/전공">학술/전공</option>
                 <option value="체육">체육</option>
@@ -45,17 +49,23 @@
                 <option value="게임/보드/취미">게임/보드/취미</option>
                 <option value="사회참여/시사/토론">사회참여/시사/토론</option>
             </select>
-        </div>
+        </div><br>
         <div>
-            <label for="deadline">모집 마감일</label>
-            <input type="date" id="deadline" name="deadline">
-        </div>
+            <label for="deadline">모집 마감일</label><br>
+            <input type="date" id="deadline" name="deadline" class="text-box">
+        </div><br>
         <div>
-            <label for="image">이미지</label>
-            <input type="file" id="image" name="image" accept="image/*">
-        </div>
-        <div>
-            <button type="submit">저장</button>
+            <label for="image">이미지</label><br>
+            <input type="file" id="imageInput" name="image" accept="image/*" style="display: none" />
+            <!-- 드래그 앤 드롭과 미리보기 -->
+            <div id="dropArea" class="drop-area">
+                <p id="dropText">여기에 이미지를 드래그하거나</p>
+                <button type="button" id="customBtn" class="button">파일 선택</button>
+                <img id="preview" src="" alt="미리보기" style="display: none; max-width: 100%; margin-top: 10px;" />
+            </div>
+        </div><br>
+        <div id="button-wrapper">
+            <button type="submit" class="button">저장</button>
         </div>
     </form>
 
@@ -63,6 +73,34 @@
         const selectedOption = document.querySelector("select");
         console.log(selectedOption);
         selectedOption.value = "<%= selected %>_post";
+    </script>
+    <script src="/pages/enter.js"></script>
+
+
+    <!-- Quill JS -->
+    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+
+    <!-- 스크립트: Quill 초기화 -->
+    <script>
+        const quill = new Quill('#editor', {
+            theme: 'snow',  // 'snow' 테마 (가장 흔한 스타일)
+            modules: {
+                toolbar: [
+                    [{ header: [1, 2, 3, false] }],
+                    ['bold', 'italic', 'underline', 'strike'],        // 굵게, 기울임, 밑줄, 취소선
+                    ['blockquote', 'code-block'],
+                    [{ list: 'ordered' }, { list: 'bullet' }],
+                    ['link', 'image'],
+                    ['clean']  // 서식 제거 버튼
+                ]
+            }
+        });
+        
+        const form = document.getElementById('myForm');
+        form.onsubmit = function () {
+            // 에디터 내용 HTML을 숨겨진 input에 넣음
+            document.getElementById('content').value = quill.getText();
+        }
     </script>
 </body>
 
