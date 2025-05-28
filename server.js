@@ -166,7 +166,8 @@ app.post('/save',upload.single('image'), function (req, res){
             content : req.body.content,
             category : req.body.category,
             deadline : req.body.deadline,
-            image : imagePath
+            image : imagePath,
+            createdAt: new Date()  // 등록한 날짜 추가
         }
     ).then(result => {
         console.log(result);
@@ -176,4 +177,34 @@ app.post('/save',upload.single('image'), function (req, res){
     res.redirect("/"+redirect_page);
 });
 
+// home 글 정보 불러오기
+app.get("/club/data/club_post", async (req, res) => {
+  try {
+    const data = await mydb.collection("club_post").find().toArray();
+    res.json(data);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("서버 오류");
+  }
+});
+
+app.get("/club/data/smclub_post", async (req, res) => {
+  try {
+    const data = await mydb.collection("smclub_post").find().toArray();
+    res.json(data);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("서버 오류");
+  }
+});
+
+app.get("/club/data/etcclub_post", async (req, res) => {
+  try {
+    const data = await mydb.collection("etcclub_post").find().toArray();
+    res.json(data);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("서버 오류");
+  }
+});
 

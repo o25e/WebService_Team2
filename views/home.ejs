@@ -13,9 +13,8 @@
     <script src="/layouts/header.js" defer></script>
     <!-- 달력 js -->
     <script src="/features/calendar/home_calendar.js" defer></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
-        integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g=="
-        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- 홈 js -->
+    <script src="/pages/home.js"></script>
   </head>
 <body>
   <div class="home-page">
@@ -38,20 +37,19 @@
           <h3>동아리</h3>
           <h5>동아리의 모집 공고를 확인하고, 관심있는 동아리에 지원해보세요.</h5>
           <!-- 내용 영역 -->
-          <div id="contentArea"></div>
-          <script src="/pages/home.js"></script>
-
-          <ul id="club-list"></ul>
+          <div id="contentArea-club"></div>
         </div>
         <div class="home-section">
           <h3>소모임</h3>
           <h5>소모임의 여러 행사를 확인하고, 관심있는 행사에 참여해보세요.</h5>
-          <ul></ul>
+          <!-- 내용 영역 -->
+          <div id="contentArea-group"></div>
         </div>
         <div class="home-section">
           <h3>기타</h3>
           <h5>모든 분야의 스터디글을 확인하고, 함께 할 팀원을 모집해보세요.</h5>
-          <ul></ul>
+          <!-- 내용 영역 -->
+          <div id="contentArea-etc"></div>  
         </div>
       </div>
 
