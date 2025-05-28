@@ -12,13 +12,13 @@ function showFilter(type, element) {
 }
 // 글 데이터 서버로부터 가져오기
 let posts = [];
-fetch("/club/data")
-.then(res=>res.json())
-.then(data=>{
-    console.log(data);
-    posts = data;
-    renderPosts(posts);
-});
+fetch("/smclub/data")
+    .then(res => res.json())
+    .then(data => {
+        console.log(data);
+        posts = data;
+        renderPosts(posts);
+    });
 
 //글 임시로 보여주기
 // const posts = [
@@ -75,13 +75,56 @@ function renderPosts(data) {
     data.forEach(post => {
         const box = document.createElement('div');
         box.className = 'contentbox';
-        box.innerHTML =
-            `<div class="club_pic">
-                    ${post.image ? `<img src="${post.image}" alt="동아리 이미지">` : ''}
+        box.innerHTML = `
+        <!-- 소모임 카드 -->
+        <div class="card">
+            <!-- 이미지와 정보 묶음 -->
+            <div class="card-content">
+                <!-- 이미지와 상태 -->
+                <div class="image-wrapper">
+                    ${post.image ? `<img src="${post.image}" alt="이미지" class="image">` : ''}
+                    <div class="status-left">
+                        ${getDDay(post.deadline)}
+                    </div>
                 </div>
-                <div class="d-day">${getDDay(post.deadline)}</div>
-                <div class="club_name">${post.title}</div>
-                <div class="club_exp">${post.content.length > 50 ? post.content.slice(0, 50)+"..." : post.content}...</div>`;
+
+                <!-- 소모임 정보 -->
+                <div class="info">
+                    <h2 class="title">${post.title}</h2>
+                    <p class="description">${post.content.length > 100 ? post.content.slice(0, 100)+"..." : post.content}</p>
+
+                    <div class="period-wrapper">
+                        <div class="period">
+                            <span class="period-label">모집 기간</span>
+                            <span class="period-dates">2025.05.01 ~ 2025.05.11</span>
+                        </div>
+                    </div>
+
+                    <!-- 해시태그들 -->
+                    <div class="hashtags">
+                        <span class="hashtag">#디자인</span>
+                        <span class="hashtag">#화목</span>
+                        <!-- 추가 해시태그 -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- 최신 글 -->
+            <div class="latest-posts">
+                <h3 class="latest-title">최신 글</h3>
+                <hr class="divider">
+
+                <!-- 게시글 -->
+                <div class="post-list">
+                    <div class="post-item">
+                        <span>소모임 모집</span>
+                        <span>2025.05.01</span>
+                    </div>
+                    <hr class="divider">
+                </div>
+                <!-- 추가 게시글 -->
+            </div>
+        </div>`;
         area.appendChild(box);
     });
 }

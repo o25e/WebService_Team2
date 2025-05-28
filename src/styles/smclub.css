@@ -73,133 +73,91 @@ header {
     border-color: #007BFF;
 }
 
-/* 드롭다운 필터 */
-.dropdown {
-    display: none;
-    position: absolute;
-    top: calc(100% + 15px);
-    left: 50%;
-    transform: translateX(-50%);
-    background: #fff;
-    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
-    padding: 30px 40px;
-    width: 960px;
-    z-index: 100;
-    border-radius: 16px;
-    column-count: 3;
-    column-gap: 50px;
+/* 필터 */
+.nav2 {
+  display: flex;
+  justify-content: center;
+  border-bottom: 1px solid #ccc;
+  margin-bottom: 10px;
+  position: relative;
 }
 
-.filter-group {
-    break-inside: avoid-column;
-    margin-bottom: 30px;
-    padding: 20px;
-    background: #f9f9f9;
-    border-radius: 12px;
+.menu {
+  margin: 0 20px;
+  padding: 10px;
+  font-weight: bold;
+  cursor: pointer;
+  position: relative;
 }
 
-.filter-group h3 {
-    margin: 0 0 15px 0;
-    color: #007BFF;
-    font-size: 16px;
-    font-weight: 600;
-    padding-bottom: 10px;
-    border-bottom: 2px solid #eee;
+.menu.active::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background-color: black;
 }
 
-.filter-item {
-    display: flex;
-    align-items: center;
-    margin: 10px 0;
-    padding: 8px 12px;
-    border-radius: 8px;
-    transition: background 0.2s;
+.filter-box {
+  display: none;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 10px 0;
+  border-bottom: 1px solid #ccc;
 }
 
-.filter-item:hover {
-    background: rgba(0, 123, 255, 0.05);
+.filter-box.active {
+  display: flex;
 }
 
-.filter-item input {
-    width: 18px;
-    height: 18px;
-    margin-right: 15px;
-    accent-color: #007BFF;
-    cursor: pointer;
+.filter-box label {
+  width: 150px;
+  text-align: left;
 }
 
-.filter-item label {
-    font-size: 14px;
-    color: #444;
-    cursor: pointer;
-    flex-grow: 1;
+.search-box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 30px;
+  gap: 10px;
 }
 
-/* 상태 필터 */
-.status-filter-container {
-    text-align: center;
-    margin: 30px 0;
+.search-txt {
+  padding: 10px 15px;
+  width: 300px;
+  border: 2px solid #ccc;
+  border-radius: 25px;
+  font-size: 16px;
+  outline: none;
+  transition: all 0.3s ease;
 }
 
-.status-filter {
-    padding: 12px 25px;
-    font-size: 14px;
-    border: 2px solid #ddd;
-    border-radius: 10px;
-    background: #fff;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    appearance: none;
-    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23007BFF' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
-    background-repeat: no-repeat;
-    background-position: right 15px center;
-    background-size: 16px;
-    padding-right: 45px;
+.search-txt:focus {
+  border-color: #4285f4;
+  box-shadow: 0 0 5px rgba(66, 133, 244, 0.5);
 }
 
-.status-filter:hover {
-    border-color: #007BFF;
-    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.1);
+.search-btn {
+  background-color: #4285f4;
+  border: none;
+  color: white;
+  padding: 10px 15px;
+  border-radius: 25px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
 }
 
-/* MY 사이드바 */
-.sidebar {
-    position: fixed;
-    right: -320px;
-    top: 0;
-    width: 320px;
-    height: 100%;
-    background: #fff;
-    box-shadow: -4px 0 15px rgba(0, 0, 0, 0.1);
-    transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    z-index: 1000;
+.search-btn:hover {
+  background-color: #3367d6;
 }
 
-.sidebar.active {
-    right: 0;
-}
-
-.sidebar-menu {
-    padding: 40px 30px;
-}
-
-.sidebar-menu button {
-    display: block;
-    width: 100%;
-    padding: 16px;
-    margin: 12px 0;
-    background: none;
-    border: 2px solid #f0f0f0;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 15px;
-    transition: all 0.2s ease;
-}
-
-.sidebar-menu button:hover {
-    border-color: #007BFF;
-    color: #007BFF;
-    background: rgba(0, 123, 255, 0.05);
+.search-btn i {
+  pointer-events: none;
 }
 
 /* 오버레이 */
@@ -216,7 +174,7 @@ header {
 
 /* 소모임 카드 */
 .card {
-    margin: auto;
+    margin: 20px auto;
     width: 1000px;
     background: white;
     box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
