@@ -81,7 +81,7 @@ function renderPosts(data) {
                 </div>
                 <div class="d-day">${getDDay(post.deadline)}</div>
                 <div class="club_name">${post.title}</div>
-                <div class="club_exp">${post.content.length > 50 ? post.content.slice(0, 50)+"..." : post.content}...</div>`;
+                <div class="club_exp">${post.content.slice(0, 20)}...</div>`;
         area.appendChild(box);
     });
 }

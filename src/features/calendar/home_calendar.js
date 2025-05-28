@@ -9,10 +9,12 @@ document.addEventListener("DOMContentLoaded", () => {
   const eventInput = document.getElementById("event-input");
   const saveEventBtn = document.getElementById("save-event");
   const closeModalBtn = document.getElementById("close-modal");
+  const eventList = document.getElementById("event-list");
 
   let current = new Date();
   let selectedDate = null;
 
+  // 이벤트 데이터 저장용 (한 날짜에 일정 1개 저장)
   const events = JSON.parse(localStorage.getItem("calendarEvents") || "{}");
 
   function saveEvents() {
@@ -24,10 +26,27 @@ document.addEventListener("DOMContentLoaded", () => {
     modalDate.textContent = `${dateStr} 일정`;
     eventInput.value = events[dateStr] || "";
     modal.classList.remove("hidden");
+
+    renderEventList(dateStr);
   }
 
   function closeModal() {
     modal.classList.add("hidden");
+    eventInput.value = "";
+  }
+
+  function renderEventList(dateStr) {
+    eventList.innerHTML = "";
+    if (events[dateStr]) {
+      const li = document.createElement("li");
+      li.textContent = events[dateStr];
+      eventList.appendChild(li);
+    } else {
+      const li = document.createElement("li");
+      li.textContent = "일정이 없습니다.";
+      li.style.fontStyle = "italic";
+      eventList.appendChild(li);
+    }
   }
 
   function generateCalendar(date) {
@@ -51,9 +70,13 @@ document.addEventListener("DOMContentLoaded", () => {
       const cell = document.createElement("td");
       cell.textContent = day;
 
-      const dateStr = `${year}-${month + 1}-${day}`;
+      // 날짜 포맷: YYYY-MM-DD (월, 일 2자리 맞춤)
+      const monthStr = String(month + 1).padStart(2, '0');
+      const dayStr = String(day).padStart(2, '0');
+      const dateStr = `${year}-${monthStr}-${dayStr}`;
 
-      // 오늘 날짜 강조
+      cell.dataset.date = dateStr; // data-date 속성 추가
+
       if (
         day === today.getDate() &&
         month === today.getMonth() &&
@@ -62,16 +85,15 @@ document.addEventListener("DOMContentLoaded", () => {
         cell.classList.add("today");
       }
 
-      // 일정이 있으면 표시
       if (events[dateStr]) {
         cell.classList.add("has-event");
       }
 
-      // 클릭 이벤트 등록
       cell.addEventListener("click", () => openModal(dateStr));
 
       row.appendChild(cell);
 
+      // 7일 단위로 줄바꿈
       if ((firstDay + day) % 7 === 0 || day === lastDate) {
         calendarBody.appendChild(row);
         row = document.createElement("tr");
@@ -82,15 +104,19 @@ document.addEventListener("DOMContentLoaded", () => {
   prevMonthBtn.addEventListener("click", () => {
     current.setMonth(current.getMonth() - 1);
     generateCalendar(current);
+    eventList.innerHTML = "<li>날짜를 선택해주세요.</li>";
   });
 
   nextMonthBtn.addEventListener("click", () => {
     current.setMonth(current.getMonth() + 1);
     generateCalendar(current);
+    eventList.innerHTML = "<li>날짜를 선택해주세요.</li>";
   });
 
   saveEventBtn.addEventListener("click", () => {
     const value = eventInput.value.trim();
+    if (!selectedDate) return;
+
     if (value) {
       events[selectedDate] = value;
     } else {
@@ -98,13 +124,16 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     saveEvents();
     generateCalendar(current);
+    renderEventList(selectedDate);
     closeModal();
   });
 
   closeModalBtn.addEventListener("click", closeModal);
-  window.addEventListener("click", e => {
+
+  window.addEventListener("click", (e) => {
     if (e.target === modal) closeModal();
   });
 
+  // 초기 달력 생성
   generateCalendar(current);
 });

@@ -130,7 +130,8 @@ body {
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
 }
 
-.home-calendar h3 {
+.home-calendar h3,
+.selected-events h4 {
   font-size: 18px;
   margin-bottom: 12px;
   color: #222;
@@ -147,10 +148,37 @@ body {
   padding: 8px;
   border: 1px solid #ddd;
   font-size: 13px;
+  cursor: pointer;
 }
 
 .home-calendar td.today {
   background-color: #4285f4;
   color: white;
   border-radius: 4px;
+}
+
+.home-calendar td.has-event {
+  background-color: #d1ecf1;
+  color: #0c5460;
+  font-weight: bold;
+}
+
+.selected-events {
+  margin-top: 16px;
+  background: #f9f9f9;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+}
+
+#event-list {
+  list-style: disc;
+  margin-left: 20px;
+  margin-top: 10px;
+}
+
+#event-list li {
+  font-size: 14px;
+  margin-bottom: 6px;
+  color: #333;
 }
