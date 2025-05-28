@@ -89,6 +89,11 @@ app.get('/login', function (req, res) {
     res.render("login.ejs");
 });
 
+// 마이 페이지 라우팅
+app.get('/mypage', function (req, res) {
+    res.render("mypage.ejs");
+});
+
 // 등록 페이지 라우팅
 app.get('/register', function (req, res) {
     res.render("register.ejs");

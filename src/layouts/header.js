@@ -1,7 +1,7 @@
 window.addEventListener("DOMContentLoaded", () => {
   const headerContainer = document.createElement("div");
 
-  fetch("../layouts/Header.html")
+  fetch("/layouts/Header.html")
     .then((res) => res.text())
     .then((html) => {
       headerContainer.innerHTML = html;
@@ -45,7 +45,9 @@ window.addEventListener("DOMContentLoaded", () => {
 
               <!-- 유저 이름 및 로그아웃 -->
               <div style="display: flex; flex-direction: column; align-items: flex-start;">
-                <span style="margin-bottom: 5px;"><strong>${loggedInUser}</strong> 님</span>
+                <a href="/mypage" style="margin-bottom: 5px; text-decoration: none; color: inherit; font-weight: bold; cursor: pointer;">
+                  ${loggedInUser} 님
+                </a>
                 <button onclick="logout()" class="login-button" style="background-color: #e93535; color: #fff; padding: 4px 8px; font-size: 16px;">로그아웃</button>
               </div>
             </div>
