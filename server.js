@@ -2,6 +2,11 @@
 const express = require('express');
 const app = express();
 
+// JSON 파싱을 위한 미들웨어
+app.use(express.json());
+// 폼 데이터 파싱을 위한 미들웨어 (선택)
+app.use(express.urlencoded({ extended: true }));
+
 //이미지 저장
 const multer = require('multer');
 
@@ -225,4 +230,58 @@ app.get('/content/:id', function(req, res){
         console.log(result);
         res.render("content.ejs", { post : result });
     });
+});
+
+// 회원가입 처리 라우터
+app.post('/register', async (req, res) => {
+  const { studentId, password, email } = req.body;
+  
+  try {
+    const exists = await mydb.collection('user').findOne({ studentId });
+    if (exists) {
+      return res.status(400).json({ message: '이미 존재하는 학번입니다.' });
+    }
+
+    const newUser = {
+      studentId,
+      password, // 필요 시 해시 처리 가능
+      email,
+      createdAt: new Date()
+    };
+
+    await mydb.collection('user').insertOne(newUser);
+    res.status(200).json({ message: '회원가입 성공' });
+
+  } catch (error) {
+    console.error('회원가입 오류:', error);
+    res.status(500).json({ message: '서버 오류' });
+  }
+});
+
+// 로그인 처리 라우터
+app.post('/login', async (req, res) => {
+  const { studentId, password } = req.body;
+
+  try {
+    const user = await mydb.collection('user').findOne({ studentId });
+
+    if (!user) {
+      return res.status(401).json({ message: '존재하지 않는 사용자입니다.' });
+    }
+
+    if (user.password !== password) {
+      return res.status(401).json({ message: '비밀번호가 일치하지 않습니다.' });
+    }
+
+    res.status(200).json({
+      message: '로그인 성공',
+      user: {
+        studentId: user.studentId,
+        email: user.email,
+      },
+    });
+  } catch (error) {
+    console.error('로그인 오류:', error);
+    res.status(500).json({ message: '서버 오류' });
+  }
 });

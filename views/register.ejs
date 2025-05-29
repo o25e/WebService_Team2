@@ -44,11 +44,11 @@
 
   <!-- 회원가입 폼 -->
   <div class="input-box">
-    <form id="registerForm" onsubmit="return handleRegister(event)">
-      <input type="text" id="studentId" placeholder="학번" required>
-      <input type="password" id="password" placeholder="비밀번호" required>
-      <input type="password" id="confirmPassword" placeholder="비밀번호 확인" required>
-      <input type="email" id="email" placeholder="학교 이메일" required>
+    <form id="registerForm" method="POST" action="/register">
+      <input type="text" name="studentId" placeholder="학번" required>
+      <input type="password" name="password" placeholder="비밀번호" required>
+      <input type="password" name="confirmPassword" placeholder="비밀번호 확인" required>
+      <input type="email" name="email" placeholder="학교 이메일" required>
       <button type="submit" class="login-btn">회원가입</button>
     </form>
   </div>
@@ -59,39 +59,36 @@
   </div>
 
   <script>
-    // 회원가입 처리 함수
-    function handleRegister(e) {
+    document.getElementById("registerForm").addEventListener("submit", async function(e) {
       e.preventDefault();
-      const users = JSON.parse(localStorage.getItem('users') || '[]');
-      const studentId = document.getElementById('studentId').value;
-      const password = document.getElementById('password').value;
-      const confirmPassword = document.getElementById('confirmPassword').value;
-      const email = document.getElementById('email').value;
 
-      // 비밀번호 일치 검증
+      const form = e.target;
+      const studentId = form.studentId.value.trim();
+      const password = form.password.value.trim();
+      const confirmPassword = form.confirmPassword.value.trim();
+      const email = form.email.value.trim();
+
       if (password !== confirmPassword) {
-        alert('비밀번호가 일치하지 않습니다');
-        return;
-      }
-      
-      // 학번 중복 검사
-      if (users.some(u => u.studentId === studentId)) {
-        alert('이미 등록된 학번입니다');
+        alert("비밀번호가 일치하지 않습니다");
         return;
       }
 
-      // 사용자 데이터 저장
-      users.push({
-        studentId,
-        username: studentId,  // 학번을 아이디로 사용
-        password,
-        email,
-        avatar: '' // 프로필 사진 초기값
+      const res = await fetch("/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ studentId, password, email })
       });
-      localStorage.setItem('users', JSON.stringify(users));
-      alert('회원가입 성공!');
-      window.location.href = '/login';
-    }
+
+      const data = await res.json();
+      if (res.ok) {
+        alert("회원가입 성공!");
+        window.location.href = "/login";
+      } else {
+        alert("회원가입 실패: " + data.message);
+      }
+    });
   </script>
 </body>
 </html>
