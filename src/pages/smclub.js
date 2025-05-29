@@ -73,6 +73,10 @@ function renderPosts(data) {
     area.innerHTML = '';
 
     data.forEach(post => {
+        const rawHtml = post.content; // 글 내용 가져오기
+        const plainText = rawHtml.replace(/<[^>]*>?/gm, ''); // 모든 HTML 태그 제거
+        const length = plainText.trim().length; 
+
         const box = document.createElement('div');
         box.className = 'contentbox';
         box.innerHTML = `
@@ -92,8 +96,8 @@ function renderPosts(data) {
 
                 <!-- 소모임 정보 -->
                 <div class="info">
-                    <h2 class="title">${post.title}</h2>
-                    <p class="description">${post.content.length > 100 ? post.content.slice(0, 100)+"..." : post.content}</p>
+                    <h2 class="title" onclick="location.href='/content/${post._id}?type=smclub'">${post.title}</h2>
+                    <p class="description">${length > 50 ? plainText.slice(0, 50) + "..." : plainText}</p>
 
                     <div class="period-wrapper">
                         <div class="period">

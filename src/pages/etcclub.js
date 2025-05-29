@@ -73,6 +73,10 @@ function renderPosts(data) {
     area.innerHTML = '';
 
     data.forEach(post => {
+        const rawHtml = post.content; // 글 내용 가져오기
+        const plainText = rawHtml.replace(/<[^>]*>?/gm, ''); // 모든 HTML 태그 제거
+        const length = plainText.trim().length; 
+        
         const box = document.createElement('div');
         box.className = 'contentbox';
         box.innerHTML = `
@@ -82,8 +86,8 @@ function renderPosts(data) {
             ${post.image ? `<img class="meeting-image" src="${post.image}" alt="이미지">` : ''}
             <!-- 모임 정보 -->
             <div class="meeting-info">
-                <h2 class="meeting-title">${post.title}</h2>
-                <p class="meeting-description">${post.content.length > 50 ? post.content.slice(0, 50)+"..." : post.content}</p>
+                <h2 class="meeting-title" onclick="location.href='/content/${post._id}?type=etcclub'">${post.title}</h2>
+                <p class="meeting-description">${length > 50 ? plainText.slice(0, 50) + "..." : plainText}</p>
                 <!-- 해시태그들 -->
                 <div class="hashtags">
                     <span class="hashtag">#디자인</span>

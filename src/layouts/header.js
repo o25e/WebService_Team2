@@ -65,7 +65,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
       navLinks.forEach((link) => {
         const linkHref = link.getAttribute("href") ?? '';
-        if (linkHref === currentPage) {
+        if (linkHref === "/" + currentPage) {
           link.classList.add("active");
         }
       });

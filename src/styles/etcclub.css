@@ -146,6 +146,9 @@ body {
     /* gray-800 */
     margin: 0;
 }
+.meeting-title:hover {
+  cursor: pointer;
+}
 
 /* 설명 */
 .meeting-description {
