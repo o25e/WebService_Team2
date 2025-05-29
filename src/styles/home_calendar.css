@@ -1,0 +1,90 @@
+.home-calendar {
+  background: #f5f5ff;
+  padding: 10px;
+  border-radius: 12px;
+  font-family: 'Pretendard', sans-serif;
+}
+
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.calendar-header button {
+  background: #3563e9;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.calendar-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: center;
+}
+
+.calendar-table td, .calendar-table th {
+  padding: 8px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.calendar-table td.today {
+  background: #3563e9;
+  color: #fff;
+  font-weight: bold;
+}
+
+.calendar-table td.has-event::after {
+  content: "📌";
+  margin-left: 4px;
+}
+
+/* Modal */
+.modal {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal.hidden {
+  display: none;
+}
+
+.modal-content {
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  width: 300px;
+}
+
+.modal-content input {
+  width: 100%;
+  padding: 8px;
+  margin-top: 10px;
+}
+
+#save-event {
+  margin-top: 10px;
+  width: 100%;
+  background: #3563e9;
+  color: white;
+  border: none;
+  padding: 8px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+#close-modal {
+  float: right;
+  font-size: 20px;
+  cursor: pointer;
+}

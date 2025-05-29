@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>활동 등록 - 숭실대학교 동아리 플랫폼</title>
+    <style>
+        .release-container {
+            max-width: 800px;
+            margin: 30px auto;
+            padding: 40px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+        }
+
+        .form-group {
+            margin-bottom: 30px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 12px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 18px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 15px;
+            transition: border-color 0.3s;
+        }
+
+        .form-input:focus {
+            border-color: #007BFF;
+            outline: none;
+        }
+
+        .category-selectors {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+
+        .category-card {
+            padding: 20px;
+            border: 2px solid #eee;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .category-card.active {
+            border-color: #007BFF;
+            background: rgba(0,123,255,0.05);
+        }
+
+        .tag-input-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            border: 2px solid #e0e0e0;
+            padding: 12px;
+            border-radius: 10px;
+        }
+
+        .tag-item {
+            background: #f0f0f0;
+            padding: 6px 15px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .tag-remove {
+            cursor: pointer;
+            color: #999;
+        }
+
+        #image-upload {
+            border: 2px dashed #e0e0e0;
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: border-color 0.3s;
+        }
+
+        #image-upload:hover {
+            border-color: #007BFF;
+        }
+
+        .submit-btn {
+            background: #007BFF;
+            color: white;
+            padding: 16px 40px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .submit-btn:hover {
+            background: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="release-container">
+        <h1 style="margin-bottom: 40px;">새 활동 등록</h1>
+        
+        <form id="activity-form">
+            <div class="form-group">
+                <label class="form-label">활동 제목</label>
+                <input type="text" class="form-input" placeholder="예시: K-POP 댄스 동아리 모집" required>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">카테고리</label>
+                <div class="category-selectors">
+                    <div class="category-card" onclick="selectCategory('club')">
+                        <h3>동아리</h3>
+                        <p>정식 등록 단체</p>
+                    </div>
+                    <div class="category-card" onclick="selectCategory('group')">
+                        <h3>소모임</h3>
+                        <p>자유 주제 모임</p>
+                    </div>
+                    <div class="category-card" onclick="selectCategory('etc')">
+                        <h3>기타</h3>
+                        <p>특별 행사/이벤트</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">필요 인원</label>
+                <input type="number" class="form-input" placeholder="모집할 인원 수를 입력하세요" min="1" required>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">모집 마감일</label>
+                <input type="date" class="form-input" id="deadline-date" required>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">대표 이미지</label>
+                <div id="image-upload" onclick="document.getElementById('file-input').click()">
+                    <span>이미지를 업로드하려면 클릭하세요</span>
+                    <input type="file" id="file-input" hidden accept="image/*">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">태그 (최대 5개)</label>
+                <div class="tag-input-container" id="tag-container">
+                    <input type="text" class="form-input" style="border: none;" placeholder="태그 입력 후 엔터 키를 누르세요" id="tag-input">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">상세 설명</label>
+                <textarea class="form-input" rows="6" placeholder="활동에 대한 상세한 설명을 작성해주세요" required></textarea>
+            </div>
+
+            <button type="submit" class="submit-btn">등록 완료</button>
+        </form>
+    </div>
+    <script src="postform.js"></script>
+</body>
+</html>

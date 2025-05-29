@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <title>홈 - 동아링</title>
+    <!-- 공통 헤더 CSS -->
+    <link rel="stylesheet" href="/styles/header.css" />
+    <!-- 메인 페이지 전용 CSS -->
+    <link rel="stylesheet" href="/styles/home.css" />
+    <!-- 캘린더 css -->
+    <link rel="stylesheet" href="/styles/home_calendar.css" />
+    <!-- 헤더 js -->
+    <script src="/layouts/header.js" defer></script>
+    <!-- 달력 js -->
+    <script src="/features/calendar/home_calendar.js" defer></script>
+    <!-- 홈 js -->
+    <script src="/pages/home.js"></script>
+  </head>
+<body>
+  <div class="home-page">
+    <div class="home-page-container">
+      <!-- 왼쪽 영역 -->
+      <div class="home-sidebar-left">
+        <div class="home-popular">
+          <h3>마감 임박 동아리</h3>
+          <ul></ul>
+        </div>
+        <div class="home-bookmarks">
+          <h3>즐겨찾기</h3>
+          <ul></ul>
+        </div>
+      </div>
+
+      <!-- 중앙 콘텐츠 -->
+      <div class="home-main-content">
+        <div class="home-section">
+          <a href="/club" class="section-link"><h3>동아리</h3></a>
+          <h5>동아리의 모집 공고를 확인하고, 관심있는 동아리에 지원해보세요.</h5>
+          <!-- 내용 영역 -->
+          <div id="contentArea-club"></div>
+        </div>
+        <div class="home-section">
+          <a href="/smclub" class="section-link"><h3>소모임</h3></a>
+          <h5>소모임의 여러 행사를 확인하고, 관심있는 행사에 참여해보세요.</h5>
+          <!-- 내용 영역 -->
+          <div id="contentArea-group"></div>
+        </div>
+        <div class="home-section">
+          <a href="/etcclub" class="section-link"><h3>기타</h3></a>
+          <h5>모든 분야의 스터디글을 확인하고, 함께 할 팀원을 모집해보세요.</h5>
+          <!-- 내용 영역 -->
+          <div id="contentArea-etc"></div>  
+        </div>
+      </div>
+
+      <!-- 오른쪽 영역 -->
+      <div class="home-sidebar-right">
+        <div class="home-calendar">
+          <div class="calendar-header">
+            <button id="prevMonth">&lt;</button>
+            <span id="monthYear"></span>
+            <button id="nextMonth">&gt;</button>
+          </div>
+          <table class="calendar-table">
+            <thead>
+              <tr>
+                <th>Su</th><th>Mo</th><th>Tu</th><th>We</th><th>Th</th><th>Fr</th><th>Sa</th>
+              </tr>
+            </thead>
+            <tbody id="calendar-body">
+              <!-- 동적으로 채워짐 -->
+            </tbody>
+          </table>
+          <div id="selected-events" class="selected-events">
+            <h4>선택한 날짜의 일정</h4>
+            <ul id="event-list"><li>날짜를 선택해주세요.</li></ul>
+          </div>
+        </div>
+
+        <!-- 일정 등록 팝업 -->
+        <div id="event-modal" class="modal hidden">
+          <div class="modal-content">
+            <span id="close-modal" class="close-btn">&times;</span>
+            <h3 id="modal-date"></h3>
+            <input type="text" id="event-input" placeholder="일정을 입력하세요" />
+            <button id="save-event">저장</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // 아래 JS 코드는 home_calendar.js에서 관리하세요
+  </script>
+</body>
+</html>

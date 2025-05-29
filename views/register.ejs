@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>동아링 회원가입</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #fff;
+      flex-direction: column;
+    }
+    h1 { font-size: 24px; margin-bottom: 0; }
+    p { margin-top: 8px; font-size: 18px; color: #333; }
+    .input-box { width: 400px; margin-top: 20px; }
+    .input-box input {
+      width: 100%;
+      padding: 15px;
+      margin-bottom: 15px;
+      font-size: 16px;
+      border: 1px solid #000;
+      box-sizing: border-box;
+    }
+    .login-btn {
+      width: 100%;
+      padding: 20px;
+      background-color: #ddd;
+      border: none;
+      font-size: 20px;
+      cursor: pointer;
+    }
+    .back-link { margin-top: 20px; text-align: center; }
+    .back-link a { color: #333; text-decoration: none; font-size: 16px; }
+    .back-link a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <h1>동아링 회원가입</h1>
+  <p>당신의 새로운 연결, 동아링과 함께</p>
+
+  <!-- 회원가입 폼 -->
+  <div class="input-box">
+    <form id="registerForm" method="POST" action="/register">
+      <input type="text" name="studentId" placeholder="학번" required>
+      <input type="password" name="password" placeholder="비밀번호" required>
+      <input type="password" name="confirmPassword" placeholder="비밀번호 확인" required>
+      <input type="email" name="email" placeholder="학교 이메일" required>
+      <button type="submit" class="login-btn">회원가입</button>
+    </form>
+  </div>
+
+  <!-- 로그인 화면 링크 -->
+  <div class="back-link">
+    <a href="/login">로그인 화면으로 돌아가기</a>
+  </div>
+
+  <script>
+    document.getElementById("registerForm").addEventListener("submit", async function(e) {
+      e.preventDefault();
+
+      const form = e.target;
+      const studentId = form.studentId.value.trim();
+      const password = form.password.value.trim();
+      const confirmPassword = form.confirmPassword.value.trim();
+      const email = form.email.value.trim();
+
+      if (password !== confirmPassword) {
+        alert("비밀번호가 일치하지 않습니다");
+        return;
+      }
+
+      const res = await fetch("/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ studentId, password, email })
+      });
+
+      const data = await res.json();
+      if (res.ok) {
+        alert("회원가입 성공!");
+        window.location.href = "/login";
+      } else {
+        alert("회원가입 실패: " + data.message);
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>동아링 로그인</title>
+  <style>
+    body { 
+      font-family: 'Arial', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #fff;
+      flex-direction: column;
+    }
+    h1 { font-size: 24px; margin-bottom: 0; }
+    p { margin-top: 8px; font-size: 18px; color: #333; }
+    .input-box { width: 400px; margin-top: 20px; }
+    .input-box input {
+      width: 100%;
+      padding: 15px;
+      margin-bottom: 15px;
+      font-size: 16px;
+      border: 1px solid #000;
+      box-sizing: border-box;
+    }
+    .login-btn {
+      width: 100%;
+      padding: 20px;
+      background-color: #ddd;
+      border: none;
+      font-size: 20px;
+      cursor: pointer;
+    }
+    .separator {
+      display: flex;
+      align-items: center;
+      margin: 30px 0 10px;
+      width: 400px;
+    }
+    .separator::before,
+    .separator::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: #000;
+    }
+    .separator span { margin: 0 10px; color: #333; }
+    .social-icons {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      margin-top: 10px;
+    }
+    .social-icons img { width: 48px; height: 48px; cursor: pointer; }
+    .register-link { margin-top: 20px; text-align: center; }
+    .register-link a { color: #333; text-decoration: none; font-size: 16px; }
+    .register-link a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <h1>동아링 로그인</h1>
+  <p>동아링에 오신 걸 환영합니다!</p>
+
+  <!-- 로그인 폼 -->
+  <div class="input-box">
+    <form id="loginForm" onsubmit="return handleLogin(event)">
+      <input type="text" id="username" placeholder="아이디" required autocomplete="off" />
+      <input type="password" id="password" placeholder="비밀번호" required autocomplete="off" />
+      <button type="submit" class="login-btn">로그인</button>
+    </form>
+  </div>
+
+  <!-- 소셜 로그인 구분선 -->
+  <div class="separator"><span>또는</span></div>
+
+  <!-- 소셜 로그인 아이콘 (기능 미구현 안내용) -->
+  <div class="social-icons">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/e/e3/KakaoTalk_logo.svg" alt="Kakao" title="준비 중입니다" />
+    <img src="https://th.bing.com/th/id/R.c0d68dc7f3c8a56ef69149abb993bcbf?rik=rZHP%2fwwIizBr0g&riu=http%3a%2f%2fpluspng.com%2fimg-png%2fnaver-logo-png-naver-300.png&ehk=GAsZ%2bEmwsAfWq9%2bMXcVCXFkcZ%2bjOQWtG6BGpNINIIXs%3d&risl=&pid=ImgRaw&r=0" alt="Naver" title="준비 중입니다" />
+    <img src="https://p16.tiktokcdn-us.com/tos-useast5-avt-0068-tx/73c90de9d342041ce02bf9c6fb886e82~c5_720x720.jpeg" alt="Google" title="준비 중입니다" />
+  </div>
+
+  <!-- 회원가입 링크 -->
+  <div class="register-link">
+    <a href="/register">회원가입</a>
+  </div>
+
+  <script>
+    async function handleLogin(e) {
+      e.preventDefault();
+
+      const studentId = document.getElementById('username').value.trim();
+      const password = document.getElementById('password').value;
+
+      if (!studentId || !password) {
+        alert('아이디와 비밀번호를 모두 입력해주세요');
+        return false;
+      }
+
+      try {
+        const response = await fetch('/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ studentId, password })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          // 로그인 성공 시 세션 및 로컬 저장소 저장
+          sessionStorage.setItem('currentUser', JSON.stringify(data.user));
+          sessionStorage.setItem('loggedIn', 'true');
+          localStorage.setItem('loggedInUser', data.user.studentId);
+
+          alert('로그인 성공!');
+          window.location.href = '/home'; // 로그인 후 이동할 페이지
+        } else {
+          alert(data.message || '로그인 실패');
+        }
+      } catch (err) {
+        console.error('서버 오류:', err);
+        alert('서버와의 연결에 실패했습니다');
+      }
+    }
+  </script>
+</body>
+</html>

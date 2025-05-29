@@ -1,0 +1,119 @@
+/* 공통 기본 스타일 */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Arial", sans-serif;
+}
+
+body {
+  width: 100%;
+  background-color: #f5f5f5;
+}
+
+/* 본문 영역 */
+.main-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* 본문 내부 요소 중앙 정렬 */
+  width: 100%;
+  max-width: 1304px;  /* 본문 최대 너비 */
+  margin: 106px auto 0 auto; /* 상단 여백, 좌우 중앙 정렬 */
+}
+
+/* 기존 본문 내부 스타일 유지 */
+.logo-placeholder {
+  position: relative;
+  width: 100%;
+  height: 412px;
+  background-color: #d9d9d9;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #000;
+  font-size: 40px;
+  font-family: "Inter", "Arial", sans-serif;
+}
+
+.main-heading {
+  color: #000;
+  font-size: 48px;
+  font-weight: 700;
+  font-family: "Pretendard", "Arial", sans-serif;
+  text-align: center;
+  margin-top: 85px;
+}
+
+.sub-heading {
+  color: #000;
+  font-size: 40px;
+  font-weight: 400;
+  font-family: "Pretendard", "Arial", sans-serif;
+  text-align: center;
+  margin-top: 40px;
+  max-width: 900px;
+}
+
+.features-container {
+  display: flex;
+  flex-direction: column;
+  gap: 50px;
+  margin-top: 244px;
+  width: 100%;
+}
+
+.feature-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  max-width: 1304px;
+}
+
+.feature-text {
+  color: #000;
+  font-size: 96px;
+  font-weight: 700;
+  font-family: "Pretendard", "Arial", sans-serif;
+  max-width: 495px;
+  text-align: center;
+}
+
+.feature-image {
+  width: 548px;
+  height: 474px;
+  background-color: #d9d9d9;
+}
+
+/* 반응형 유지 */
+@media (max-width: 991px) {
+  .container {
+    padding: 0 60px;
+  }
+  .nav-links {
+    display: none;
+  }
+  .feature-row {
+    flex-direction: column;
+    gap: 40px;
+  }
+}
+
+@media (max-width: 640px) {
+  .container {
+    padding: 0 20px;
+  }
+  .feature-text {
+    font-size: 64px;
+  }
+  .feature-image {
+    width: 100%;
+    max-width: 548px;
+  }
+  .main-heading {
+    font-size: 36px;
+  }
+  .sub-heading {
+    font-size: 28px;
+  }
+}
