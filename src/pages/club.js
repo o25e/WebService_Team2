@@ -75,17 +75,17 @@ function renderPosts(data) {
     data.forEach(post => {
         const rawHtml = post.content; // 글 내용 가져오기
         const plainText = rawHtml.replace(/<[^>]*>?/gm, ''); // 모든 HTML 태그 제거
-        const length = plainText.trim().length; 
+        const length = plainText.trim().length;
 
         const box = document.createElement('div');
         box.className = 'contentbox';
-        box.innerHTML =
-            `<div class="club_pic">
-                    ${post.image ? `<img src="${post.image}" alt="동아리 이미지">` : ''}
-                </div>
-                ${post.deadline ? `<div class="d-day">${getDDay(post.deadline)}</div>` : ''}
-                <div class="club_name" onclick="location.href='/content/${post._id}?type=club'">${post.title}</div>
-                <div class="club_exp">${length > 50 ? plainText.slice(0, 50) + "..." : plainText}</div>`;
+        box.innerHTML = `
+            <div class="club_pic">
+                ${post.image ? `<img src="${post.image}" alt="동아리 이미지">` : ''}
+            </div>
+            ${post.deadline ? `<span class="d-day">${getDDay(post.deadline)}</span>` : ''} <span><i class="fa-regular fa-heart heart-icon"></i></span>
+            <div class="club_name" onclick="location.href='/content/${post._id}?type=club'">${post.title}</div>
+            <div class="club_exp">${length > 50 ? plainText.slice(0, 50) + "..." : plainText}</div>`;
         area.appendChild(box);
     });
 }
