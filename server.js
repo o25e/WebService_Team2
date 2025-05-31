@@ -111,10 +111,12 @@ app.get('/notifications', function (req, res) {
 
 // 동아리 페이지 라우팅
 app.get('/club', function (req, res) {
-  mydb.collection('user').find().toArray().then(result=>{
-    console.log(result);
-    res.render("club.ejs");
-  })
+  // user 정보 보기
+  // mydb.collection('user').find().toArray().then(result=>{
+  //   console.log(result);
+  //   res.render("club.ejs");
+  // });
+  res.render("club.ejs");
 });
 app.get('/club/data', function (req, res) {
     mydb
@@ -138,26 +140,55 @@ app.get('/club/bookmarkList', function(req, res){
 })
 app.post('/addBookmark', function(req, res){
   console.log(req.body);
-  mydb
-  .collection('user')
+  req.body._id = new ObjId(req.body._id);
+  // user 북마크리스트 업데이트
+  mydb.collection('user')
   .updateOne({ studentId: req.body.studentId }, {$set : { bookmarkList : req.body.bookmarkList }})
   .then((result)=>{
+    console.log("추가: ", result.modifiedCount);
     console.log("북마크 추가 완료!");
-    res.json({ success: true });
+
+    // 포스트의 북마크 개수 증가
+    mydb.collection('club_post')
+    .updateOne({_id: req.body._id}, {$inc: { bookmarkNum: 1 }})
+    .then((result)=>{
+      console.log(req.body._id);
+      console.log(result);
+      console.log("북마크 수 증가!");
+      res.json({ success: true });
+    })
+    .catch((err)=>{
+      console.log(err);
+      res.status(500).json({ success: false, error: err.message });
+    });
   })
   .catch((err)=>{
     console.log(err);
+    res.status(500).json({ success: false, error: err.message });
   });
 });
 app.post('/deleteBookmark', function(req, res){
   console.log(req.body);
+  req.body._id = new ObjId(req.body._id);
+  // user 북마크 리스트 업데이트
   mydb
   .collection('user')
   .updateOne({ studentId: req.body.studentId }, {$set : { bookmarkList : req.body.bookmarkList }})
   .then((result)=>{
-    console.log(result);
+    console.log("제거: ", result.modifiedCount);
     console.log("북마크 제거 완료!");
-    res.json({ success: true });
+
+    // 포스트의 북마크 개수 감소
+    mydb.collection('club_post')
+    .updateOne({_id: req.body._id}, {$inc: { bookmarkNum: -1 }})
+    .then((result)=>{
+      console.log(result);
+      console.log("북마크 수 감소!");
+      res.json({ success: true });
+    })
+    .catch((err)=>{
+      console.log(err);
+    });
   })
   .catch((err)=>{
     console.log(err);
@@ -218,7 +249,9 @@ app.post('/save',upload.single('image'), function (req, res){
             category : req.body.category,
             deadline : req.body.deadline,
             image : imagePath,
-            createdAt: new Date()  // 등록한 날짜 추가
+            createdAt: new Date(),  // 등록한 날짜 추가
+            bookmarkNum: 0, // 북마크 수
+            hits: 0, // 조회수
         }
     ).then(result => {
         console.log(result);

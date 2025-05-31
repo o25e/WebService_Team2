@@ -197,7 +197,7 @@ document.querySelectorAll(".category-filter, .status-filter").forEach(cb => {
 window.onload = () => renderPosts(posts);
 
 $(document).on('click', '.heart-icon', function (e) {
-    let sid = e.currentTarget.dataset.id;
+    let sid = e.currentTarget.dataset.id; // 포스트 id
     let item = e.currentTarget;
 
     // 북마크리스트에 있는지 확인
@@ -211,10 +211,13 @@ $(document).on('click', '.heart-icon', function (e) {
             data: {
                 bookmarkList: bookmarkList,
                 studentId: localStorage.getItem("loggedInUser"),
+                _id: sid,
             }
         }).done(function (result) {
             item.classList.replace('fa-solid', 'fa-regular');
-            console.log("북마크 제거 표시")
+            let bookmarkNum = item.querySelector("span").innerText;
+            item.querySelector("span").innerText = Number(bookmarkNum) - 1;
+            console.log("북마크 제거 표시");
         }).fail(function (xhr, textStatus, errorThrown) {
             console.log("북마크 제거 실패");
             console.log(xhr, textStatus, errorThrown);
@@ -228,10 +231,13 @@ $(document).on('click', '.heart-icon', function (e) {
             data: {
                 bookmarkList: bookmarkList,
                 studentId: localStorage.getItem("loggedInUser"),
+                _id: sid,
             }
         }).done(function (result) {
             item.classList.replace('fa-regular', 'fa-solid');
-            console.log("북마크 추가 표시")
+            let bookmarkNum = item.querySelector("span").innerText;
+            item.querySelector("span").innerText = Number(bookmarkNum) + 1;
+            console.log("북마크 추가 표시");
         }).fail(function (xhr, textStatus, errorThrown) {
             console.log("북마크 추가 실패");
             console.log(xhr, textStatus, errorThrown);
