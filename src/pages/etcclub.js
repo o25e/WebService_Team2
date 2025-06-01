@@ -1,3 +1,30 @@
+let posts = [];
+let bookmarkList = [];
+// 글 데이터 서버로부터 가져오기
+fetch("/postData?postType=etcclub")
+    .then(res => res.json())
+    .then(data => {
+        console.log(data);
+        posts = data;
+    })
+    .then(()=>{
+        renderPosts(posts);
+    });
+// bookmarkList 데이터 가져오기
+fetch(`/bookmarkList?studentId=${localStorage.getItem("loggedInUser")}`)
+    .then(res => res.json())
+    .then(data => {
+        console.log(data);
+        if (data === null) {
+            bookmarkList = [];
+        } else {
+            bookmarkList = data;
+        }
+    })
+    .then(()=>{
+        renderPosts(posts);
+    });
+
 //필터
 function showFilter(type, element) {
     const menus = document.querySelectorAll('.menu');
@@ -10,15 +37,6 @@ function showFilter(type, element) {
     const target = document.querySelector(`.${type}`);
     if (target) target.classList.add('active');
 }
-// 글 데이터 서버로부터 가져오기
-let posts = [];
-fetch("/etcclub/data")
-.then(res=>res.json())
-.then(data=>{
-    console.log(data);
-    posts = data;
-    renderPosts(posts);
-});
 
 //글 임시로 보여주기
 // const posts = [
@@ -75,7 +93,8 @@ function renderPosts(data) {
     data.forEach(post => {
         const rawHtml = post.content; // 글 내용 가져오기
         const plainText = rawHtml.replace(/<[^>]*>?/gm, ''); // 모든 HTML 태그 제거
-        const length = plainText.trim().length; 
+        const length = plainText.trim().length; // 텍스트 길이
+        const isInBookmarkList = bookmarkList.includes(post._id); // bookmarkList 안에 있는지
         
         const box = document.createElement('div');
         box.className = 'contentbox';
@@ -83,7 +102,11 @@ function renderPosts(data) {
         <!-- 모임 카드 -->
         <div class="meeting-card">
             <!-- 이미지 -->
-            ${post.image ? `<img class="meeting-image" src="${post.image}" alt="이미지">` : ''}
+            <div class="image-wrapper">
+                ${post.image ? `<img class="meeting-image" src="${post.image}" alt="이미지">` : ''}
+                <i class="status-right ${isInBookmarkList ? "fa-solid" : "fa-regular"} fa-heart heart-icon" data-id=${post._id}> 
+                <span>${post.bookmarkNum}</span></i>
+            </div>
             <!-- 모임 정보 -->
             <div class="meeting-info">
                 <h2 class="meeting-title" onclick="location.href='/content/${post._id}?type=etcclub'">${post.title}</h2>
@@ -187,3 +210,53 @@ document.querySelectorAll(".category-filter, .status-filter").forEach(cb => {
 
 
 window.onload = () => renderPosts(posts);
+
+// jquery ajax로 하트 클릭하면 post 요청 보내기
+$(document).on('click', '.heart-icon', function (e) {
+    let sid = e.currentTarget.dataset.id; // 포스트 id
+    let item = e.currentTarget;
+
+    // 북마크리스트에 있는지 확인
+    if (bookmarkList.includes(sid)) {
+        // 있으면 제거
+        bookmarkList = bookmarkList.filter(elem => elem !== sid);
+        console.log(bookmarkList);
+        $.ajax({
+            type: 'post',
+            url: '/deleteBookmark?postType=etcclub',
+            data: {
+                bookmarkList: bookmarkList,
+                studentId: localStorage.getItem("loggedInUser"),
+                _id: sid,
+            }
+        }).done(function (result) {
+            item.classList.replace('fa-solid', 'fa-regular');
+            let bookmarkNum = item.querySelector("span").innerText;
+            item.querySelector("span").innerText = Number(bookmarkNum) - 1;
+            console.log("북마크 제거 표시");
+        }).fail(function (xhr, textStatus, errorThrown) {
+            console.log("북마크 제거 실패");
+            console.log(xhr, textStatus, errorThrown);
+        });
+    } else {
+        // 없으면 추가
+        bookmarkList.push(sid);
+        $.ajax({
+            type: 'post',
+            url: '/addBookmark?postType=etcclub',
+            data: {
+                bookmarkList: bookmarkList,
+                studentId: localStorage.getItem("loggedInUser"),
+                _id: sid,
+            }
+        }).done(function (result) {
+            item.classList.replace('fa-regular', 'fa-solid');
+            let bookmarkNum = item.querySelector("span").innerText;
+            item.querySelector("span").innerText = Number(bookmarkNum) + 1;
+            console.log("북마크 추가 표시");
+        }).fail(function (xhr, textStatus, errorThrown) {
+            console.log("북마크 추가 실패");
+            console.log(xhr, textStatus, errorThrown);
+        });
+    }
+});
