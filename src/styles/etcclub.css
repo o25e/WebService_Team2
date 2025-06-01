@@ -116,6 +116,11 @@ body {
     /* 둥근 모서리 */
 }
 
+/* 이미지와 상태 */
+.image-wrapper {
+    position: relative;
+}
+
 /* 이미지 크기와 둥근 모서리 */
 .meeting-image {
     width: 7.5rem;
@@ -125,6 +130,35 @@ body {
     border-radius: 0.75rem;
     /* 12px 둥근 모서리 */
     object-fit: cover;
+}
+
+.heart-icon {
+  position: absolute;
+  top: 0.25rem;
+  /* top-1 */
+  right: 0.25rem;
+  /* right-1 */
+  background: white;
+  color: black;
+  font-size: 0.75rem;
+  padding: 0.4rem 0.25rem;
+  border-radius: 0.375rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+.heart-icon span {
+  font-size: 12px;
+  color: black;
+  font-weight: 2;
+}
+
+.heart-icon:hover {
+  background-color: #dbdbdb;
+  cursor: pointer;
+}
+
+.heart-icon.fa-solid {
+  color: red;
 }
 
 /* 모임 정보 영역 */

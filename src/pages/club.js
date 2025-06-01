@@ -1,7 +1,7 @@
 let posts = [];
 let bookmarkList = [];
 // 글 데이터 서버로부터 가져오기
-fetch("/club/data")
+fetch("/postData?postType=club")
     .then(res => res.json())
     .then(data => {
         console.log(data);
@@ -11,7 +11,7 @@ fetch("/club/data")
         renderPosts(posts);
     });
 // bookmarkList 데이터 가져오기
-fetch(`/club/bookmarkList?studentId=${localStorage.getItem("loggedInUser")}`)
+fetch(`/bookmarkList?studentId=${localStorage.getItem("loggedInUser")}`)
     .then(res => res.json())
     .then(data => {
         console.log(data);
@@ -24,8 +24,6 @@ fetch(`/club/bookmarkList?studentId=${localStorage.getItem("loggedInUser")}`)
     .then(()=>{
         renderPosts(posts);
     });
-
-
 
 //필터
 function showFilter(type, element) {
@@ -89,7 +87,7 @@ function renderPosts(data) {
         const rawHtml = post.content; // 글 내용 가져오기
         const plainText = rawHtml.replace(/<[^>]*>?/gm, ''); // 모든 HTML 태그 제거
         const length = plainText.trim().length; // 텍스트 길이
-        const isInBookmarkList = bookmarkList.includes(post._id);
+        const isInBookmarkList = bookmarkList.includes(post._id); // bookmarkList 안에 있는지
 
 
         const box = document.createElement('div');
@@ -196,6 +194,7 @@ document.querySelectorAll(".category-filter, .status-filter").forEach(cb => {
 
 window.onload = () => renderPosts(posts);
 
+// jquery ajax로 하트 클릭하면 post 요청 보내기
 $(document).on('click', '.heart-icon', function (e) {
     let sid = e.currentTarget.dataset.id; // 포스트 id
     let item = e.currentTarget;
@@ -207,7 +206,7 @@ $(document).on('click', '.heart-icon', function (e) {
         console.log(bookmarkList);
         $.ajax({
             type: 'post',
-            url: '/deleteBookmark',
+            url: '/deleteBookmark?postType=club',
             data: {
                 bookmarkList: bookmarkList,
                 studentId: localStorage.getItem("loggedInUser"),
@@ -227,7 +226,7 @@ $(document).on('click', '.heart-icon', function (e) {
         bookmarkList.push(sid);
         $.ajax({
             type: 'post',
-            url: '/addBookmark',
+            url: '/addBookmark?postType=club',
             data: {
                 bookmarkList: bookmarkList,
                 studentId: localStorage.getItem("loggedInUser"),
@@ -243,5 +242,4 @@ $(document).on('click', '.heart-icon', function (e) {
             console.log(xhr, textStatus, errorThrown);
         });
     }
-
 });

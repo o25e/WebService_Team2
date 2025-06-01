@@ -118,16 +118,19 @@ app.get('/club', function (req, res) {
   // });
   res.render("club.ejs");
 });
-app.get('/club/data', function (req, res) {
-    mydb
-    .collection('club_post')
-    .find().toArray().then(result=>{
-        res.json(result);
-    }).catch((err)=>{
-        console.log(err);
-    });
+// 포스트 데이터 요청 응답
+app.get('/postData', function (req, res) {
+  // 요청에 따라 콜렉션 종류 결정
+  const collection = req.query.postType + "_post";
+  mydb
+  .collection(collection)
+  .find().toArray().then(result=>{
+      res.json(result);
+  }).catch((err)=>{
+      console.log(err);
+  });
 });
-app.get('/club/bookmarkList', function(req, res){
+app.get('/bookmarkList', function(req, res){
   mydb
   .collection('user')
   .findOne({ studentId: req.query.studentId})
@@ -141,6 +144,8 @@ app.get('/club/bookmarkList', function(req, res){
 app.post('/addBookmark', function(req, res){
   console.log(req.body);
   req.body._id = new ObjId(req.body._id);
+  // 요청에 따라 콜렉션 종류 결정
+  const postCollection = req.query.postType + "_post";
   // user 북마크리스트 업데이트
   mydb.collection('user')
   .updateOne({ studentId: req.body.studentId }, {$set : { bookmarkList : req.body.bookmarkList }})
@@ -149,7 +154,7 @@ app.post('/addBookmark', function(req, res){
     console.log("북마크 추가 완료!");
 
     // 포스트의 북마크 개수 증가
-    mydb.collection('club_post')
+    mydb.collection(postCollection)
     .updateOne({_id: req.body._id}, {$inc: { bookmarkNum: 1 }})
     .then((result)=>{
       console.log(req.body._id);
@@ -170,6 +175,8 @@ app.post('/addBookmark', function(req, res){
 app.post('/deleteBookmark', function(req, res){
   console.log(req.body);
   req.body._id = new ObjId(req.body._id);
+  // 요청에 따라 콜렉션 종류 결정
+  const postCollection = req.query.postType + "_post";
   // user 북마크 리스트 업데이트
   mydb
   .collection('user')
@@ -179,7 +186,7 @@ app.post('/deleteBookmark', function(req, res){
     console.log("북마크 제거 완료!");
 
     // 포스트의 북마크 개수 감소
-    mydb.collection('club_post')
+    mydb.collection(postCollection)
     .updateOne({_id: req.body._id}, {$inc: { bookmarkNum: -1 }})
     .then((result)=>{
       console.log(result);
@@ -199,28 +206,10 @@ app.post('/deleteBookmark', function(req, res){
 app.get('/smclub', function (req, res) {
     res.render("smclub.ejs");
 });
-app.get('/smclub/data', function (req, res) {
-    mydb
-    .collection('smclub_post')
-    .find().toArray().then(result=>{
-        res.json(result);
-    }).catch((err)=>{
-        console.log(err);
-    });
-});
 
 // 기타 페이지 라우팅
 app.get('/etcclub', function (req, res) {
     res.render("etcclub.ejs");
-});
-app.get('/etcclub/data', function (req, res) {
-    mydb
-    .collection('etcclub_post')
-    .find().toArray().then(result=>{
-        res.json(result);
-    }).catch((err)=>{
-        console.log(err);
-    });
 });
 
 // 글쓰기 페이지 라우팅
@@ -296,10 +285,11 @@ app.get("/club/data/etcclub_post", async (req, res) => {
 app.get('/content/:id', function(req, res){
     // collection 선택
     const collection = req.query.type + "_post";
-    req.params.id = new ObjId(req.params.id);
+    console.log(req.params.id);
+    const targetId = new ObjId(req.params.id);
     mydb
     .collection(collection)
-    .findOne({_id : req.params.id})
+    .findOne({_id : targetId})
     .then((result)=>{
         console.log(result);
         res.render("content.ejs", { post : result });
