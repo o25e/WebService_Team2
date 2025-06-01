@@ -156,26 +156,26 @@ function renderPosts(data) {
     });
 }
 
-//검색 기능
-document.addEventListener("DOMContentLoaded", () => {
-    const searchInput = document.getElementById("searchInput");
-    const searchForm = document.querySelector("form.search-box");
+//검색 기능 (중복 코드라 없앰)
+// document.addEventListener("DOMContentLoaded", () => {
+//     const searchInput = document.getElementById("searchInput");
+//     const searchForm = document.querySelector("form.search-box");
 
-    if (searchForm && searchInput) {
-        searchForm.addEventListener("submit", (e) => {
-            e.preventDefault();
+//     if (searchForm && searchInput) {
+//         searchForm.addEventListener("submit", (e) => {
+//             e.preventDefault();
 
-            const keyword = searchInput.value.toLowerCase();
+//             const keyword = searchInput.value.toLowerCase();
 
-            const filtered = posts.filter(post =>
-                post.title.toLowerCase().includes(keyword) ||
-                post.content.toLowerCase().includes(keyword)
-            );
+//             const filtered = posts.filter(post =>
+//                 post.title.toLowerCase().includes(keyword) ||
+//                 post.content.toLowerCase().includes(keyword)
+//             );
 
-            renderPosts(filtered);
-        });
-    }
-});
+//             renderPosts(filtered);
+//         });
+//     }
+// });
 
 //분야별 필터링 기능
 function filterPosts() {
@@ -215,6 +215,9 @@ document.addEventListener("DOMContentLoaded", () => {
 function filterPosts() {
     const keyword = document.getElementById('searchInput').value.toLowerCase();
 
+    const checkedClubNames = Array.from(document.querySelectorAll('.club-name-filter:checked'))
+        .map(cb => cb.value);
+
     const checkedCategories = Array.from(document.querySelectorAll('.category-filter:checked'))
         .map(cb => cb.value);
 
@@ -226,18 +229,21 @@ function filterPosts() {
             post.title.toLowerCase().includes(keyword) ||
             post.content.toLowerCase().includes(keyword);
 
+        const matchClubName = 
+            checkedClubNames.length === 0 || checkedClubNames.includes(post.title);
+
         const matchCategory =
             checkedCategories.length === 0 || checkedCategories.includes(post.category);
 
         const matchStatus =
             checkedStatuses.length === 0 || checkedStatuses.includes(getStatus(post.deadline));
 
-        return matchKeyword && matchCategory && matchStatus;
+        return matchClubName && matchKeyword && matchCategory && matchStatus;
     });
 
     renderPosts(filtered);
 }
-document.querySelectorAll(".category-filter, .status-filter").forEach(cb => {
+document.querySelectorAll(".club-name-filter, .category-filter, .status-filter").forEach(cb => {
     cb.addEventListener("change", filterPosts);
 });
 

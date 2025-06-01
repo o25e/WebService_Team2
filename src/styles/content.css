@@ -19,7 +19,7 @@ body {
 
 /* 동아리 사진 */
 .club-img {
-    width: 350px;
+    height: 150px;
     border-radius: 20px;
 }
 /* 포스트 상자 */

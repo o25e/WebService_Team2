@@ -107,26 +107,26 @@ function renderPosts(data) {
     });
 }
 
-//검색 기능
-document.addEventListener("DOMContentLoaded", () => {
-    const searchInput = document.getElementById("searchInput");
-    const searchForm = document.querySelector("form.search-box");
+//검색 기능 (중복 코드라 없앰)
+// document.addEventListener("DOMContentLoaded", () => {
+//     const searchInput = document.getElementById("searchInput");
+//     const searchForm = document.querySelector("form.search-box");
 
-    if (searchForm && searchInput) {
-        searchForm.addEventListener("submit", (e) => {
-            e.preventDefault();
+//     if (searchForm && searchInput) {
+//         searchForm.addEventListener("submit", (e) => {
+//             e.preventDefault();
 
-            const keyword = searchInput.value.toLowerCase();
+//             const keyword = searchInput.value.toLowerCase();
 
-            const filtered = posts.filter(post =>
-                post.title.toLowerCase().includes(keyword) ||
-                post.content.toLowerCase().includes(keyword)
-            );
+//             const filtered = posts.filter(post =>
+//                 post.title.toLowerCase().includes(keyword) ||
+//                 post.content.toLowerCase().includes(keyword)
+//             );
 
-            renderPosts(filtered);
-        });
-    }
-});
+//             renderPosts(filtered);
+//         });
+//     }
+// });
 
 //분야별 필터링 기능
 function filterPosts() {
