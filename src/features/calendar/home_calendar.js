@@ -11,11 +11,13 @@ document.addEventListener("DOMContentLoaded", () => {
   const closeModalBtn = document.getElementById("close-modal");
   const eventList = document.getElementById("event-list");
 
+  const filterButtons = document.querySelectorAll(".filter-btn");
+
   let current = new Date();
   let selectedDate = null;
+  let selectedCategory = "all";
 
-  // 이벤트 데이터 저장용 (한 날짜에 일정 1개 저장)
-  const events = JSON.parse(localStorage.getItem("calendarEvents") || "{}");
+  let events = JSON.parse(localStorage.getItem("calendarEvents") || "{}");
 
   function saveEvents() {
     localStorage.setItem("calendarEvents", JSON.stringify(events));
@@ -24,9 +26,16 @@ document.addEventListener("DOMContentLoaded", () => {
   function openModal(dateStr) {
     selectedDate = dateStr;
     modalDate.textContent = `${dateStr} 일정`;
-    eventInput.value = events[dateStr] || "";
-    modal.classList.remove("hidden");
 
+    const event = events[dateStr];
+    eventInput.value = event?.text || "";
+
+    const radios = document.querySelectorAll("input[name='event-category']");
+    radios.forEach((r) => {
+      r.checked = event?.category === r.value;
+    });
+
+    modal.classList.remove("hidden");
     renderEventList(dateStr);
   }
 
@@ -37,15 +46,56 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function renderEventList(dateStr) {
     eventList.innerHTML = "";
-    if (events[dateStr]) {
+    const event = events[dateStr];
+    if (event) {
       const li = document.createElement("li");
-      li.textContent = events[dateStr];
+      li.textContent = `[${categoryLabel(event.category)}] ${event.text}`;
       eventList.appendChild(li);
     } else {
       const li = document.createElement("li");
       li.textContent = "일정이 없습니다.";
       li.style.fontStyle = "italic";
       eventList.appendChild(li);
+    }
+  }
+
+  function renderFilteredEventList(category) {
+    eventList.innerHTML = "";
+
+    if (category === "all") {
+      eventList.innerHTML = "<li>필터를 선택하세요.</li>";
+      return;
+    }
+
+    const filteredEvents = Object.entries(events).filter(
+      ([date, event]) =>
+        (category === "bookmark" && event.isBookmarked) ||
+        (event.category === category && event.isBookmarked)
+    );
+
+    if (filteredEvents.length === 0) {
+      const li = document.createElement("li");
+      li.textContent = `${categoryLabel(category)} 북마크 일정이 없습니다.`;
+      li.style.fontStyle = "italic";
+      eventList.appendChild(li);
+      return;
+    }
+
+    filteredEvents.forEach(([date, event]) => {
+      const li = document.createElement("li");
+      li.textContent = `${date} [${categoryLabel(event.category)}] ${event.text}`;
+      li.style.cursor = "pointer";
+      li.addEventListener("click", () => openModal(date));
+      eventList.appendChild(li);
+    });
+  }
+
+  function categoryLabel(code) {
+    switch (code) {
+      case "club": return "동아리";
+      case "group": return "소모임";
+      case "etc": return "기타";
+      default: return "기타";
     }
   }
 
@@ -61,7 +111,6 @@ document.addEventListener("DOMContentLoaded", () => {
     calendarBody.innerHTML = "";
     let row = document.createElement("tr");
 
-    // 빈 칸 채우기
     for (let i = 0; i < firstDay; i++) {
       row.appendChild(document.createElement("td"));
     }
@@ -70,12 +119,10 @@ document.addEventListener("DOMContentLoaded", () => {
       const cell = document.createElement("td");
       cell.textContent = day;
 
-      // 날짜 포맷: YYYY-MM-DD (월, 일 2자리 맞춤)
       const monthStr = String(month + 1).padStart(2, '0');
       const dayStr = String(day).padStart(2, '0');
       const dateStr = `${year}-${monthStr}-${dayStr}`;
-
-      cell.dataset.date = dateStr; // data-date 속성 추가
+      cell.dataset.date = dateStr;
 
       if (
         day === today.getDate() &&
@@ -85,21 +132,45 @@ document.addEventListener("DOMContentLoaded", () => {
         cell.classList.add("today");
       }
 
-      if (events[dateStr]) {
+      const event = events[dateStr];
+      if (event && (selectedCategory === "all" || event.category === selectedCategory || (selectedCategory === "bookmark" && event.isBookmarked))) {
         cell.classList.add("has-event");
       }
 
-      cell.addEventListener("click", () => openModal(dateStr));
+    // 점 추가 (필터별 색상)
+    if (
+      event &&
+      event.isBookmarked === true &&
+      (selectedCategory === "all" || selectedCategory === "bookmark")
+    ) {
+      const dot = document.createElement("span");
+      dot.classList.add("deadline-dot");
 
-      row.appendChild(cell);
+      if (event.category === "club") dot.classList.add("club");
+      else if (event.category === "group") dot.classList.add("group");
+      else dot.classList.add("etc");
 
-      // 7일 단위로 줄바꿈
-      if ((firstDay + day) % 7 === 0 || day === lastDate) {
-        calendarBody.appendChild(row);
-        row = document.createElement("tr");
-      }
+      cell.appendChild(dot);
+    }
+
+    // 동아리 필터 클릭 시 해당 날짜 배경 붉은색 칠하기
+    if (
+      selectedCategory === "club" &&
+      event &&
+      event.category === "club"
+    ) {
+      cell.classList.add("club-filtered");
+    }
+
+    cell.addEventListener("click", () => openModal(dateStr));
+    row.appendChild(cell);
+
+    if ((firstDay + day) % 7 === 0 || day === lastDate) {
+      calendarBody.appendChild(row);
+      row = document.createElement("tr");
     }
   }
+}
 
   prevMonthBtn.addEventListener("click", () => {
     current.setMonth(current.getMonth() - 1);
@@ -115,13 +186,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
   saveEventBtn.addEventListener("click", () => {
     const value = eventInput.value.trim();
+    const category = document.querySelector("input[name='event-category']:checked")?.value || "etc";
+
     if (!selectedDate) return;
 
     if (value) {
-      events[selectedDate] = value;
+      events[selectedDate] = {
+        text: value,
+        category,
+        isBookmarked: events[selectedDate]?.isBookmarked || false
+      };
     } else {
       delete events[selectedDate];
     }
+
     saveEvents();
     generateCalendar(current);
     renderEventList(selectedDate);
@@ -134,6 +212,77 @@ document.addEventListener("DOMContentLoaded", () => {
     if (e.target === modal) closeModal();
   });
 
-  // 초기 달력 생성
-  generateCalendar(current);
+  filterButtons.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      filterButtons.forEach((b) => b.classList.remove("active"));
+      btn.classList.add("active");
+      selectedCategory = btn.dataset.category;
+      generateCalendar(current);
+
+      if (selectedCategory === "all") {
+        eventList.innerHTML = "<li>날짜를 선택해주세요.</li>";
+      } else {
+        renderFilteredEventList(selectedCategory);
+      }
+    });
+  });
+
+  function loadBookmarkedEvents() {
+    const studentId = localStorage.getItem('loggedInUser');
+    if (!studentId) {
+      console.warn("로그인된 유저가 없어 북마크 일정 로딩 안함.");
+      generateCalendar(current);
+      return;
+    }
+
+    // 기존 북마크 일정 모두 제거
+    for (const date in events) {
+      if (events[date]?.isBookmarked) {
+        delete events[date];
+      }
+    }
+
+    // 각 카테고리별 API 주소 (필요에 맞게 변경)
+    const urls = [
+      { url: `/club/data/bookmarked_club_post?studentId=${studentId}`, category: 'club' },
+      { url: `/group/data/bookmarked_smclub_post?studentId=${studentId}`, category: 'group' },
+      { url: `/etc/data/bookmarked_etcclub_post?studentId=${studentId}`, category: 'etc' },
+    ];
+
+    Promise.all(
+      urls.map(api =>
+        fetch(api.url)
+          .then(res => res.json())
+          .then(posts => ({ posts, category: api.category }))
+          .catch(err => {
+            console.error(`API 호출 실패: ${api.url}`, err);
+            return { posts: [], category: api.category };
+          })
+      )
+    )
+    .then(results => {
+      results.forEach(({ posts, category }) => {
+        posts.forEach(post => {
+          const dateStr = post.deadline;
+          if (!dateStr) return;
+
+          events[dateStr] = {
+            text: post.title || "제목 없음",
+            category: category,
+            isBookmarked: true,
+          };
+        });
+      });
+
+      saveEvents();
+      generateCalendar(current);
+    })
+    .catch(err => {
+      console.error("북마크 일정 통합 로딩 실패:", err);
+      generateCalendar(current);
+    });
+  }
+
+  // 최초 로딩
+  loadBookmarkedEvents();
 });
