@@ -111,44 +111,105 @@ app.get('/notifications', function (req, res) {
 
 // 동아리 페이지 라우팅
 app.get('/club', function (req, res) {
-    res.render("club.ejs");
+  // user 정보 보기
+  // mydb.collection('user').find().toArray().then(result=>{
+  //   console.log(result);
+  //   res.render("club.ejs");
+  // });
+  res.render("club.ejs");
 });
-app.get('/club/data', function (req, res) {
-    mydb
-    .collection('club_post')
-    .find().toArray().then(result=>{
-        res.json(result);
-    }).catch((err)=>{
-        console.log(err);
+// 포스트 데이터 요청 응답
+app.get('/postData', function (req, res) {
+  // 요청에 따라 콜렉션 종류 결정
+  const collection = req.query.postType + "_post";
+  mydb
+  .collection(collection)
+  .find().toArray().then(result=>{
+      res.json(result);
+  }).catch((err)=>{
+      console.log(err);
+  });
+});
+app.get('/bookmarkList', function(req, res){
+  mydb
+  .collection('user')
+  .findOne({ studentId: req.query.studentId})
+  .then(result=>{
+    res.json(result.bookmarkList);
+  }).catch((err)=>{
+    console.log(err);
+  });
+// 북마크 추가, 제거
+})
+app.post('/addBookmark', function(req, res){
+  console.log(req.body);
+  req.body._id = new ObjId(req.body._id);
+  // 요청에 따라 콜렉션 종류 결정
+  const postCollection = req.query.postType + "_post";
+  // user 북마크리스트 업데이트
+  mydb.collection('user')
+  .updateOne({ studentId: req.body.studentId }, {$set : { bookmarkList : req.body.bookmarkList }})
+  .then((result)=>{
+    console.log("추가: ", result.modifiedCount);
+    console.log("북마크 추가 완료!");
+
+    // 포스트의 북마크 개수 증가
+    mydb.collection(postCollection)
+    .updateOne({_id: req.body._id}, {$inc: { bookmarkNum: 1 }})
+    .then((result)=>{
+      console.log(req.body._id);
+      console.log(result);
+      console.log("북마크 수 증가!");
+      res.json({ success: true });
+    })
+    .catch((err)=>{
+      console.log(err);
+      res.status(500).json({ success: false, error: err.message });
     });
+  })
+  .catch((err)=>{
+    console.log(err);
+    res.status(500).json({ success: false, error: err.message });
+  });
+});
+app.post('/deleteBookmark', function(req, res){
+  console.log(req.body);
+  req.body._id = new ObjId(req.body._id);
+  // 요청에 따라 콜렉션 종류 결정
+  const postCollection = req.query.postType + "_post";
+  // user 북마크 리스트 업데이트
+  mydb
+  .collection('user')
+  .updateOne({ studentId: req.body.studentId }, {$set : { bookmarkList : req.body.bookmarkList }})
+  .then((result)=>{
+    console.log("제거: ", result.modifiedCount);
+    console.log("북마크 제거 완료!");
+
+    // 포스트의 북마크 개수 감소
+    mydb.collection(postCollection)
+    .updateOne({_id: req.body._id}, {$inc: { bookmarkNum: -1 }})
+    .then((result)=>{
+      console.log(result);
+      console.log("북마크 수 감소!");
+      res.json({ success: true });
+    })
+    .catch((err)=>{
+      console.log(err);
+    });
+  })
+  .catch((err)=>{
+    console.log(err);
+  });
 });
 
 // 소모임 페이지 라우팅
 app.get('/smclub', function (req, res) {
     res.render("smclub.ejs");
 });
-app.get('/smclub/data', function (req, res) {
-    mydb
-    .collection('smclub_post')
-    .find().toArray().then(result=>{
-        res.json(result);
-    }).catch((err)=>{
-        console.log(err);
-    });
-});
 
 // 기타 페이지 라우팅
 app.get('/etcclub', function (req, res) {
     res.render("etcclub.ejs");
-});
-app.get('/etcclub/data', function (req, res) {
-    mydb
-    .collection('etcclub_post')
-    .find().toArray().then(result=>{
-        res.json(result);
-    }).catch((err)=>{
-        console.log(err);
-    });
 });
 
 // 글쓰기 페이지 라우팅
@@ -177,7 +238,9 @@ app.post('/save',upload.single('image'), function (req, res){
             category : req.body.category,
             deadline : req.body.deadline,
             image : imagePath,
-            createdAt: new Date()  // 등록한 날짜 추가
+            createdAt: new Date(),  // 등록한 날짜 추가
+            bookmarkNum: 0, // 북마크 수
+            hits: 0, // 조회수
         }
     ).then(result => {
         console.log(result);
@@ -222,10 +285,11 @@ app.get("/club/data/etcclub_post", async (req, res) => {
 app.get('/content/:id', function(req, res){
     // collection 선택
     const collection = req.query.type + "_post";
-    req.params.id = new ObjId(req.params.id);
+    console.log(req.params.id);
+    const targetId = new ObjId(req.params.id);
     mydb
     .collection(collection)
-    .findOne({_id : req.params.id})
+    .findOne({_id : targetId})
     .then((result)=>{
         console.log(result);
         res.render("content.ejs", { post : result });
@@ -246,7 +310,8 @@ app.post('/register', async (req, res) => {
       studentId,
       password, // 필요 시 해시 처리 가능
       email,
-      createdAt: new Date()
+      createdAt: new Date(),
+      bookmarkList: [],
     };
 
     await mydb.collection('user').insertOne(newUser);
@@ -285,3 +350,4 @@ app.post('/login', async (req, res) => {
     res.status(500).json({ message: '서버 오류' });
   }
 });
+

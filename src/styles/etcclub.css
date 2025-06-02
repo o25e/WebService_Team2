@@ -116,15 +116,48 @@ body {
     /* 둥근 모서리 */
 }
 
+/* 이미지와 상태 */
+.image-wrapper {
+  display: flex;
+  justify-content: center; /* 가로 가운데 */
+  align-items: center;     /* 세로 가운데 */
+}
+
 /* 이미지 크기와 둥근 모서리 */
 .meeting-image {
-    width: 7.5rem;
-    /* 120px */
-    height: 7.5rem;
-    /* 120px */
-    border-radius: 0.75rem;
-    /* 12px 둥근 모서리 */
-    object-fit: cover;
+  margin: 10px 0 10px 10px;
+  width: 7.5rem;
+  /* 120px */
+  height: 7.5rem;
+  /* 120px */
+  border-radius: 0.75rem;
+  /* 12px 둥근 모서리 */
+  object-fit: cover;
+}
+
+.heart-icon {
+  margin: 10px 10px 0 0;
+  background: white;
+  color: black;
+  font-size: 0.75rem;
+  padding: 0.4rem 0.25rem;
+  border-radius: 0.375rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+.heart-icon span {
+  font-size: 12px;
+  color: black;
+  font-weight: 2;
+}
+
+.heart-icon:hover {
+  background-color: #dbdbdb;
+  cursor: pointer;
+}
+
+.heart-icon.fa-solid {
+  color: red;
 }
 
 /* 모임 정보 영역 */
