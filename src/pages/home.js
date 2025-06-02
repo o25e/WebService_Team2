@@ -37,9 +37,9 @@ function renderPosts(posts, targetId) {
   });
 }
 
-// 왼쪽 사이드바 렌더링 (제목, 내용, 마감기한 포함)
-function renderSidebarPosts(posts, targetSelector) {
-  const area = document.querySelector(targetSelector);
+// 왼쪽 사이드바 렌더링 (디데이 + 제목만)
+function renderSidebarPosts(posts, targetId) {
+  const area = document.getElementById(targetId);
   area.innerHTML = '';
 
   const sorted = posts
@@ -48,10 +48,11 @@ function renderSidebarPosts(posts, targetSelector) {
     .slice(0, 3);
 
   sorted.forEach(post => {
-    const item = document.createElement('li');
+    const item = document.createElement('div');
+    item.className = 'sidebar-item';
     item.innerHTML = `
       <div class="d-day">${getDDay(post.deadline)}</div>
-      <div class="club_name">${post.title}</div><br>
+      <div class="club_name">${post.title}</div>
     `;
     area.appendChild(item);
   });
@@ -62,7 +63,7 @@ fetch("/club/data/club_post")
   .then(res => res.json())
   .then(data => {
     renderPosts(data, "contentArea-club");
-    renderSidebarPosts(data, ".home-popular ul"); // 왼쪽 인기 동아리
+    renderSidebarPosts(data, "contentArea-populared"); // 왼쪽 인기 동아리
   })
   .catch(err => console.error("동아리 불러오기 오류:", err));
 
