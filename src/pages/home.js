@@ -23,7 +23,7 @@ function renderPosts(posts, targetId) {
 
   const sorted = posts
     .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
-    .reverse()
+    // .reverse() // reverse()적용 시 오래된 순 정렬
     .slice(0, 3);
 
   sorted.forEach(post => {
@@ -50,10 +50,11 @@ function renderSidebarPosts(posts, targetSelector) {
   sorted.forEach(post => {
     const item = document.createElement('li');
     item.innerHTML = `
-      <strong>${post.title}</strong><br>
-      <span>${post.content.length > 30 ? post.content.slice(0, 30) + "..." : post.content}</span><br>
-      <small>${getDDay(post.deadline)}</small>
-    `;
+      <div class="d-day">${getDDay(post.deadline)}</div>
+      <div class="club_name">${post.title}</div><br>
+     `;   
+      // <span>${post.content.length > 30 ? post.content.slice(0, 30) + "..." : post.content}</span>
+
     area.appendChild(item);
   });
 }
