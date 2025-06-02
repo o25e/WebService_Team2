@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="/styles/header.css" />
     <!-- 헤더 js -->
     <script src="/layouts/header.js" defer></script>
+    <!-- font awesome 아이콘 css 가져오기 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
         integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -18,11 +19,21 @@
     <!-- 필터 -->
     <!-- 네비 -->
     <div class="nav2">
-        <div class="menu active" onclick="showFilter('field', this)">분야별</div>
+        <div class="menu active" onclick="showFilter('club-name', this)">소모임명</div>
+        <div class="menu" onclick="showFilter('field', this)">분야별</div>
         <div class="menu" onclick="showFilter('status', this)">접수상태</div>
     </div>
+    <!-- 소모임별 -->
+    <div class="filter-box club-name active">
+        <input type='checkbox' name='club-name' value='게임웍스' class="club-name-filter" />게임웍스
+        <input type='checkbox' name='club-name' value='디자인솔솔' class="club-name-filter" />디자인솔솔
+        <input type='checkbox' name='club-name' value='언타이틀' class="club-name-filter" />언타이틀
+        <input type='checkbox' name='club-name' value='슈퍼배드' class="club-name-filter" />슈퍼배드
+        <input type='checkbox' name='club-name' value='미디어올스타' class="club-name-filter" />미디어올스타
+        <input type='checkbox' name='club-name' value='MFC' class="club-name-filter" /><label for="" style="align-content: center;">MFC</label>
+    </div>
     <!-- 분야별 -->
-    <div class="filter-box field active">
+    <div class="filter-box field">
         <input type='checkbox' name='field' value='공연/댄스' class="category-filter" />공연/댄스
         <input type='checkbox' name='field' value='학술/전공' class="category-filter" />학술/전공
         <input type='checkbox' name='field' value='체육' class="category-filter" />체육
@@ -53,8 +64,8 @@
     <!-- 내용 영역 -->
     <div id="contentArea"></div>
 
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
     <script src="/pages/smclub.js"></script>
-
 </body>
 
 </html>

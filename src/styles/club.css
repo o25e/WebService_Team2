@@ -124,6 +124,13 @@ body {
   margin-bottom: 10px;
 }
 
+/* d-day와 하트 아이콘 */
+.icon-box {
+    display: flex;
+    width: 100%;
+    flex-direction: row;
+}
+
 .contentbox .d-day {
   width: fit-content;
   align-self: flex-start;
@@ -134,8 +141,29 @@ body {
   font-size: 14px;
   padding: 8px;
   border-radius: 15px;
-  margin-bottom: 10px;
   text-align: left;
+  margin-right: auto;
+}
+
+.heart-icon {
+  background-color: white;
+  padding: 10px;
+  border-radius: 30px;
+  transition: all 0.3s ease;
+}
+.heart-icon span {
+  font-size: 12px;
+  color: black;
+  font-weight: 2;
+}
+
+.heart-icon:hover {
+  background-color: #dbdbdb;
+  cursor: pointer;
+}
+
+.heart-icon.fa-solid {
+  color: red;
 }
 
 .contentbox .club_name {
@@ -176,6 +204,7 @@ body {
 .btn:hover {
   background-color: #0056b3;
 }
+
 
 #contentArea {
   display: flex;
