@@ -95,9 +95,18 @@ body {
   margin: 0;
 }
 
-.home-popular ul li,
+.home-popular ul li {
+  background-color: #E3F4FF; /* 하늘색 유지 */
+  border-radius: 15px;
+  padding: 8px 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
 .home-bookmarks ul li {
-  background-color: #E3F4FF;
+  background-color: #FFF8DC; /* 연노란색으로 변경 */
   border-radius: 15px;
   padding: 8px 12px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);

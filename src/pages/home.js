@@ -14,16 +14,16 @@ function renderPosts(posts, targetId) {
 
   // targetId별로 사용할 클래스명 정의
   const classMap = {
-    'contentArea-club': 'club-box', // 동아리용
-    'contentArea-group': 'group-box', // 소모임용
-    'contentArea-etc': 'etc-box', // 기타용 
+    'contentArea-club': 'club-box',        // 동아리용
+    'contentArea-group': 'group-box',      // 소모임용
+    'contentArea-etc': 'etc-box',          // 기타용
+    'contentArea-bookmarked': 'bookmark-box' // 북마크용
   };
 
   const boxClass = classMap[targetId] || 'club-box'; // 기본 club-box
 
   const sorted = posts
     .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
-    // .reverse() // reverse()적용 시 오래된 순 정렬
     .slice(0, 3);
 
   sorted.forEach(post => {
@@ -52,14 +52,12 @@ function renderSidebarPosts(posts, targetSelector) {
     item.innerHTML = `
       <div class="d-day">${getDDay(post.deadline)}</div>
       <div class="club_name">${post.title}</div><br>
-     `;   
-      // <span>${post.content.length > 30 ? post.content.slice(0, 30) + "..." : post.content}</span>
-
+    `;
     area.appendChild(item);
   });
 }
 
-// 데이터 fetch 및 렌더링
+// 각 데이터 fetch 및 렌더링
 fetch("/club/data/club_post")
   .then(res => res.json())
   .then(data => {
@@ -77,3 +75,15 @@ fetch("/club/data/etcclub_post")
   .then(res => res.json())
   .then(data => renderPosts(data, "contentArea-etc"))
   .catch(err => console.error("기타 불러오기 오류:", err));
+
+// 사용자 별 북마크한 글 불러오기
+const studentId = localStorage.getItem('loggedInUser');
+
+if (studentId) {
+  fetch(`/club/data/bookmarked_club_post?studentId=${studentId}`)
+    .then(res => res.json())
+    .then(data => renderPosts(data, "contentArea-bookmarked"))
+    .catch(err => console.error("북마크 동아리 불러오기 오류:", err));
+} else {
+  console.warn("로그인한 유저가 없어 북마크를 불러올 수 없습니다.");
+}

@@ -281,6 +281,42 @@ app.get("/club/data/etcclub_post", async (req, res) => {
   }
 });
 
+// 북마크한 동아리 게시물 데이터 반환
+app.get("/club/data/bookmarked_club_post", async (req, res) => {
+  try {
+    const studentId = req.query.studentId;
+
+    if (!studentId) {
+      return res.status(400).json({ error: "studentId is required" });
+    }
+
+    // 유저의 bookmarkList 가져오기
+    const user = await mydb.collection("user").findOne({ studentId });
+
+    if (!user || !user.bookmarkList || user.bookmarkList.length === 0) {
+      return res.json([]); // 북마크한 항목이 없는 경우
+    }
+
+    // 각 postType에 따라 조회
+    const collections = ["club_post", "smclub_post", "etcclub_post"];
+    const objectIdList = user.bookmarkList.map(id => new ObjId(id));
+
+    let bookmarkedPosts = [];
+
+    for (const col of collections) {
+      const posts = await mydb.collection(col)
+        .find({ _id: { $in: objectIdList } })
+        .toArray();
+      bookmarkedPosts = bookmarkedPosts.concat(posts);
+    }
+
+    res.json(bookmarkedPosts);
+  } catch (err) {
+    console.error("북마크 게시물 조회 오류:", err);
+    res.status(500).send("서버 오류");
+  }
+});
+
 // 모집 글 상세 페이지 라우팅
 app.get('/content/:id', function(req, res){
     // collection 선택
