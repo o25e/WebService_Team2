@@ -83,7 +83,7 @@ const studentId = localStorage.getItem('loggedInUser');
 if (studentId) {
   fetch(`/club/data/bookmarked_club_post?studentId=${studentId}`)
     .then(res => res.json())
-    .then(data => renderPosts(data, "contentArea-bookmarked"))
+    .then(data => renderSidebarPosts(data, "contentArea-bookmarked"))
     .catch(err => console.error("북마크 동아리 불러오기 오류:", err));
 } else {
   console.warn("로그인한 유저가 없어 북마크를 불러올 수 없습니다.");
