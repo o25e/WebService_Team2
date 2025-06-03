@@ -281,7 +281,6 @@ app.get("/club/data/etcclub_post", async (req, res) => {
   }
 });
 
-// 북마크한 동아리 게시물 데이터 반환
 app.get("/club/data/bookmarked_club_post", async (req, res) => {
   try {
     const studentId = req.query.studentId;
@@ -290,14 +289,12 @@ app.get("/club/data/bookmarked_club_post", async (req, res) => {
       return res.status(400).json({ error: "studentId is required" });
     }
 
-    // 유저의 bookmarkList 가져오기
     const user = await mydb.collection("user").findOne({ studentId });
 
     if (!user || !user.bookmarkList || user.bookmarkList.length === 0) {
-      return res.json([]); // 북마크한 항목이 없는 경우
+      return res.json([]);
     }
 
-    // 각 postType에 따라 조회
     const collections = ["club_post", "smclub_post", "etcclub_post"];
     const objectIdList = user.bookmarkList.map(id => new ObjId(id));
 
@@ -307,7 +304,15 @@ app.get("/club/data/bookmarked_club_post", async (req, res) => {
       const posts = await mydb.collection(col)
         .find({ _id: { $in: objectIdList } })
         .toArray();
-      bookmarkedPosts = bookmarkedPosts.concat(posts);
+
+      // 컬렉션명에 따른 category 부여
+      const category = col === "club_post" ? "club"
+                     : col === "smclub_post" ? "smclub"
+                     : "etc";
+
+      const postsWithCategory = posts.map(post => ({ ...post, category }));
+
+      bookmarkedPosts = bookmarkedPosts.concat(postsWithCategory);
     }
 
     res.json(bookmarkedPosts);

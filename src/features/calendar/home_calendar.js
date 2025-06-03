@@ -26,17 +26,8 @@ document.addEventListener("DOMContentLoaded", () => {
   function openModal(dateStr) {
     selectedDate = dateStr;
     modalDate.textContent = `${dateStr} 일정`;
-
-    const event = events[dateStr];
-    eventInput.value = event?.text || "";
-
-    const radios = document.querySelectorAll("input[name='event-category']");
-    radios.forEach((r) => {
-      r.checked = event?.category === r.value;
-    });
-
-    modal.classList.remove("hidden");
     renderEventList(dateStr);
+    modal.classList.remove("hidden");
   }
 
   function closeModal() {
@@ -46,18 +37,31 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function renderEventList(dateStr) {
     eventList.innerHTML = "";
-    const event = events[dateStr];
-    if (event) {
-      const li = document.createElement("li");
-      li.textContent = `[${categoryLabel(event.category)}] ${event.text}`;
-      eventList.appendChild(li);
-    } else {
+    const dayEvents = events[dateStr];
+
+    if (!dayEvents) {
       const li = document.createElement("li");
       li.textContent = "일정이 없습니다.";
       li.style.fontStyle = "italic";
       eventList.appendChild(li);
+      return;
     }
+
+    const eventArray = Array.isArray(dayEvents) ? dayEvents : [dayEvents];
+    eventArray.forEach(ev => {
+      const li = document.createElement("li");
+      li.textContent = `[${categoryLabel(ev.category)}] ${ev.text}`;
+      eventList.appendChild(li);
+    });
+
+    // 모달 입력 필드에는 첫 번째 이벤트 내용 및 카테고리 세팅 (편집용)
+    eventInput.value = eventArray[0].text || "";
+    const radios = document.querySelectorAll("input[name='event-category']");
+    radios.forEach(r => {
+      r.checked = eventArray[0].category === r.value;
+    });
   }
+
 
   function renderFilteredEventList(category) {
     eventList.innerHTML = "";
@@ -67,11 +71,15 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    const filteredEvents = Object.entries(events).filter(
-      ([date, event]) =>
-        (category === "bookmark" && event.isBookmarked) ||
-        (event.category === category && event.isBookmarked)
-    );
+    const filteredEvents = Object.entries(events).flatMap(([date, ev]) => {
+      const eventArray = Array.isArray(ev) ? ev : [ev];
+      return eventArray
+        .filter(event =>
+          (category === "bookmark" && event.isBookmarked) ||
+          (event.category === category && event.isBookmarked)
+        )
+        .map(event => ({ date, event }));
+    });
 
     if (filteredEvents.length === 0) {
       const li = document.createElement("li");
@@ -81,7 +89,7 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    filteredEvents.forEach(([date, event]) => {
+    filteredEvents.forEach(({ date, event }) => {
       const li = document.createElement("li");
       li.textContent = `${date} [${categoryLabel(event.category)}] ${event.text}`;
       li.style.cursor = "pointer";
@@ -89,6 +97,7 @@ document.addEventListener("DOMContentLoaded", () => {
       eventList.appendChild(li);
     });
   }
+
 
   function categoryLabel(code) {
     switch (code) {
@@ -132,45 +141,56 @@ document.addEventListener("DOMContentLoaded", () => {
         cell.classList.add("today");
       }
 
-      const event = events[dateStr];
-      if (event && (selectedCategory === "all" || event.category === selectedCategory || (selectedCategory === "bookmark" && event.isBookmarked))) {
-        cell.classList.add("has-event");
+      const dayEvents = events[dateStr];
+      if (dayEvents) {
+        // dayEvents가 배열인지 확인
+        const eventArray = Array.isArray(dayEvents) ? dayEvents : [dayEvents];
+
+        // 선택된 필터에 맞는 이벤트가 하나라도 있으면 표시
+        const hasEventForFilter = eventArray.some(ev =>
+          selectedCategory === "all" ||
+          ev.category === selectedCategory ||
+          (selectedCategory === "bookmark" && ev.isBookmarked)
+        );
+
+        if (hasEventForFilter) {
+          cell.classList.add("has-event");
+        }
+
+        // 점 표시 (북마크 필터 및 카테고리별 색상)
+        eventArray.forEach(ev => {
+          if (ev.isBookmarked &&
+            (selectedCategory === "all" || selectedCategory === "bookmark")) {
+            const dot = document.createElement("span");
+            dot.classList.add("deadline-dot");
+
+            if (ev.category === "club") dot.classList.add("club");
+            else if (ev.category === "group") dot.classList.add("group");
+            else dot.classList.add("etc");
+
+            cell.appendChild(dot);
+          }
+        });
+
+        // 동아리 필터 선택 시 배경 붉은색 처리
+        if (
+          selectedCategory === "club" &&
+          eventArray.some(ev => ev.category === "club")
+        ) {
+          cell.classList.add("club-filtered");
+        }
       }
 
-    // 점 추가 (필터별 색상)
-    if (
-      event &&
-      event.isBookmarked === true &&
-      (selectedCategory === "all" || selectedCategory === "bookmark")
-    ) {
-      const dot = document.createElement("span");
-      dot.classList.add("deadline-dot");
+      cell.addEventListener("click", () => openModal(dateStr));
+      row.appendChild(cell);
 
-      if (event.category === "club") dot.classList.add("club");
-      else if (event.category === "group") dot.classList.add("group");
-      else dot.classList.add("etc");
-
-      cell.appendChild(dot);
-    }
-
-    // 동아리 필터 클릭 시 해당 날짜 배경 붉은색 칠하기
-    if (
-      selectedCategory === "club" &&
-      event &&
-      event.category === "club"
-    ) {
-      cell.classList.add("club-filtered");
-    }
-
-    cell.addEventListener("click", () => openModal(dateStr));
-    row.appendChild(cell);
-
-    if ((firstDay + day) % 7 === 0 || day === lastDate) {
-      calendarBody.appendChild(row);
-      row = document.createElement("tr");
+      if ((firstDay + day) % 7 === 0 || day === lastDate) {
+        calendarBody.appendChild(row);
+        row = document.createElement("tr");
+      }
     }
   }
-}
+
 
   prevMonthBtn.addEventListener("click", () => {
     current.setMonth(current.getMonth() - 1);
@@ -191,12 +211,18 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!selectedDate) return;
 
     if (value) {
-      events[selectedDate] = {
-        text: value,
-        category,
-        isBookmarked: events[selectedDate]?.isBookmarked || false
-      };
+      // 기존 이벤트 배열 유지 혹은 새 배열 생성
+      let eventArray = events[selectedDate];
+      if (!eventArray) {
+        events[selectedDate] = [{ text: value, category, isBookmarked: false }];
+      } else {
+        eventArray = Array.isArray(eventArray) ? eventArray : [eventArray];
+        // 편의상 첫 이벤트만 업데이트 (필요 시 수정 가능)
+        eventArray[0] = { text: value, category, isBookmarked: eventArray[0]?.isBookmarked || false };
+        events[selectedDate] = eventArray;
+      }
     } else {
+      // 일정 삭제: 모든 이벤트 삭제 (필요 시 첫 이벤트만 삭제 등으로 변경 가능)
       delete events[selectedDate];
     }
 
@@ -237,12 +263,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // 기존 북마크 일정 모두 제거
     for (const date in events) {
-      if (events[date]?.isBookmarked) {
+      if (Array.isArray(events[date])) {
+        events[date] = events[date].filter(ev => !ev.isBookmarked);
+        if (events[date].length === 0) delete events[date];
+      } else if (events[date]?.isBookmarked) {
         delete events[date];
       }
     }
 
-    // 각 카테고리별 API 주소 (필요에 맞게 변경)
     const urls = [
       { url: `/club/data/bookmarked_club_post?studentId=${studentId}`, category: 'club' },
       { url: `/group/data/bookmarked_smclub_post?studentId=${studentId}`, category: 'group' },
@@ -266,11 +294,18 @@ document.addEventListener("DOMContentLoaded", () => {
           const dateStr = post.deadline;
           if (!dateStr) return;
 
-          events[dateStr] = {
+          if (!events[dateStr]) {
+            events[dateStr] = [];
+          } else if (!Array.isArray(events[dateStr])) {
+            // 기존 단일 이벤트가 있으면 배열로 변환
+            events[dateStr] = [events[dateStr]];
+          }
+
+          events[dateStr].push({
             text: post.title || "제목 없음",
             category: category,
             isBookmarked: true,
-          };
+          });
         });
       });
 
@@ -282,6 +317,7 @@ document.addEventListener("DOMContentLoaded", () => {
       generateCalendar(current);
     });
   }
+
 
   // 최초 로딩
   loadBookmarkedEvents();
