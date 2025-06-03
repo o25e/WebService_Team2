@@ -98,7 +98,7 @@ function renderPosts(data) {
             </div>
             <div class="icon-box">
                 ${post.deadline ? `<div class="d-day">${getDDay(post.deadline)}</div>` : ''}
-                <i class="${isInBookmarkList ? "fa-solid" : "fa-regular"} fa-heart heart-icon" data-id=${post._id}> 
+                <i class="${isInBookmarkList ? "fa-solid" : "fa-regular"} fa-heart heart-icon" data-id=${post._id}>
                 <span>${post.bookmarkNum}</span></i>
             </div>
             <div class="club_name" onclick="location.href='/content/${post._id}?type=club'">${post.title}</div>
@@ -206,7 +206,7 @@ $(document).on('click', '.heart-icon', function (e) {
         console.log(bookmarkList);
         $.ajax({
             type: 'post',
-            url: '/deleteBookmark?postType=club',
+            url: '/deleteBookmark?type=club_post',
             data: {
                 bookmarkList: bookmarkList,
                 studentId: localStorage.getItem("loggedInUser"),
@@ -226,7 +226,7 @@ $(document).on('click', '.heart-icon', function (e) {
         bookmarkList.push(sid);
         $.ajax({
             type: 'post',
-            url: '/addBookmark?postType=club',
+            url: '/addBookmark?type=club_post',
             data: {
                 bookmarkList: bookmarkList,
                 studentId: localStorage.getItem("loggedInUser"),

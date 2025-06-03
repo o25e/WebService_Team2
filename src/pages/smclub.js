@@ -1,11 +1,22 @@
 let posts = [];
+let smclubPosts = [];
 let bookmarkList = [];
-// 글 데이터 서버로부터 가져오기
-fetch("/postData?postType=smclub")
+// 소모임 데이터 서버로부터 가져오기
+fetch("/smclubData")
     .then(res => res.json())
     .then(data => {
         console.log(data);
         posts = data;
+    })
+    .then(()=>{
+        renderPosts(posts);
+    });
+// 소모임 글 데이터
+fetch("/postData?postType=smclub")
+    .then(res => res.json())
+    .then(data => {
+        console.log("글 데이터", data);
+        smclubPosts = data;
     })
     .then(()=>{
         renderPosts(posts);
@@ -95,7 +106,22 @@ function renderPosts(data) {
         const plainText = rawHtml.replace(/<[^>]*>?/gm, ''); // 모든 HTML 태그 제거
         const length = plainText.trim().length; // 텍스트 길이
         const isInBookmarkList = bookmarkList.includes(post._id); // bookmarkList 안에 있는지
-
+        // 해당 소모임 포스트 가져오기
+        smclubPosts.forEach(post=>console.log(post.clubId));
+        const relatedPosts = smclubPosts.filter(p => p.smclubId === post._id);
+        // 최신 글 정렬 후 가져오기
+        relatedPosts.sort((a, b) => new Date(b.createdDate) - new Date(a.createdDate));
+        const latestPostsHtml = relatedPosts.slice(0, 3).map(p =>`
+            <!-- 게시글 -->
+            <div class="post-list">
+                <div class="post-item">
+                    <span><a href="/content/${p._id}?type=smclub" class="post-title">${p.title}</a></span>
+                    <span style="float: right;">${p.createdDate}</span>
+                </div>
+                <hr class="divider">
+            </div>
+            `
+        ).join('');
         const box = document.createElement('div');
         box.className = 'contentbox';
         box.innerHTML = `
@@ -117,7 +143,7 @@ function renderPosts(data) {
 
                 <!-- 소모임 정보 -->
                 <div class="info">
-                    <h2 class="title" onclick="location.href='/content/${post._id}?type=smclub'">${post.title}</h2>
+                    <h2 class="title" onclick="location.href='/smclubInfo/${post._id}?type=smclub'">${post.title}</h2>
                     <p class="description">${length > 50 ? plainText.slice(0, 50) + "..." : plainText}</p>
 
                     <div class="period-wrapper">
@@ -140,16 +166,7 @@ function renderPosts(data) {
             <div class="latest-posts">
                 <h3 class="latest-title">최신 글</h3>
                 <hr class="divider">
-
-                <!-- 게시글 -->
-                <div class="post-list">
-                    <div class="post-item">
-                        <span>소모임 모집</span>
-                        <span>2025.05.01</span>
-                    </div>
-                    <hr class="divider">
-                </div>
-                <!-- 추가 게시글 -->
+                ${latestPostsHtml || '<div class="post-item"><span>등록된 글 없음</span></div>'}
             </div>
         </div>`;
         area.appendChild(box);
@@ -262,7 +279,7 @@ $(document).on('click', '.heart-icon', function (e) {
         console.log(bookmarkList);
         $.ajax({
             type: 'post',
-            url: '/deleteBookmark?postType=smclub',
+            url: '/deleteBookmark?type=smclub',
             data: {
                 bookmarkList: bookmarkList,
                 studentId: localStorage.getItem("loggedInUser"),
@@ -282,7 +299,7 @@ $(document).on('click', '.heart-icon', function (e) {
         bookmarkList.push(sid);
         $.ajax({
             type: 'post',
-            url: '/addBookmark?postType=smclub',
+            url: '/addBookmark?type=smclub',
             data: {
                 bookmarkList: bookmarkList,
                 studentId: localStorage.getItem("loggedInUser"),

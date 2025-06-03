@@ -227,7 +227,7 @@ $(document).on('click', '.heart-icon', function (e) {
         console.log(bookmarkList);
         $.ajax({
             type: 'post',
-            url: '/deleteBookmark?postType=etcclub',
+            url: '/deleteBookmark?type=etcclub_post',
             data: {
                 bookmarkList: bookmarkList,
                 studentId: localStorage.getItem("loggedInUser"),
@@ -247,7 +247,7 @@ $(document).on('click', '.heart-icon', function (e) {
         bookmarkList.push(sid);
         $.ajax({
             type: 'post',
-            url: '/addBookmark?postType=etcclub',
+            url: '/addBookmark?type=etcclub_post',
             data: {
                 bookmarkList: bookmarkList,
                 studentId: localStorage.getItem("loggedInUser"),
