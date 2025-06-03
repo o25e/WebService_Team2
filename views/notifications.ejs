@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ko">
+
 <head>
   <meta charset="UTF-8" />
   <title>알림 페이지</title>
@@ -10,7 +11,63 @@
   <!-- 헤더 js -->
   <script src="/layouts/header.js" defer></script>
 </head>
+
 <body>
-    <h1>알림창 페이지 구현</h1>
+  <h2>📢 알림</h2>
+  <ul id="notificationList"></ul>
+
+  <script>
+    const studentId = localStorage.getItem("loggedInUser");
+
+    fetch(`/api/notifications?studentId=${studentId}`)
+      .then(res => res.json())
+      .then(data => {
+        const list = document.getElementById("notificationList");
+        list.innerHTML = "";
+
+        if (data.length === 0) {
+          list.innerHTML = "<li>알림이 없습니다.</li>";
+          return;
+        }
+
+        data.forEach(noti => {
+          const item = document.createElement("li");
+
+          // 알림이 클릭 가능하게 링크 추가
+          const link = document.createElement("a");
+          const postType = noti.postType || 'club'; // 기본값 설정
+          link.href = `/content/${noti.postId}?type=${postType}`;
+          link.innerText = noti.message;
+          link.style.textDecoration = "none";
+          link.style.color = "#333";
+
+          item.appendChild(link);
+          list.appendChild(item);
+          link.addEventListener("click", (e) => {
+            e.preventDefault();
+
+            fetch("/api/notifications/markAsRead", {
+              method: "PATCH",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                studentId: studentId,
+                postId: noti.postId,
+              }),
+            }).then(() => {
+              window.location.href = `/content/${noti.postId}?type=${noti.postType}`;
+            });
+          });
+        });
+      })
+      .catch(err => {
+        console.error("알림 불러오기 실패:", err);
+        document.getElementById("notificationList").innerHTML = "<li>알림을 불러오는데 실패했습니다.</li>";
+      });
+
+
+  </script>
 </body>
+
 </html>
