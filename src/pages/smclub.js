@@ -22,19 +22,21 @@ fetch("/postData?postType=smclub")
         renderPosts(posts);
     });
 // bookmarkList 데이터 가져오기
-fetch(`/bookmarkList?studentId=${localStorage.getItem("loggedInUser")}`)
-    .then(res => res.json())
-    .then(data => {
-        console.log(data);
-        if (data === null) {
-            bookmarkList = [];
-        } else {
-            bookmarkList = data;
-        }
-    })
-    .then(()=>{
-        renderPosts(posts);
-    });
+if(localStorage.getItem("loggedInUser")){
+    fetch(`/bookmarkList?studentId=${localStorage.getItem("loggedInUser")}`)
+        .then(res => res.json())
+        .then(data => {
+            console.log(data);
+            if (data === null) {
+                bookmarkList = [];
+            } else {
+                bookmarkList = data;
+            }
+        })
+        .then(()=>{
+            renderPosts(posts);
+        });
+}
 
 //필터
 function showFilter(type, element) {
@@ -269,6 +271,10 @@ window.onload = () => renderPosts(posts);
 
 // jquery ajax로 하트 클릭하면 post 요청 보내기
 $(document).on('click', '.heart-icon', function (e) {
+    if(!localStorage.getItem("loggedInUser")){
+        alert("로그인이 필요합니다");
+        return;
+    }
     let sid = e.currentTarget.dataset.id; // 포스트 id
     let item = e.currentTarget;
 
