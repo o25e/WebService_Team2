@@ -113,10 +113,10 @@ header {
   display: flex;
 }
 
-.filter-box label {
+/* .filter-box label {
   width: 150px;
   text-align: left;
-}
+} */
 
 .search-box {
   display: flex;

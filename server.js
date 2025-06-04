@@ -215,7 +215,13 @@ app.post('/deleteBookmark', function (req, res) {
 
 // 소모임 페이지 라우팅
 app.get('/smclub', function (req, res) {
-  res.render("smclub.ejs");
+  mydb.collection("smclub").find().toArray().then(smclubs=>{
+    const smclubNames = smclubs.map(smclub => smclub.title);
+    res.render("smclub.ejs", {smclubNames});
+  }).catch((err)=>{
+    console.log("소모임 이름 가져오기 오류", err);
+    res.status(500).send("서버 오류");
+  });
 });
 app.get('/enterSmclub', function (req, res) {
   res.render("enterSmclub.ejs");
