@@ -7,6 +7,33 @@ app.use(express.json());
 // 폼 데이터 파싱을 위한 미들웨어 (선택)
 app.use(express.urlencoded({ extended: true }));
 
+// 알림
+const cron = require('node-cron');
+const moment = require('moment');
+const { ObjectId } = require('mongodb');
+
+// 알림 조회 API
+app.get('/api/notifications', async (req, res) => {
+  const studentId = req.query.studentId;
+
+  if (!studentId) {
+    return res.status(400).json({ error: "studentId 없음" });
+  }
+
+  try {
+    const notis = await mydb.collection('notifications')
+      .find({ userStudentId: studentId })
+      .sort({ createdAt: -1 })
+      .toArray();
+
+    res.json(notis);
+  } catch (err) {
+    console.error("알림 조회 오류:", err);
+    res.status(500).json({ error: "서버 내부 오류" });
+  }
+});
+
+
 //이미지 저장
 const multer = require('multer');
 
@@ -107,6 +134,130 @@ app.get('/register', function (req, res) {
 // 알림 페이지 라우팅
 app.get('/notifications', function (req, res) {
   res.render("notifications.ejs");
+});
+app.get('/notifications', async (req, res) => {
+  const studentId = req.query.studentId;
+  if (!studentId) {
+    return res.status(400).json({ error: "studentId 없음" });
+  }
+
+  const notis = await mydb.collection('notifications')
+    .find({ userStudentId: studentId })
+    .sort({ createdAt: -1 })
+    .toArray();
+  res.json(notis);
+});
+const collectionName = 'notification';
+
+cron.schedule('* * * * *', async () => {
+  console.log("              [CRON] 북마크 마감 알림 스캔 시작");
+
+  const users = await mydb.collection('user').find().toArray();
+
+  for (const user of users) {
+    console.log(`사용자: ${user.studentId}`);
+    const bookmarks = user.bookmarkList || [];
+
+    for (const postId of bookmarks) {
+      let post = null;
+      const postCollections = ['club_post', 'etcclub_post', 'smclub_post'];
+
+      for (const col of postCollections) {
+        try {
+          post = await mydb.collection(col).findOne({ _id: new ObjectId(postId) });
+          if (post) {
+            console.log(`✔️ ${col}에서 ${post.title} 찾음`);
+            post._postType = col.replace('_post', '');
+            break;
+          }
+        } catch (err) {
+          console.log(`❌ ${col}에서 postId 변환 실패:`, postId);
+        }
+      }
+
+      if (!post || !post.deadline) {
+        console.log(`❌ 게시글 없음 or 마감일 없음`);
+        continue;
+      }
+
+      const deadline = moment(post.deadline).startOf('day');
+      const today = moment().startOf('day');
+      const dday = deadline.diff(today, 'days');
+
+      console.log(`📝 ${post.title}, 마감일: ${post.deadline}, D-${dday}`);
+
+      // ✅ D-1, D-3, D-5일일 때만 알림
+      const allowedDays = [1, 3, 5];
+
+      if (allowedDays.includes(dday)) {
+        const msg = `[${post.title}]의 마감일이 D-${dday}입니다.`;
+
+        const exists = await mydb.collection('notifications').findOne({
+          userStudentId: user.studentId,
+          message: msg
+        });
+
+        if (!exists) {
+          await mydb.collection('notifications').insertOne({
+            userStudentId: user.studentId,
+            message: msg,
+            postId: post._id,
+            postType: post._postType,
+            isRead: false,
+            createdAt: new Date()
+          });
+          console.log("✅ 알림 추가됨:", msg);
+        } else {
+          console.log("⚠️ 이미 동일한 알림 존재");
+        }
+      }
+    }
+  }
+});
+
+app.get('/api/unread-count', async (req, res) => {
+  const studentId = req.query.studentId;
+  if (!studentId) return res.status(400).json({ error: "studentId 없음" });
+
+  try {
+    const count = await mydb.collection('notifications')
+      .countDocuments({ userStudentId: studentId, isRead: false });
+    res.json({ count });
+  } catch (err) {
+    console.error("알림 수 조회 오류:", err);
+    res.status(500).json({ error: "서버 오류" });
+  }
+});
+
+app.post('/api/mark-read', async (req, res) => {
+  const { studentId, message } = req.body;
+  await mydb.collection('notifications').updateOne(
+    { userStudentId: studentId, message },
+    { $set: { isRead: true } }
+  );
+  res.json({ success: true });
+});
+
+app.patch('/api/notifications/markAsRead', async (req, res) => {
+  const { studentId, postId } = req.body;
+
+  if (!studentId || !postId) {
+    return res.status(400).json({ error: "필수 정보 누락" });
+  }
+
+  try {
+    await mydb.collection('notifications').updateOne(
+      {
+        userStudentId: studentId,
+        postId: new ObjectId(postId) 
+      },
+      { $set: { isRead: true } }
+    );
+    res.status(200).json({ message: "읽음 처리 완료" });
+  } catch (err) {
+    console.error("읽음 처리 오류:", err);
+    res.status(500).json({ error: "서버 오류" });
+  }
 });
 
 // 동아리 페이지 라우팅
