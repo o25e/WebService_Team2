@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <title>숭실대학교 동아리 플랫폼</title>
+    <!-- 공통 헤더 CSS -->
+    <link rel="stylesheet" href="/styles/header.css" />
+    <!-- 전용 css -->
+    <link rel="stylesheet" href="/styles/smclubInfo.css">
+    <!-- 헤더 js -->
+    <script src="/layouts/header.js" defer></script>
+</head>
+
+<body>
+    <!-- 소모임 박스 -->
+    <div class="smclub-box">
+        <div class="flex-box">
+            <div>
+                <% if(data.image) { %>
+                    <img src=<%= data.image %> alt="동아리 이미지" class="club-img">
+                <% } %>
+            </div>
+            <div>
+                <h2><%= data.title %></h2>
+                <h4>마감일 <%= data.deadline %></h4> 
+                <h4>카테고리 <span class="category"><%= data.category %></span></h4>
+            </div>
+        </div>
+        <div class="post-list-wrap">
+            
+            <!-- 최신 글 -->
+            <div class="latest-posts">
+                <h3 class="latest-title">게시글</h3>
+                <hr class="divider">
+                <% for(let i = 0; i < posts.length; i++) { %>
+                    <!-- 게시글 -->
+                    <div class="post-list">
+                        <div class="post-item">
+                            <span><a href="/content/<%= posts[i]._id %>?type=smclub" class="post-title"><%= posts[i].title %></a></span>
+                            <span style="float: right;"><%= posts[i].createdDate %></span>
+                        </div>
+                        <hr class="divider">
+                    </div>
+                <% } %>
+            </div>
+            
+        </div>
+
+    </div>
+
+</body>
+
+</html>

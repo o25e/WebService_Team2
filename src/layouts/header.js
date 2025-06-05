@@ -1,5 +1,12 @@
 window.addEventListener("DOMContentLoaded", () => {
-  const headerContainer = document.createElement("div");
+  const headerContainer = document.createElement("div"); // 헤더 div 만들기
+  const titleTag = document.querySelector("head > title"); // title 태그 찾기
+  // title 태그 바로 다음에 favicon 삽입
+  titleTag.insertAdjacentHTML(
+    "afterend",
+    `<!-- 파비콘 -->
+     <link rel="icon" type="image/" href="https://cdn.builder.io/api/v1/image/assets/TEMP/5e00ff58ae24d3b693ab7c42a265da829f20a895">`
+  );
 
   fetch("/layouts/Header.html")
     .then((res) => res.text())
@@ -8,7 +15,7 @@ window.addEventListener("DOMContentLoaded", () => {
       document.body.insertBefore(headerContainer, document.body.firstChild);
 
       const loggedInUser = localStorage.getItem("loggedInUser");
-      const unreadNotifications = 3;  // 실제 값은 서버나 localStorage 등에서 받아와야 함
+      const unreadNotifications = 3;  // 안 읽은 알림 수. 실제 값은 서버나 localStorage 등에서 받아와야 함
 
       const authArea = headerContainer.querySelector("#auth-area");
 

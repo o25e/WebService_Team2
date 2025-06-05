@@ -25,12 +25,9 @@
     </div>
     <!-- 소모임별 -->
     <div class="filter-box club-name active">
-        <input type='checkbox' name='club-name' value='게임웍스' class="club-name-filter" />게임웍스
-        <input type='checkbox' name='club-name' value='디자인솔솔' class="club-name-filter" />디자인솔솔
-        <input type='checkbox' name='club-name' value='언타이틀' class="club-name-filter" />언타이틀
-        <input type='checkbox' name='club-name' value='슈퍼배드' class="club-name-filter" />슈퍼배드
-        <input type='checkbox' name='club-name' value='미디어올스타' class="club-name-filter" />미디어올스타
-        <input type='checkbox' name='club-name' value='MFC' class="club-name-filter" /><label for="" style="align-content: center;">MFC</label>
+        <% for (let i = 0; i < smclubNames.length; i++) { %>
+            <input type='checkbox' name='club-name' value='<%= smclubNames[i] %>' class="club-name-filter" /><label style="align-content: center;"><%= smclubNames[i] %></label>
+        <% } %>
     </div>
     <!-- 분야별 -->
     <div class="filter-box field">

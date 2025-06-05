@@ -40,7 +40,7 @@ dropArea.addEventListener('drop', e => {
   }
 });
 
-// 🖼️ 이미지 미리보기
+// 🖼️ 이미지 미리보기 함수
 function showPreview(file) {
   const reader = new FileReader();
   reader.onload = () => {

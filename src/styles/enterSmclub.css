@@ -55,11 +55,6 @@ body {
     border: none;
 }
 
-.question {
-    font-size: 12px;
-    margin-right: 10px;
-}
-
 /* 드래그 앤 드롭 */
 .drop-area {
     border: 2px dashed #ccc;
