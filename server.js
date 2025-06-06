@@ -54,8 +54,8 @@ app.use('/uploads', express.static('uploads'));
 // 몽고 DB 접속 코드
 const mongoclient = require('mongodb').MongoClient;
 const ObjId = require('mongodb').ObjectId;
-// const url = 'mongodb+srv://sangho:1016@cluster0.xwq0xe8.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
-const url = 'mongodb+srv://eeeon:0915@cluster0.oz5ftkr.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
+const url = 'mongodb+srv://sangho:1016@cluster0.xwq0xe8.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
+// const url = 'mongodb+srv://eeeon:0915@cluster0.oz5ftkr.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
 //const url = 'mongodb+srv://kimnarin572:0000@cluster0.sn9kshr.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
 let mydb;
 mongoclient.connect(url)
@@ -160,26 +160,39 @@ cron.schedule('* * * * *', async () => {
 
     for (const postId of bookmarks) {
       let post = null;
-      const postCollections = ['club_post', 'etcclub_post', 'smclub_post'];
+      const postCollections = ['club_post', 'etcclub_post', 'smclub'];
 
       for (const col of postCollections) {
         try {
           post = await mydb.collection(col).findOne({ _id: new ObjectId(postId) });
           if (post) {
             console.log(`✔️ ${col}에서 ${post.title} 찾음`);
-            post._postType = col.replace('_post', '');
+            if(col !== 'smclub')
+              post._postType = col.replace('_post', '');
+            else
+              post._postType = col;
             break;
           }
         } catch (err) {
           console.log(`❌ ${col}에서 postId 변환 실패:`, postId);
         }
       }
-
-      if (!post || !post.deadline) {
-        console.log(`❌ 게시글 없음 or 마감일 없음`);
+      
+      if (!post) {
+        console.log(`❌ 게시글 없음`);
         continue;
       }
-
+      // post가 소모임인 경우
+      if (post._postType === 'smclub'){
+        console.log("함수실행");
+        smclubNotification(post, user);
+        continue;
+      }
+      if (!post.deadline) {
+        console.log(`❌ 마감일 없음`);
+        continue;
+      }
+      
       const deadline = moment(post.deadline).startOf('day');
       const today = moment().startOf('day');
       const dday = deadline.diff(today, 'days');
@@ -214,6 +227,53 @@ cron.schedule('* * * * *', async () => {
     }
   }
 });
+//  함수
+async function smclubNotification(smclub, user) {
+  const posts = await mydb.collection("smclub_post").find({ smclubId: smclub._id }).toArray();
+  if(!posts ){
+    console.log("❌ 해당 소모임 포스트들 못 찾음");
+    return;
+  };
+
+  for (const post of posts){
+    if (!post || !post.deadline) {
+        console.log(`❌ 게시글 없음 or 마감일 없음`);
+        continue;
+      }
+      
+      const deadline = moment(post.deadline).startOf('day');
+      const today = moment().startOf('day');
+      const dday = deadline.diff(today, 'days');
+
+      console.log(`📝 ${post.title}, 마감일: ${post.deadline}, D-${dday}`);
+
+      // ✅ D-1, D-3, D-5일일 때만 알림
+      const allowedDays = [1, 3, 5];
+
+      if (allowedDays.includes(dday)) {
+        const msg = `[${post.title}]의 마감일이 D-${dday}입니다.`;
+
+        const exists = await mydb.collection('notifications').findOne({
+          userStudentId: user.studentId,
+          message: msg
+        });
+
+        if (!exists) {
+          await mydb.collection('notifications').insertOne({
+            userStudentId: user.studentId,
+            message: msg,
+            postId: post._id,
+            postType: "smclub",
+            isRead: false,
+            createdAt: new Date()
+          });
+          console.log("✅ 알림 추가됨:", msg);
+        } else {
+          console.log("⚠️ 이미 동일한 알림 존재");
+        }
+      }
+  }
+}
 
 app.get('/api/unread-count', async (req, res) => {
   const studentId = req.query.studentId;
@@ -415,20 +475,47 @@ app.post('/save', upload.single('image'), async function (req, res) {
       bookmarkNum: 0, // 북마크 수
       hits: 0, // 조회수
     }
-    // 소모임 이름에 해당하는 소모임 데이터 _id 저장
+    // smclub_post인 경우 데이터에 smclubId 추가
+    let smclub = {};
     if (req.body.clubType === "smclub_post") {
-      await mydb.collection("smclub").findOne({ title: req.body.smclubName })
-        .then((data) => {
-          postData.smclubId = data._id;
-        });
+      // smclubId에 해당 소모임 _id 저장
+      smclub = await mydb.collection("smclub").findOne({ title: req.body.smclubName })
+      postData.smclubId = smclub._id;
+      postData.postType = "smclub_post";
     }
-    // mongoDB
-    await mydb.collection(req.body.clubType)
-      .insertOne(postData)
-      .then(result => {
-        console.log(result);
-        console.log("데이터 추가 성공")
-      });
+    // mongoDB에 저장
+    const savedData = await mydb.collection(req.body.clubType).insertOne(postData)
+    if(savedData){
+      console.log(savedData.insertedId);
+      console.log("데이터 추가 성공")
+    } else {
+      console.log("데이터 저장 실패")
+    }
+    // smclub_post인 경우 
+    if (req.body.clubType === "smclub_post"){
+      // 북마크 해당 user에게 알림 추가
+      console.log("!!!!!!!!!!!!! 새 글 북마크 추가 시작")
+      const users = await mydb.collection('user').find().toArray();
+      for (const user of users) {
+        console.log(`사용자: ${user.studentId}`);
+        const bookmarks = user.bookmarkList || [];
+        const msg = `${smclub.title}에 새 글이 올라왔습니다.`
+        if(bookmarks.includes(smclub._id.toString())){
+          await mydb.collection('notifications').insertOne({
+            userStudentId: user.studentId,
+            message: msg,
+            postId: savedData.insertedId,
+            postType: "smclub",
+            isRead: false,
+            createdAt: new Date()
+          });
+          console.log("✅ 알림 추가됨:", msg);
+        } else {
+          console.log("북마크에 포함 안됨");
+        }
+      }
+    }
+    // 동아리 목록으로 돌아가기
     const redirect_page = req.body.clubType.replace('_post', '');
     res.redirect("/" + redirect_page);
 

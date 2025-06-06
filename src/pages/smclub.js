@@ -112,7 +112,7 @@ function renderPosts(data) {
         smclubPosts.forEach(post=>console.log(post.clubId));
         const relatedPosts = smclubPosts.filter(p => p.smclubId === post._id);
         // 최신 글 정렬 후 가져오기
-        relatedPosts.sort((a, b) => new Date(b.createdDate) - new Date(a.createdDate));
+        relatedPosts.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
         const latestPostsHtml = relatedPosts.slice(0, 3).map(p =>`
             <!-- 게시글 -->
             <div class="post-list">

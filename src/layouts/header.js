@@ -15,7 +15,7 @@ window.addEventListener("DOMContentLoaded", () => {
       document.body.insertBefore(headerContainer, document.body.firstChild);
 
       const studentId = localStorage.getItem("loggedInUser");
-
+      
       // 알림 수 불러오기
       fetch(`/api/unread-count?studentId=${studentId}`)
         .then(res => res.json())
