@@ -37,15 +37,20 @@ function renderPosts(posts, targetId) {
   });
 }
 
-// 왼쪽 사이드바 렌더링 (디데이 + 제목만)
+// 왼쪽 사이드바 렌더링 (디데이 + 제목만, 마감된 글 제외)
 function renderSidebarPosts(posts, targetId) {
   const area = document.getElementById(targetId);
   area.innerHTML = '';
 
+  const today = new Date();
+  today.setHours(0, 0, 0, 0); // 시간 제거로 정확한 날짜 비교
+
   const sorted = posts
-    .filter(p => p.deadline)
-    .sort((a, b) => new Date(a.deadline).getTime() - new Date(b.deadline).getTime())
-    .slice(0, 3);
+    .filter(p => p.deadline) // 마감일 있는 글만
+    .map(p => ({ ...p, deadlineDate: new Date(p.deadline) }))
+    .filter(p => p.deadlineDate >= today) // 오늘 이후만
+    .sort((a, b) => a.deadlineDate - b.deadlineDate) // 마감일 빠른 순
+    .slice(0, 3); // 최대 3개
 
   sorted.forEach(post => {
     const item = document.createElement('div');
