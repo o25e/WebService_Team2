@@ -10,8 +10,120 @@ body {
     background: #f5f5f5;
 }
 
-h1 {
-    text-align: center;
-    margin-top: 50px; /* 필요에 따라 여백 조절 */
+.container {
+  display: flex;
+  padding: 30px;
 }
 
+/* 왼쪽 프로필 영역 */
+.profile-section {
+  width: 250px;
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* .profile-section img {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 10px;
+} */
+
+.profile-section h2 {
+  margin: 10px 0;
+}
+
+.counts {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 20px;
+  font-size: 14px;
+}
+
+.count-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#written-count,
+#bookmark-count {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 4px;
+}
+
+.bookmark-title {
+  padding: 8px 0px;
+  border-bottom: 1px solid #ddd;
+  cursor: pointer;
+}
+.bookmark-title:hover {
+  background-color: #f0f0f0;
+}
+
+
+/* .write-btn {
+  margin-top: 20px;
+  padding: 10px 20px;
+  background-color: #3f51b5;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+} */
+
+.write-button {
+  width: 100%;
+  display: inline-block;
+  background-color: #3f51b5;
+  color: white;
+  border: none;
+  margin-top: 20px;
+  padding: 10px 20px;
+  border-radius: 20px;
+  text-decoration: none;
+  text-align: center;
+  cursor: pointer;
+}
+.write-button:hover {
+  background-color: #1f2dbf;
+}
+
+/* 오른쪽 콘텐츠 영역 */
+.content-section {
+  flex: 1;
+  margin-left: 30px;
+}
+
+.content-section h3 {
+  margin-top: 0;
+}
+
+.content-box {
+  background-color: white;
+  padding: 20px;
+  margin-bottom: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+/* .post {
+  padding: 10px 0;
+  border-bottom: 1px solid #ddd;
+} */
+
+.post:last-child {
+  border-bottom: none;
+}
+
+.view-all {
+  text-align: right;
+  font-size: 14px;
+  color: gray;
+  cursor: pointer;
+}

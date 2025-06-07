@@ -7,7 +7,7 @@
     <!-- 공통 헤더 CSS -->
     <link rel="stylesheet" href="/styles/header.css" />
     <!-- 전용 css -->
-    <link rel="stylesheet" href="/styles/content.css">
+    <link rel="stylesheet" href="/styles/smclubInfo.css">
     <!-- font awesome 아이콘 css 가져오기 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
         integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g=="
@@ -17,34 +17,43 @@
 </head>
 
 <body>
-    <!-- 글 박스 -->
-    <div class="post-box">
+    <!-- 소모임 박스 -->
+    <div class="smclub-box">
         <div class="flex-box">
             <div>
-                <% if(post.image) { %>
-                    <img src=<%=post.image %> alt="동아리 이미지" class="club-img">
+                <% if(data.image) { %>
+                    <img src=<%= data.image %> alt="동아리 이미지" class="club-img">
                 <% } %>
             </div>
             <div>
-                <h2>
-                    <%= post.title %>
-                </h2>
-                <h4>마감일 <%= post.deadline %>
-                </h4>
-                <h4>카테고리 <span class="category">
-                        <%= post.category %>
-                    </span></h4>
+                <h2><%= data.title %></h2>
+                <h4>마감일 <%= data.deadline %></h4> 
+                <h4>카테고리 <span class="category"><%= data.category %></span></h4>
             </div>
             <div style="margin-left: auto;">
-                <div class="icon-box" data-post-id="<%= post._id %>" data-bookmark-num="<%= post.bookmarkNum %>">
+                <div class="icon-box" data-data-id="<%= data._id %>" data-bookmark-num="<%= data.bookmarkNum %>">
                     <!-- 스크립트가 채워줌-->
                 </div>
             </div>
         </div>
-        <div class="content">
-
-            <%- post.content %>
-
+        <div class="post-list-wrap">
+            
+            <!-- 최신 글 -->
+            <div class="latest-posts">
+                <h3 class="latest-title">게시글</h3>
+                <hr class="divider">
+                <% for(let i = 0; i < posts.length; i++) { %>
+                    <!-- 게시글 -->
+                    <div class="post-list">
+                        <div onclick="document.location.href = '/content/<%= posts[i]._id %>?type=smclub'" class="post-item">
+                            <span class="post-title"><%= posts[i].title %></span>
+                            <span><%= posts[i].createdDate %></span>
+                        </div>
+                        <hr class="divider">
+                    </div>
+                <% } %>
+            </div>
+            
         </div>
 
     </div>
@@ -62,13 +71,13 @@
             }).then(()=>{
                 // 가져온 뒤 동작
                 const box = document.querySelector(".icon-box");
-                const postId = box.dataset.postId;
+                const dataId = box.dataset.dataId;
                 const bookmarkNum = box.dataset.bookmarkNum;
-                console.log(typeof postId, typeof bookmarkNum);
-                const isInBookmarkList = bookmarkList.includes(postId);
+                console.log(typeof dataId, typeof bookmarkNum);
+                const isInBookmarkList = bookmarkList.includes(dataId);
                 box.innerHTML = `
                     <i class="${isInBookmarkList ? " fa-solid" : "fa-regular" } fa-heart heart-icon"
-                        data-id="${postId}">
+                        data-id="${dataId}">
                         <span>${bookmarkNum}</span>
                     </i>`
             })

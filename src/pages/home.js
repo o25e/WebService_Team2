@@ -7,28 +7,37 @@ function getDDay(deadline) {
   return diff >= 0 ? `D-${diff}` : "마감";
 }
 
-// 중앙 콘텐츠 렌더링 (제목, 내용만)
+// 중앙 콘텐츠 렌더링 (제목, 내용만, 마감된 글 제외)
 function renderPosts(posts, targetId) {
   const area = document.getElementById(targetId);
   area.innerHTML = '';
 
   // targetId별로 사용할 클래스명 정의
   const classMap = {
-    'contentArea-club': 'club-box',        // 동아리용
-    'contentArea-group': 'group-box',      // 소모임용
-    'contentArea-etc': 'etc-box',          // 기타용
-    'contentArea-bookmarked': 'bookmark-box' // 북마크용
+    'contentArea-club': 'club-box',
+    'contentArea-group': 'group-box',
+    'contentArea-etc': 'etc-box',
+    'contentArea-bookmarked': 'bookmark-box'
   };
 
-  const boxClass = classMap[targetId] || 'club-box'; // 기본 club-box
+  const boxClass = classMap[targetId] || 'club-box';
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0); // 날짜 비교용
 
   const sorted = posts
-    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+    .filter(p => {
+      if (!p.deadline) return true; // 마감일 없으면 포함
+      const deadlineDate = new Date(p.deadline);
+      deadlineDate.setHours(0, 0, 0, 0);
+      return deadlineDate >= today;
+    })
+    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)) // 최신 글 우선
     .slice(0, 3);
 
   sorted.forEach(post => {
     const box = document.createElement('div');
-    box.className = `contentbox ${boxClass}`; // 동적으로 클래스 지정
+    box.className = `contentbox ${boxClass}`;
     box.innerHTML = `
       <div class="club_name">${post.title}</div>
       <div class="club_exp">${post.content.length > 50 ? post.content.slice(0, 50) + "..." : post.content}</div>
@@ -37,14 +46,31 @@ function renderPosts(posts, targetId) {
   });
 }
 
-// 왼쪽 사이드바 렌더링 (디데이 + 제목만)
+// 왼쪽 사이드바 렌더링 (디데이 + 제목만, 마감된 글 제외)
 function renderSidebarPosts(posts, targetId) {
   const area = document.getElementById(targetId);
   area.innerHTML = '';
 
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
   const sorted = posts
-    .filter(p => p.deadline)
-    .sort((a, b) => new Date(a.deadline).getTime() - new Date(b.deadline).getTime())
+    .filter(p => {
+      if (!p.deadline) return false; // 마감일 없는 글 제외
+      const deadlineDate = new Date(p.deadline);
+      deadlineDate.setHours(0, 0, 0, 0);
+      return deadlineDate >= today;
+    })
+    .sort((a, b) => {
+      const deadlineA = new Date(a.deadline).setHours(0, 0, 0, 0);
+      const deadlineB = new Date(b.deadline).setHours(0, 0, 0, 0);
+
+      if (deadlineA !== deadlineB) {
+        return deadlineA - deadlineB; // 마감일이 빠른 순
+      } else {
+        return new Date(b.createdAt) - new Date(a.createdAt); // 동일한 마감일이면 최신 등록 순
+      }
+    })
     .slice(0, 3);
 
   sorted.forEach(post => {

@@ -40,9 +40,61 @@
   font-weight: bold;
 }
 
-.calendar-table td.has-event::after {
+/* .calendar-table td.has-event::after {
   content: "📌";
   margin-left: 4px;
+} */
+
+/* 동아리, 소모임, 기타 버튼 */
+.calendar-filter-buttons {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 8px;
+}
+
+.calendar-filter-buttons .filter-btn {
+  padding: 5px 10px;
+  background-color: #e0e0e0;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.calendar-filter-buttons .filter-btn.active {
+  background-color: #90caf9;
+  font-weight: bold;
+}
+
+td {
+  position: relative; /* 빨간 점 위치 기준 */
+}
+
+/* 점 스타일 */
+.deadline-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-left: 4px;
+  vertical-align: middle;
+}
+
+/* 점 색상 필터별 */
+.deadline-dot.club {
+  background-color: red;
+}
+
+.deadline-dot.group {
+  background-color: blue;
+}
+
+.deadline-dot.etc {
+  background-color: green;
+}
+
+/* 동아리 필터 선택 시, 해당 날짜 배경색 */
+td.club-filtered {
+  background-color: #fdd; /* 연한 붉은색 */
 }
 
 /* Modal */

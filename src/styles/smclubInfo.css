@@ -22,8 +22,8 @@ body {
     height: 150px;
     border-radius: 20px;
 }
-/* 포스트 상자 */
-.post-box {
+/* 소모임 상자 */
+.smclub-box {
     background-color: white;
     border-radius: 20px;
     width: 800px;
@@ -31,9 +31,28 @@ body {
     padding: 20px;
 }
 
-/* 모집글 */
-.content {
+/* 글 목록 */
+.post-list-wrap {
     margin: 20px 10px;
+}
+
+.post-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.post-item {
+    cursor: pointer;
+    display: flex;
+    margin-top: 10px;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.post-title {
+    color: black;
+    text-decoration: none;
 }
 
 .flex-box {
@@ -47,7 +66,7 @@ body {
     color: white;
     background-color: #3563e9;
 }
-
+/* 가로 꽉 차게 */
 .full {
     width: 100%;
 }
