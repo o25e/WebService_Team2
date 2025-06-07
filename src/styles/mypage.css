@@ -65,6 +65,14 @@ body {
 .bookmark-title:hover {
   background-color: #f0f0f0;
 }
+.written-title {
+  padding: 8px 0px;
+  border-bottom: 1px solid #ddd;
+  cursor: pointer;
+}
+.written-title:hover {
+  background-color: #f0f0f0;
+}
 
 
 /* .write-btn {

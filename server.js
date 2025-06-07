@@ -353,6 +353,8 @@ app.get('/postData', function (req, res) {
       console.log(err);
     });
 });
+
+// 유저 북마크 리스트 보내기
 app.get('/bookmarkList', function (req, res) {
   mydb
     .collection('user')
@@ -362,8 +364,8 @@ app.get('/bookmarkList', function (req, res) {
     }).catch((err) => {
       console.log(err);
     });
-  // 북마크 추가, 제거
-})
+});
+// 북마크 추가, 제거
 app.post('/addBookmark', function (req, res) {
   console.log(req.body);
   req.body._id = new ObjId(req.body._id);
@@ -457,6 +459,7 @@ app.get('/enter', function (req, res) {
 // 글쓰기 저장
 app.post('/save', upload.single('image'), async function (req, res) {
   try{
+    // 이미지 경로
     const imagePath = req.file ? '/uploads/' + req.file.filename : '';
     // 날짜
     const dateObj = new Date();
@@ -476,6 +479,7 @@ app.post('/save', upload.single('image'), async function (req, res) {
       createdDate: formatted, // 포맷 날짜
       bookmarkNum: 0, // 북마크 수
       hits: 0, // 조회수
+      writer: req.body.writer, // 작성자
     }
     // smclub_post인 경우 데이터에 smclubId 추가
     let smclub = {};
@@ -493,6 +497,11 @@ app.post('/save', upload.single('image'), async function (req, res) {
     } else {
       console.log("데이터 저장 실패")
     }
+    // 사용자 정보에 작성 리스트 추가
+    const writer = await mydb.collection("user").findOne({ studentId: req.body.writer });
+    const writeList = writer.writeList? writer.writeList : [];
+    writeList.push(savedData.insertedId.toString());
+    await mydb.collection("user").updateOne({studentId: req.body.writer}, {$set: { writeList: writeList }});
     // smclub_post인 경우 
     if (req.body.clubType === "smclub_post"){
       // 북마크 해당 user에게 알림 추가
@@ -557,7 +566,7 @@ app.get("/club/data/etcclub_post", async (req, res) => {
     res.status(500).send("서버 오류");
   }
 });
-
+// 북마크한 글 데이터 보내기
 app.get("/club/data/bookmarked_club_post", async (req, res) => {
   try {
     const studentId = req.query.studentId;
@@ -585,7 +594,48 @@ app.get("/club/data/bookmarked_club_post", async (req, res) => {
       // 컬렉션명에 따른 category 부여
       const category = col === "club_post" ? "club"
                      : col === "smclub_post" ? "smclub"
-                     : "etc";
+                     : "etcclub";
+
+      const postsWithCategory = posts.map(post => ({ ...post, category }));
+
+      bookmarkedPosts = bookmarkedPosts.concat(postsWithCategory);
+    }
+
+    res.json(bookmarkedPosts);
+  } catch (err) {
+    console.error("북마크 게시물 조회 오류:", err);
+    res.status(500).send("서버 오류");
+  }
+});
+// 유저 글 작성 리스트 보내기
+app.get('/writeList', async function (req, res) {
+  try {
+    const studentId = req.query.studentId;
+
+    if (!studentId) {
+      return res.status(400).json({ error: "studentId is required" });
+    }
+
+    const user = await mydb.collection("user").findOne({ studentId });
+
+    if (!user || !user.writeList || user.writeList.length === 0) {
+      return res.json([]);
+    }
+
+    const collections = ["club_post", "smclub_post", "etcclub_post"];
+    const objectIdList = user.writeList.map(id => new ObjId(id));
+
+    let bookmarkedPosts = [];
+
+    for (const col of collections) {
+      const posts = await mydb.collection(col)
+        .find({ _id: { $in: objectIdList } })
+        .toArray();
+
+      // 컬렉션명에 따른 category 부여
+      const category = col === "club_post" ? "club"
+                     : col === "smclub_post" ? "smclub"
+                     : "etcclub";
 
       const postsWithCategory = posts.map(post => ({ ...post, category }));
 
