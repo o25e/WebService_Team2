@@ -84,9 +84,9 @@
 
             // 클릭 시 상세 페이지로 이동
             div.addEventListener('click', () => {
-              window.location.href = `/content/${post._id}?type=club`;
+              let typePath = post.type || 'club';
+              window.location.href = `/content/${post._id}?type=${typePath}`;
             });
-
             bookmarkPostsEl.appendChild(div);
           });
         }
