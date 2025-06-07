@@ -11,6 +11,64 @@
   <script src="/layouts/header.js" defer></script>
 </head>
 <body>
-    <h1>마이 페이지 구현</h1>
+  <div class="container">
+  <!-- 프로필 영역 -->
+  <div class="profile-section">
+    <img src="../assets/profile-icon.png" alt="프로필" style="width: 70%; height: 70%; border-radius: 50%;" />
+    <!-- <img src="https://via.placeholder.com/100" alt="프로필 이미지"> -->
+    <h2 id="username"></h2>
+    <div class="counts">
+      <div class="count-item">
+        <div id="written-count">1</div>
+        <div>작성한 글</div>
+      </div>
+      <div class="count-item">
+        <div id="bookmark-count">1</div>
+        <div>즐겨찾기</div>
+      </div>
+    </div>
+    <a href="/enter?selected=club" class="write-button">+글쓰기</a>
+
+  </div>  <!-- 콘텐츠 영역 -->
+  <div class="content-section">
+    <!-- 내가 쓴 글 -->
+    <div class="content-box">
+      <h3>내가 쓴 글</h3>
+      <div class="post">“커피와 감성 한 꼬집” C&L동아리 인원모집!!</div>
+      <div class="view-all">전체보기</div>
+    </div>
+
+    <!-- 즐겨찾기한 글 -->
+    <div class="content-box">
+      <h3>즐겨찾기</h3>
+      <div class="post">“커피와 감성 한 꼬집” C&L동아리 인원모집!!</div>
+      <div class="view-all">전체보기</div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const studentId = localStorage.getItem("loggedInUser");
+    const nameElement = document.getElementById("username");
+
+    if (studentId && nameElement) {
+      nameElement.textContent = studentId;
+    }
+  });
+
+  const studentId = localStorage.getItem('loggedInUser');
+
+if (studentId) {
+  fetch(`/club/data/bookmarked_club_post?studentId=${studentId}`)
+    .then(res => res.json())
+    .then(data => {
+      const countEl = document.getElementById('bookmark-count');
+      if (countEl) countEl.textContent = data.length;
+    })
+    .catch(err => console.error("북마크 동아리 불러오기 오류:", err));
+}
+</script>
+
 </body>
 </html>
