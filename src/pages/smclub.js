@@ -116,8 +116,8 @@ function renderPosts(data) {
         const latestPostsHtml = relatedPosts.slice(0, 3).map(p =>`
             <!-- 게시글 -->
             <div class="post-list">
-                <div class="post-item">
-                    <span><a href="/content/${p._id}?type=smclub" class="post-title">${p.title}</a></span>
+                <div onclick="document.location.href = '/content/${p._id}?type=smclub'" class="post-item">
+                    <span class="post-title">${p.title}</span>
                     <span style="float: right;">${p.createdDate}</span>
                 </div>
                 <hr class="divider">

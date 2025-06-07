@@ -374,9 +374,10 @@ header {
 }
 
 .post-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .post-title {

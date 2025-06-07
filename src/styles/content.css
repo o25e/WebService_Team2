@@ -47,3 +47,30 @@ body {
     color: white;
     background-color: #3563e9;
 }
+
+.full {
+    width: 100%;
+}
+
+/* 하트 */
+.heart-icon {
+  background-color: white;
+  padding: 10px;
+  border-radius: 30px;
+  transition: all 0.3s ease;
+  float: right;
+}
+.heart-icon span {
+  font-size: 12px;
+  color: black;
+  font-weight: 2;
+}
+
+.heart-icon:hover {
+  background-color: #dbdbdb;
+  cursor: pointer;
+}
+
+.heart-icon.fa-solid {
+  color: red;
+}

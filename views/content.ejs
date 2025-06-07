@@ -8,6 +8,10 @@
     <link rel="stylesheet" href="/styles/header.css" />
     <!-- 전용 css -->
     <link rel="stylesheet" href="/styles/content.css">
+    <!-- font awesome 아이콘 css 가져오기 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
+        integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
     <!-- 헤더 js -->
     <script src="/layouts/header.js" defer></script>
 </head>
@@ -18,23 +22,114 @@
         <div class="flex-box">
             <div>
                 <% if(post.image) { %>
-                    <img src=<%= post.image %> alt="동아리 이미지" class="club-img">
+                    <img src=<%=post.image %> alt="동아리 이미지" class="club-img">
                 <% } %>
             </div>
             <div>
-                <h2><%= post.title %></h2>
-                <h4>마감일 <%= post.deadline %></h4> 
-                <h4>카테고리 <span class="category"><%= post.category %></span></h4>
+                <h2>
+                    <%= post.title %>
+                </h2>
+                <h4>마감일 <%= post.deadline %>
+                </h4>
+                <h4>카테고리 <span class="category">
+                        <%= post.category %>
+                    </span></h4>
+            </div>
+            <div style="margin-left: auto;">
+                <div class="icon-box" data-post-id="<%= post._id %>" data-bookmark-num="<%= post.bookmarkNum %>">
+                    <!-- 스크립트가 채워줌-->
+                </div>
             </div>
         </div>
         <div class="content">
-            
+
             <%- post.content %>
-            
+
         </div>
 
     </div>
 
+    <script>
+        let bookmarkList = [];
+        // 북마크 리스트 가져오기
+        if(localStorage.getItem("loggedInUser")){
+            fetch(`/bookmarkList?studentId=${localStorage.getItem("loggedInUser")}`)
+            .then(data=>data.json())
+            .then(data=>{
+                if(data){
+                    bookmarkList = data;
+                }
+            }).then(()=>{
+                // 가져온 뒤 동작
+                const box = document.querySelector(".icon-box");
+                const postId = box.dataset.postId;
+                const bookmarkNum = box.dataset.bookmarkNum;
+                console.log(typeof postId, typeof bookmarkNum);
+                const isInBookmarkList = bookmarkList.includes(postId);
+                box.innerHTML = `
+                    <i class="${isInBookmarkList ? " fa-solid" : "fa-regular" } fa-heart heart-icon"
+                        data-id="${postId}">
+                        <span>${bookmarkNum}</span>
+                    </i>`
+            })
+        }
+    </script>
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script>
+        // jquery ajax로 하트 클릭하면 post 요청 보내기
+        $(document).on('click', '.heart-icon', function (e) {
+            if (!localStorage.getItem("loggedInUser")) {
+                alert("로그인이 필요합니다");
+                return;
+            }
+            let sid = e.currentTarget.dataset.id; // 포스트 id
+            let item = e.currentTarget;
+
+            // 북마크리스트에 있는지 확인
+            if (bookmarkList.includes(sid)) {
+                // 있으면 제거
+                bookmarkList = bookmarkList.filter(elem => elem !== sid);
+                console.log(bookmarkList);
+                $.ajax({
+                    type: 'post',
+                    url: '/deleteBookmark?type=smclub_post',
+                    data: {
+                        bookmarkList: bookmarkList,
+                        studentId: localStorage.getItem("loggedInUser"),
+                        _id: sid,
+                    }
+                }).done(function (result) {
+                    item.classList.replace('fa-solid', 'fa-regular');
+                    let bookmarkNum = item.querySelector("span").innerText;
+                    item.querySelector("span").innerText = Number(bookmarkNum) - 1;
+                    console.log("북마크 제거 표시");
+                }).fail(function (xhr, textStatus, errorThrown) {
+                    console.log("북마크 제거 실패");
+                    console.log(xhr, textStatus, errorThrown);
+                });
+            } else {
+                // 없으면 추가
+                bookmarkList.push(sid);
+                $.ajax({
+                    type: 'post',
+                    url: '/addBookmark?type=smclub_post',
+                    data: {
+                        bookmarkList: bookmarkList,
+                        studentId: localStorage.getItem("loggedInUser"),
+                        _id: sid,
+                    }
+                }).done(function (result) {
+                    item.classList.replace('fa-regular', 'fa-solid');
+                    let bookmarkNum = item.querySelector("span").innerText;
+                    item.querySelector("span").innerText = Number(bookmarkNum) + 1;
+                    console.log("북마크 추가 표시");
+                }).fail(function (xhr, textStatus, errorThrown) {
+                    console.log("북마크 추가 실패");
+                    console.log(xhr, textStatus, errorThrown);
+                });
+            }
+        });
+    </script>
 </body>
 
 </html>
