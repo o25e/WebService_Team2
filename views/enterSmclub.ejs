@@ -16,6 +16,8 @@
 
 <body>
     <form action="/save" method="post" enctype="multipart/form-data" class="wrapper" id="myForm">
+        <!-- 작성자 -->
+        <input hidden type="text" id="writer-input" name="writer">
         <h1>소모임 등록</h1><br>
         <!-- 저장 종류 -->
         <div class="hidden">
@@ -90,6 +92,13 @@
         form.onsubmit = function () {
             // 에디터 내용 HTML을 숨겨진 input에 넣음
             document.getElementById('content').value = quill.root.innerHTML;
+        }
+    </script>
+    <script>
+        const writer = localStorage.getItem("loggedInUser");
+        if (writer) {
+            const writerInput = document.getElementById("writer-input");
+            writerInput.value = writer;
         }
     </script>
 </body>
