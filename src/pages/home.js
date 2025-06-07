@@ -52,14 +52,26 @@ function renderSidebarPosts(posts, targetId) {
   area.innerHTML = '';
 
   const today = new Date();
-  today.setHours(0, 0, 0, 0); // 시간 제거로 정확한 날짜 비교
+  today.setHours(0, 0, 0, 0);
 
   const sorted = posts
-    .filter(p => p.deadline) // 마감일 있는 글만
-    .map(p => ({ ...p, deadlineDate: new Date(p.deadline) }))
-    .filter(p => p.deadlineDate >= today) // 오늘 이후만
-    .sort((a, b) => a.deadlineDate - b.deadlineDate) // 마감일 빠른 순
-    .slice(0, 3); // 최대 3개
+    .filter(p => {
+      if (!p.deadline) return false; // 마감일 없는 글 제외
+      const deadlineDate = new Date(p.deadline);
+      deadlineDate.setHours(0, 0, 0, 0);
+      return deadlineDate >= today;
+    })
+    .sort((a, b) => {
+      const deadlineA = new Date(a.deadline).setHours(0, 0, 0, 0);
+      const deadlineB = new Date(b.deadline).setHours(0, 0, 0, 0);
+
+      if (deadlineA !== deadlineB) {
+        return deadlineA - deadlineB; // 마감일이 빠른 순
+      } else {
+        return new Date(b.createdAt) - new Date(a.createdAt); // 동일한 마감일이면 최신 등록 순
+      }
+    })
+    .slice(0, 3);
 
   sorted.forEach(post => {
     const item = document.createElement('div');
