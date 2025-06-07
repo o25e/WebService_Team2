@@ -57,6 +57,16 @@ body {
   margin-bottom: 4px;
 }
 
+.bookmark-title {
+  padding: 8px 0px;
+  border-bottom: 1px solid #ddd;
+  cursor: pointer;
+}
+.bookmark-title:hover {
+  background-color: #f0f0f0;
+}
+
+
 /* .write-btn {
   margin-top: 20px;
   padding: 10px 20px;
@@ -102,10 +112,10 @@ body {
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
 }
 
-.post {
+/* .post {
   padding: 10px 0;
   border-bottom: 1px solid #ddd;
-}
+} */
 
 .post:last-child {
   border-bottom: none;
