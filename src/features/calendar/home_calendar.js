@@ -8,15 +8,15 @@ document.addEventListener("DOMContentLoaded", () => {
   const filterButtons = document.querySelectorAll(".filter-btn");
 
   let current = new Date();
-  let selectedDate = null;
   let selectedCategory = "all";
 
   let events = {};
 
+  // 날짜 클릭 시 해당 날짜 이벤트만 보여주기
   function renderEventList(dateStr) {
     eventList.innerHTML = "";
-    const dayEvents = events[dateStr];
 
+    const dayEvents = events[dateStr];
     if (!dayEvents) {
       const li = document.createElement("li");
       li.textContent = "일정이 없습니다.";
@@ -26,41 +26,53 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     const eventArray = Array.isArray(dayEvents) ? dayEvents : [dayEvents];
-    eventArray.forEach(ev => {
+    const filtered = eventArray.filter(ev => selectedCategory === "all" || ev.category === selectedCategory);
+
+    if (filtered.length === 0) {
       const li = document.createElement("li");
-      li.textContent = `[${categoryLabel(ev.category)}] ${ev.text}`;
-      eventList.appendChild(li);
-    });
-  }
-
-  function renderFilteredEventList(category) {
-    eventList.innerHTML = "";
-
-    if (category === "all") {
-      eventList.innerHTML = "<li>날짜를 선택해주세요.</li>";
-      return;
-    }
-
-    const filteredEvents = Object.entries(events).flatMap(([date, ev]) => {
-      const eventArray = Array.isArray(ev) ? ev : [ev];
-      return eventArray
-        .filter(event => event.category === category)
-        .map(event => ({ date, event }));
-    });
-
-    if (filteredEvents.length === 0) {
-      const li = document.createElement("li");
-      li.textContent = `${categoryLabel(category)} 일정이 없습니다.`;
+      li.textContent = "일정이 없습니다.";
       li.style.fontStyle = "italic";
       eventList.appendChild(li);
       return;
     }
 
-    filteredEvents.forEach(({ date, event }) => {
+    filtered.forEach(ev => {
       const li = document.createElement("li");
-      li.textContent = `${date} [${categoryLabel(event.category)}] ${event.text}`;
-      li.style.cursor = "pointer";
-      li.addEventListener("click", () => renderEventList(date));
+      li.textContent = `[${dateStr}] [${categoryLabel(ev.category)}] ${ev.text}`;
+      eventList.appendChild(li);
+    });
+  }
+
+  // 전체 이벤트 보여주기 (카테고리별 전체)
+  function renderCategoryEvents(category) {
+    eventList.innerHTML = "";
+
+    // 모든 날짜 키 정렬
+    const allDates = Object.keys(events).sort();
+    let filteredEvents = [];
+
+    allDates.forEach(date => {
+      const dayEvents = events[date];
+      const eventArray = Array.isArray(dayEvents) ? dayEvents : [dayEvents];
+
+      eventArray.forEach(ev => {
+        if (category === "all" || ev.category === category) {
+          filteredEvents.push({ date, ...ev });
+        }
+      });
+    });
+
+    if (filteredEvents.length === 0) {
+      const li = document.createElement("li");
+      li.textContent = "일정이 없습니다.";
+      li.style.fontStyle = "italic";
+      eventList.appendChild(li);
+      return;
+    }
+
+    filteredEvents.forEach(ev => {
+      const li = document.createElement("li");
+      li.textContent = `[${ev.date}] [${categoryLabel(ev.category)}] ${ev.text}`;
       eventList.appendChild(li);
     });
   }
@@ -110,36 +122,64 @@ document.addEventListener("DOMContentLoaded", () => {
       const dayEvents = events[dateStr];
       if (dayEvents) {
         const eventArray = Array.isArray(dayEvents) ? dayEvents : [dayEvents];
-
         const hasEventForFilter = eventArray.some(ev =>
-          selectedCategory === "all" ||
-          ev.category === selectedCategory
+          selectedCategory === "all" || ev.category === selectedCategory
         );
 
         if (hasEventForFilter) {
           cell.classList.add("has-event");
         }
 
+        // 배경색 클래스 처리 (수정된 부분)
+        cell.classList.remove("club-filtered", "smclub-filtered", "etcclub-filtered");
+
+        if (selectedCategory === "all") {
+          // 전체 선택 시, 이벤트 카테고리에 따라 각각 색 넣기
+          // 여러 카테고리일 수 있으니 중복 방지를 위해 Set 사용 권장
+          const addedClasses = new Set();
+          eventArray.forEach(ev => {
+            if (ev.category === "club" && !addedClasses.has("club-filtered")) {
+              cell.classList.add("club-filtered");
+              addedClasses.add("club-filtered");
+            } else if (ev.category === "smclub" && !addedClasses.has("smclub-filtered")) {
+              cell.classList.add("smclub-filtered");
+              addedClasses.add("smclub-filtered");
+            } else if (ev.category === "etcclub" && !addedClasses.has("etcclub-filtered")) {
+              cell.classList.add("etcclub-filtered");
+              addedClasses.add("etcclub-filtered");
+            }
+          });
+        } else {
+          // 특정 카테고리 필터일 경우 해당 카테고리 일정만 배경색 넣기
+          if (selectedCategory === "club") {
+            if (eventArray.some(ev => ev.category === "club")) {
+              cell.classList.add("club-filtered");
+            }
+          } else if (selectedCategory === "smclub") {
+            if (eventArray.some(ev => ev.category === "smclub")) {
+              cell.classList.add("smclub-filtered");
+            }
+          } else if (selectedCategory === "etcclub") {
+            if (eventArray.some(ev => ev.category === "etcclub")) {
+              cell.classList.add("etcclub-filtered");
+            }
+          }
+        }
+
+        // 점 추가하는 기존 코드 유지
         eventArray.forEach(ev => {
           const dot = document.createElement("span");
           dot.classList.add("deadline-dot");
-
           if (ev.category === "club") dot.classList.add("club");
           else if (ev.category === "smclub") dot.classList.add("smclub");
           else dot.classList.add("etcclub");
-
           cell.appendChild(dot);
         });
-
-        if (
-          selectedCategory === "club" &&
-          eventArray.some(ev => ev.category === "club")
-        ) {
-          cell.classList.add("club-filtered");
-        }
       }
 
-      cell.addEventListener("click", () => renderEventList(dateStr));
+      cell.addEventListener("click", () => {
+        renderEventList(dateStr);
+      });
       row.appendChild(cell);
 
       if ((firstDay + day) % 7 === 0 || day === lastDate) {
@@ -148,6 +188,8 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
   }
+
+
 
   prevMonthBtn.addEventListener("click", () => {
     current.setMonth(current.getMonth() - 1);
@@ -161,18 +203,15 @@ document.addEventListener("DOMContentLoaded", () => {
     eventList.innerHTML = "<li>날짜를 선택해주세요.</li>";
   });
 
-  filterButtons.forEach((btn) => {
+  filterButtons.forEach(btn => {
     btn.addEventListener("click", () => {
-      filterButtons.forEach((b) => b.classList.remove("active"));
+      filterButtons.forEach(b => b.classList.remove("active"));
       btn.classList.add("active");
       selectedCategory = btn.dataset.category;
       generateCalendar(current);
 
-      if (selectedCategory === "all") {
-        eventList.innerHTML = "<li>날짜를 선택해주세요.</li>";
-      } else {
-        renderFilteredEventList(selectedCategory);
-      }
+      // 필터에 맞는 전체 이벤트 목록 출력
+      renderCategoryEvents(selectedCategory);
     });
   });
 
@@ -187,28 +226,23 @@ document.addEventListener("DOMContentLoaded", () => {
     fetch(`/club/data/bookmarked_club_post?studentId=${studentId}`)
       .then(res => res.json())
       .then(posts => {
-        // category 별로 분리
         const clubPosts = posts.filter(post => post.category === 'club');
         const smclubPosts = posts.filter(post => post.category === 'smclub');
         const etcclubPosts = posts.filter(post => post.category === 'etcclub');
 
-        // 이벤트 객체 초기화 (필요시)
-        Object.keys(events).forEach(key => delete events[key]);
+        events = {};
 
-        // 각 카테고리별 posts를 events에 넣기
-        [ 
-          {posts: clubPosts, category: 'club'}, 
-          {posts: smclubPosts, category: 'smclub'}, 
-          {posts: etcclubPosts, category: 'etcclub'} 
-        ].forEach(({posts, category}) => {
+        [
+          { posts: clubPosts, category: 'club' },
+          { posts: smclubPosts, category: 'smclub' },
+          { posts: etcclubPosts, category: 'etcclub' }
+        ].forEach(({ posts, category }) => {
           posts.forEach(post => {
             const dateStr = post.deadline;
             if (!dateStr) return;
 
             if (!events[dateStr]) {
               events[dateStr] = [];
-            } else if (!Array.isArray(events[dateStr])) {
-              events[dateStr] = [events[dateStr]];
             }
 
             events[dateStr].push({
@@ -219,11 +253,13 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
         generateCalendar(current);
+        renderCategoryEvents(selectedCategory);
       })
       .catch(err => {
         console.error("API 호출 실패:", err);
         generateCalendar(current);
       });
   }
+
   loadBookmarkedEvents();
 });
