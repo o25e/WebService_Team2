@@ -1,5 +1,5 @@
 .home-calendar {
-  background: #f5f5ff;
+  background:rgb(255, 255, 255);
   padding: 10px;
   border-radius: 12px;
   font-family: 'Pretendard', sans-serif;
@@ -35,15 +35,23 @@
 }
 
 .calendar-table td.today {
-  background: #3563e9;
-  color: #fff;
+  background-color: transparent !important; /* 배경 없애기 */
+  color:rgb(0, 0, 0) !important; /* 기본  강조 컬러 유지 */
   font-weight: bold;
+  //background-color: rgba(0, 0, 0, 0.55); /* 연한 회색 배경 */
+  border: 2px solid rgb(121, 121, 121) !important; /* 연회색 테두리 */
+  border-radius: 8px; /* 둥근 모서리 */
 }
 
-/* .calendar-table td.has-event::after {
-  content: "📌";
-  margin-left: 4px;
-} */
+/* 오늘 날짜 숫자 강조용 */
+//.calendar-table td.today span.today-number {
+  //display: inline-block;
+  //background-color: rgba(0, 0, 0, 0.55); /* 연한 회색 배경 */
+  //padding: 2px 3px;
+  //border-radius: 30%;
+  //font-weight: bold;
+  //color: white;
+//}
 
 /* 동아리, 소모임, 기타 버튼 */
 .calendar-filter-buttons {
@@ -60,44 +68,83 @@
   cursor: pointer;
 }
 
-.calendar-filter-buttons .filter-btn.active {
-  background-color: #90caf9;
-  font-weight: bold;
+/* 필터 버튼 색상 지정 */
+.calendar-filter-buttons .filter-btn[data-category="all"] {
+  background-color: #cccccc;
+  color: #333;
 }
 
-td {
-  position: relative; /* 빨간 점 위치 기준 */
+.calendar-filter-buttons .filter-btn[data-category="club"] {
+  background-color:rgb(98, 188, 248); /* 연한 파랑 */
+  color: white;
 }
+
+.calendar-filter-buttons .filter-btn[data-category="smclub"] {
+  background-color:rgb(150, 205, 110); /* 연한 초록 */
+  color: white;
+}
+
+.calendar-filter-buttons .filter-btn[data-category="etcclub"] {
+  background-color:rgb(255, 127, 153); /* 연한 주황 */
+  color: white;
+}
+
+/* 활성 필터 버튼 강조 (굵고 테두리 등) */
+.calendar-filter-buttons .filter-btn.active {
+  font-weight: bold;
+  box-shadow: 0 0 3px rgba(0,0,0,0.3);
+  /* border: 2px solid #222; */
+}
+
+/* 달력 날짜 배경색 (필터별) */
+td.club-filtered {
+  background-color: #bbdefb !important; /* 중간 밝기 파랑 */
+  color: #0d47a1 !important;            /* 진한 파랑 글자 */
+}
+
+td.smclub-filtered {
+  background-color: #c8e6c9 !important; /* 중간 밝기 초록 */
+  color: #1b5e20 !important;            /* 진한 초록 글자 */
+}
+
+td.etcclub-filtered {
+  background-color: #ffcdd2 !important; /* 중간 밝기 빨강 */
+  color: #b71c1c !important;            /* 진한 빨강 글자 */
+}
+
 
 /* 점 스타일 */
-.deadline-dot {
+/* .deadline-dot {
   display: inline-block;
   width: 8px;
   height: 8px;
   border-radius: 50%;
   margin-left: 4px;
   vertical-align: middle;
-}
+} */
 
 /* 점 색상 필터별 */
-.deadline-dot.club {
+/* .deadline-dot.club {
   background-color: red;
 }
 
-.deadline-dot.group {
+.deadline-dot.smclub {
   background-color: blue;
 }
 
-.deadline-dot.etc {
+.deadline-dot.etcclub {
   background-color: green;
-}
+} */
 
-/* 동아리 필터 선택 시, 해당 날짜 배경색 */
-td.club-filtered {
-  background-color: #fdd; /* 연한 붉은색 */
+/* 선택된 날짜 */
+td.selected {
+  border: 1.5px solid #999; /* 회색 경계선 */
+  background-color: #f0f0f0; /* 선택된 배경색 */
+  border-radius: 4px;
 }
 
 /* Modal */
+/* 모달 사용 안 하면 삭제 가능 */
 .modal {
   position: fixed;
   top: 0; left: 0; right: 0; bottom: 0;

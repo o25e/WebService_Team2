@@ -62,16 +62,16 @@
             <button id="nextMonth">&gt;</button>
           </div>
           <div class="calendar-filter-buttons">
-            <button class="filter-btn" data-category="all">전체</button>
+            <button class="filter-btn active" data-category="all">전체</button>
             <button class="filter-btn" data-category="club">동아리</button>
             <button class="filter-btn" data-category="smclub">소모임</button>
-            <button class="filter-btn" data-category="etc">기타</button>
-        </div>
+            <button class="filter-btn" data-category="etcclub">기타</button>
+          </div>
 
           <table class="calendar-table">
             <thead>
               <tr>
-                <th>Su</th><th>Mo</th><th>Tu</th><th>We</th><th>Th</th><th>Fr</th><th>Sa</th>
+                <th>일</th><th>월</th><th>화</th><th>수</th><th>목</th><th>금</th><th>토</th>
               </tr>
             </thead>
             <tbody id="calendar-body">
@@ -79,18 +79,8 @@
             </tbody>
           </table>
           <div id="selected-events" class="selected-events">
-            <h4>선택한 날짜의 일정</h4>
+            <h4>즐겨찾기한 일정</h4>
             <ul id="event-list"><li>날짜를 선택해주세요.</li></ul>
-          </div>
-        </div>
-
-        <!-- 일정 등록 팝업 -->
-        <div id="event-modal" class="modal hidden">
-          <div class="modal-content">
-            <span id="close-modal" class="close-btn">&times;</span>
-            <h3 id="modal-date"></h3>
-            <input type="text" id="event-input" placeholder="일정을 입력하세요" />
-            <button id="save-event">저장</button>
           </div>
         </div>
       </div>
