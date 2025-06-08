@@ -43,9 +43,12 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // 전체 이벤트 보여주기 (카테고리별 전체)
   function renderCategoryEvents(category) {
     eventList.innerHTML = "";
+
+    // 현재 보고 있는 년도와 월을 가져오기
+    const year = current.getFullYear();
+    const month = current.getMonth();
 
     // 모든 날짜 키 정렬
     const allDates = Object.keys(events).sort();
@@ -55,11 +58,17 @@ document.addEventListener("DOMContentLoaded", () => {
       const dayEvents = events[date];
       const eventArray = Array.isArray(dayEvents) ? dayEvents : [dayEvents];
 
-      eventArray.forEach(ev => {
-        if (category === "all" || ev.category === category) {
-          filteredEvents.push({ date, ...ev });
-        }
-      });
+      // 날짜 문자열을 Date 객체로 변환
+      const eventDate = new Date(date);
+
+      // 현재 달과 연도에 해당하는 일정만 필터링
+      if (eventDate.getFullYear() === year && eventDate.getMonth() === month) {
+        eventArray.forEach(ev => {
+          if (category === "all" || ev.category === category) {
+            filteredEvents.push({ date, ...ev });
+          }
+        });
+      }
     });
 
     if (filteredEvents.length === 0) {
@@ -119,62 +128,63 @@ document.addEventListener("DOMContentLoaded", () => {
         cell.classList.add("today");
       }
 
+      // 이벤트가 있고, 이벤트 날짜가 현재 월에 해당할 때만 처리
       const dayEvents = events[dateStr];
       if (dayEvents) {
-        const eventArray = Array.isArray(dayEvents) ? dayEvents : [dayEvents];
-        const hasEventForFilter = eventArray.some(ev =>
-          selectedCategory === "all" || ev.category === selectedCategory
-        );
+        const eventDate = new Date(dateStr);
+        if (eventDate.getFullYear() === year && eventDate.getMonth() === month) {
+          const eventArray = Array.isArray(dayEvents) ? dayEvents : [dayEvents];
+          const hasEventForFilter = eventArray.some(ev =>
+            selectedCategory === "all" || ev.category === selectedCategory
+          );
 
-        if (hasEventForFilter) {
-          cell.classList.add("has-event");
-        }
+          if (hasEventForFilter) {
+            cell.classList.add("has-event");
+          }
+          // 배경색 클래스 처리
+          cell.classList.remove("club-filtered", "smclub-filtered", "etcclub-filtered");
 
-        // 배경색 클래스 처리 (수정된 부분)
-        cell.classList.remove("club-filtered", "smclub-filtered", "etcclub-filtered");
-
-        if (selectedCategory === "all") {
-          // 전체 선택 시, 이벤트 카테고리에 따라 각각 색 넣기
-          // 여러 카테고리일 수 있으니 중복 방지를 위해 Set 사용 권장
-          const addedClasses = new Set();
-          eventArray.forEach(ev => {
-            if (ev.category === "club" && !addedClasses.has("club-filtered")) {
-              cell.classList.add("club-filtered");
-              addedClasses.add("club-filtered");
-            } else if (ev.category === "smclub" && !addedClasses.has("smclub-filtered")) {
-              cell.classList.add("smclub-filtered");
-              addedClasses.add("smclub-filtered");
-            } else if (ev.category === "etcclub" && !addedClasses.has("etcclub-filtered")) {
-              cell.classList.add("etcclub-filtered");
-              addedClasses.add("etcclub-filtered");
-            }
-          });
-        } else {
-          // 특정 카테고리 필터일 경우 해당 카테고리 일정만 배경색 넣기
-          if (selectedCategory === "club") {
-            if (eventArray.some(ev => ev.category === "club")) {
-              cell.classList.add("club-filtered");
-            }
-          } else if (selectedCategory === "smclub") {
-            if (eventArray.some(ev => ev.category === "smclub")) {
-              cell.classList.add("smclub-filtered");
-            }
-          } else if (selectedCategory === "etcclub") {
-            if (eventArray.some(ev => ev.category === "etcclub")) {
-              cell.classList.add("etcclub-filtered");
+          if (selectedCategory === "all") {
+            const addedClasses = new Set();
+            eventArray.forEach(ev => {
+              if (ev.category === "club" && !addedClasses.has("club-filtered")) {
+                cell.classList.add("club-filtered");
+                addedClasses.add("club-filtered");
+              } else if (ev.category === "smclub" && !addedClasses.has("smclub-filtered")) {
+                cell.classList.add("smclub-filtered");
+                addedClasses.add("smclub-filtered");
+              } else if (ev.category === "etcclub" && !addedClasses.has("etcclub-filtered")) {
+                cell.classList.add("etcclub-filtered");
+                addedClasses.add("etcclub-filtered");
+              }
+            });
+          } else {
+            // 특정 카테고리 필터별로 해당 카테고리 일정만 배경색 넣기
+            if (selectedCategory === "club") {
+              if (eventArray.some(ev => ev.category === "club")) {
+                cell.classList.add("club-filtered");
+              }
+            } else if (selectedCategory === "smclub") {
+              if (eventArray.some(ev => ev.category === "smclub")) {
+                cell.classList.add("smclub-filtered");
+              }
+            } else if (selectedCategory === "etcclub") {
+              if (eventArray.some(ev => ev.category === "etcclub")) {
+                cell.classList.add("etcclub-filtered");
+              }
             }
           }
+          
+          // 점 추가하는 코드
+          eventArray.forEach(ev => {
+            const dot = document.createElement("span");
+            dot.classList.add("deadline-dot");
+            if (ev.category === "club") dot.classList.add("club");
+            else if (ev.category === "smclub") dot.classList.add("smclub");
+            else dot.classList.add("etcclub");
+            cell.appendChild(dot);
+          });
         }
-
-        // 점 추가하는 기존 코드 유지
-        eventArray.forEach(ev => {
-          const dot = document.createElement("span");
-          dot.classList.add("deadline-dot");
-          if (ev.category === "club") dot.classList.add("club");
-          else if (ev.category === "smclub") dot.classList.add("smclub");
-          else dot.classList.add("etcclub");
-          cell.appendChild(dot);
-        });
       }
 
       cell.addEventListener("click", () => {
@@ -188,8 +198,6 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
   }
-
-
 
   prevMonthBtn.addEventListener("click", () => {
     current.setMonth(current.getMonth() - 1);
