@@ -1,4 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
+  let selectedCell = null; // 현재 선택된 날짜 셀 저장용 변수
+
   const monthYear = document.getElementById("monthYear");
   const calendarBody = document.getElementById("calendar-body");
   const prevMonthBtn = document.getElementById("prevMonth");
@@ -116,6 +118,18 @@ document.addEventListener("DOMContentLoaded", () => {
         year === today.getFullYear()
       ) {
         cell.classList.add("today");
+
+        // 숫자만 감싸는 span 추가
+        const span = document.createElement("span");
+        span.textContent = day;
+        span.classList.add("today-number");
+        cell.textContent = ""; // 기존 텍스트 제거
+        cell.appendChild(span);
+
+        // 페이지 로드 시 오늘 날짜 셀에 자동 선택 처리
+        cell.classList.add("selected");
+        selectedCell = cell; // 현재 선택된 셀 변수 갱신
+        renderEventList(dateStr); // 오늘 날짜의 이벤트 리스트 표시
       }
 
       const dayEvents = events[dateStr];
@@ -202,9 +216,20 @@ document.addEventListener("DOMContentLoaded", () => {
         // });
       }
 
+      // 기존 cell 클릭 이벤트 내부 수정
       cell.addEventListener("click", () => {
+        // 이전에 선택된 셀에서 selected 클래스 제거
+        if (selectedCell) {
+          selectedCell.classList.remove("selected");
+        }
+        
+        // 현재 클릭된 셀에 selected 클래스 추가
+        cell.classList.add("selected");
+        selectedCell = cell;  // 선택된 셀 갱신
+
         renderEventList(dateStr);
       });
+
 
       row.appendChild(cell);
 
