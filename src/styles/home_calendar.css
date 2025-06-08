@@ -64,17 +64,17 @@
 }
 
 .calendar-filter-buttons .filter-btn[data-category="club"] {
-  background-color: #e57373; /* 연한 빨강 */
+  background-color:rgb(98, 188, 248); /* 연한 파랑 */
   color: white;
 }
 
 .calendar-filter-buttons .filter-btn[data-category="smclub"] {
-  background-color: #64b5f6; /* 연한 파랑 */
+  background-color:rgb(150, 205, 110); /* 연한 초록 */
   color: white;
 }
 
 .calendar-filter-buttons .filter-btn[data-category="etcclub"] {
-  background-color: #81c784; /* 연한 초록 */
+  background-color:rgb(255, 127, 153); /* 연한 주황 */
   color: white;
 }
 
@@ -87,32 +87,33 @@
 
 /* 달력 날짜 배경색 (필터별) */
 td.club-filtered {
-  background-color: #fdecea !important; /* 아주 연한 빨강 */
-  color: #b71c1c !important; /* 진한 빨강 글자 */
+  background-color: #bbdefb !important; /* 중간 밝기 파랑 */
+  color: #0d47a1 !important;            /* 진한 파랑 글자 */
 }
 
 td.smclub-filtered {
-  background-color: #e3f2fd !important; /* 아주 연한 파랑 */
-  color: #0d47a1 !important; /* 진한 파랑 글자 */
+  background-color: #c8e6c9 !important; /* 중간 밝기 초록 */
+  color: #1b5e20 !important;            /* 진한 초록 글자 */
 }
 
 td.etcclub-filtered {
-  background-color: #e8f5e9 !important; /* 아주 연한 초록 */
-  color: #1b5e20 !important; /* 진한 초록 글자 */
+  background-color: #ffcdd2 !important; /* 중간 밝기 빨강 */
+  color: #b71c1c !important;            /* 진한 빨강 글자 */
 }
 
+
 /* 점 스타일 */
-.deadline-dot {
+/* .deadline-dot {
   display: inline-block;
   width: 8px;
   height: 8px;
   border-radius: 50%;
   margin-left: 4px;
   vertical-align: middle;
-}
+} */
 
 /* 점 색상 필터별 */
-.deadline-dot.club {
+/* .deadline-dot.club {
   background-color: red;
 }
 
@@ -122,7 +123,7 @@ td.etcclub-filtered {
 
 .deadline-dot.etcclub {
   background-color: green;
-}
+} */
 
 /* Modal */
 /* 모달 사용 안 하면 삭제 가능 */
