@@ -145,7 +145,7 @@ function renderPosts(data) {
 
                 <!-- 소모임 정보 -->
                 <div class="info">
-                    <h2 class="title" onclick="location.href='/smclubInfo/${post._id}?type=smclub'">${post.title}</h2>
+                    <h2 class="title" onclick="location.href='/smclubInfo/${post._id}'">${post.title}</h2>
                     <p class="description">${length > 50 ? plainText.slice(0, 50) + "..." : plainText}</p>
 
                     <div class="period-wrapper">

@@ -22,8 +22,8 @@
         <div class="flex-box">
             <div>
                 <% if(post.image) { %>
-                    <img src=<%=post.image %> alt="동아리 이미지" class="club-img">
-                <% } %>
+                    <img src="<%=post.image %>" alt="동아리 이미지" class="club-img">
+                    <% } %>
             </div>
             <div>
                 <h2>
@@ -35,9 +35,18 @@
                         <%= post.category %>
                     </span></h4>
             </div>
-            <div style="margin-left: auto;">
+            <div style="margin-left: auto; display: flex; flex-direction: column; justify-content: space-between;">
                 <div class="icon-box" data-post-id="<%= post._id %>" data-bookmark-num="<%= post.bookmarkNum %>">
                     <!-- 스크립트가 채워줌-->
+                </div>
+                <div class="text-box" style="text-align: end;">
+                    <span>2025.06.09 10:10</span>
+                    <span id="edit-delete-box" class="hidden">
+                        <br>
+                        <span id="edit" data-post-id="<%= post._id %>">수정</span>
+                        <span>|</span>
+                        <span id="delete" data-post-id="<%= post._id %>">삭제</span>
+                    </span>
                 </div>
             </div>
         </div>
@@ -52,30 +61,63 @@
     <script>
         let bookmarkList = [];
         // 북마크 리스트 가져오기
-        if(localStorage.getItem("loggedInUser")){
+        if (localStorage.getItem("loggedInUser")) {
             fetch(`/bookmarkList?studentId=${localStorage.getItem("loggedInUser")}`)
-            .then(data=>data.json())
-            .then(data=>{
-                if(data){
-                    bookmarkList = data;
-                }
-            }).then(()=>{
-                // 가져온 뒤 동작
-                const box = document.querySelector(".icon-box");
-                const postId = box.dataset.postId;
-                const bookmarkNum = box.dataset.bookmarkNum;
-                console.log(typeof postId, typeof bookmarkNum);
-                const isInBookmarkList = bookmarkList.includes(postId);
-                box.innerHTML = `
-                    <i class="${isInBookmarkList ? " fa-solid" : "fa-regular" } fa-heart heart-icon"
+                .then(data => data.json())
+                .then(data => {
+                    if (data) {
+                        bookmarkList = data;
+                    }
+                }).then(() => {
+                    // 가져온 뒤 동작
+                    const box = document.querySelector(".icon-box");
+                    const postId = box.dataset.postId;
+                    const bookmarkNum = box.dataset.bookmarkNum;
+                    console.log(typeof postId, typeof bookmarkNum);
+                    const isInBookmarkList = bookmarkList.includes(postId);
+                    box.innerHTML = `
+                    <i class="${isInBookmarkList ? " fa-solid" : "fa-regular"} fa-heart heart-icon"
                         data-id="${postId}">
                         <span>${bookmarkNum}</span>
                     </i>`
-            })
+                })
+        }
+        // 작성자 확인
+        if (localStorage.getItem("loggedInUser") === "<%= post.writer %>") {
+            const box = document.querySelector("#edit-delete-box");
+            box.classList.remove("hidden");
         }
     </script>
     <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
     <script>
+        // edit 요청
+        $('#edit').click(function (e) {
+            const urlParams = new URLSearchParams(window.location.search);
+            const clubType = urlParams.get('type');
+            location.href = `/edit/<%= post._id %>?type=${clubType}`;
+        });
+        // delete 요청
+        $('#delete').click(function (e) {
+            if (confirm("정말 삭제하시겠습니까?")) {
+                const urlParams = new URLSearchParams(window.location.search);
+                const clubType = urlParams.get('type');
+                $.ajax({
+                    type: 'post',
+                    url: `/delete`,
+                    data: {
+                        _id: this.dataset.postId,
+                        clubType: clubType,
+                    }
+                }).done(function (result) {
+                    location.href = `/${clubType}`;
+                }).fail(function (xhr, textStatus, errorThrown) {
+                    console.log(xhr, textStatus, errorThrown);
+                });
+                alert("삭제했습니다.");
+            } else {
+            }
+
+        });
         // jquery ajax로 하트 클릭하면 post 요청 보내기
         $(document).on('click', '.heart-icon', function (e) {
             if (!localStorage.getItem("loggedInUser")) {
