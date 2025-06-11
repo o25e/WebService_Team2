@@ -1,6 +1,5 @@
 // 서버
 const express = require('express');
-const session = require('express-session');
 const app = express();
 
 // JSON 파싱을 위한 미들웨어
