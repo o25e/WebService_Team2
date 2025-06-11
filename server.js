@@ -459,6 +459,7 @@ app.get('/enter', function (req, res) {
 // 글쓰기 저장
 app.post('/save', upload.single('image'), async function (req, res) {
   try{
+    console.log(req.file);
     // 이미지 경로
     const imagePath = req.file ? '/uploads/' + req.file.filename : '';
     // 날짜
@@ -480,6 +481,7 @@ app.post('/save', upload.single('image'), async function (req, res) {
       bookmarkNum: 0, // 북마크 수
       hits: 0, // 조회수
       writer: req.body.writer, // 작성자
+      clubType: req.body.clubType, // 글 종류
     }
     // smclub_post인 경우 데이터에 smclubId 추가
     let smclub = {};
@@ -534,6 +536,61 @@ app.post('/save', upload.single('image'), async function (req, res) {
     console.log("글 저장 실패", err);
     res.status(500).send("서버 에러");
   }
+});
+
+// 글 삭제
+app.post("/delete", function(req, res){
+  const deleteId = new ObjId(req.body._id);
+  mydb.collection(req.body.clubType + "_post")
+  .deleteOne({_id: deleteId}).then(result=>{
+    console.log("삭제 완료");
+    res.status(200).json({message: "삭제 성공"});
+  });
+});
+
+// 글 수정
+app.get("/edit/:id", async function(req, res){
+  const smclubs = await mydb.collection("smclub").find().toArray(); // 소모임들
+  
+  const smclubNames = smclubs.map(elem => elem.title);
+  const editId = new ObjId(req.params.id);
+  const clubType = req.query.type;
+  const renderData = { clubType: clubType, smclubNames: smclubNames }; // 보낼 데이터
+  // 소모임 글이라면
+  if (req.query.type === "smclub"){
+    const smclubPost = await mydb.collection("smclub_post").findOne({ _id : editId }); // 해당 소모임 포스트
+    const smclubName = smclubs.find(smclub => smclub._id.toString() === smclubPost.smclubId.toString()).title;
+    renderData.smclub = smclubName;
+  }
+  mydb.collection(clubType + "_post")
+  .findOne({_id: editId}).then((result)=>{
+    res.render("edit.ejs", { ...renderData, post: result });
+  });
+});
+// 글 수정 처리
+app.post("/edit", upload.single('image'), async function(req, res){
+  setData = {
+    clubType: req.body.clubType,
+    title: req.body.title,
+    content: req.body.content,
+    category: req.body.category,
+    deadline: req.body.deadline,
+  }
+  if(req.file){
+    const imagePath = req.file ? '/uploads/' + req.file.filename : originalImage;
+    setData.image = imagePath;
+  }
+  if(req.body.clubType === "smclub_post"){
+    setData.smclubName = req.body.smclubName;
+    const smclub = await mydb.collection("smclub").findOne({title: req.body.smclubName});
+    setData.smclubId = smclub._id;
+  }
+  mydb.collection(req.body.clubType)
+  .updateOne({ _id: new ObjId(req.body._id) }, {$set: setData})
+  .then(result=>{
+    console.log(result, "데이터 수정 완료");
+    res.redirect(`/content/${req.body._id}?type=${req.body.clubType.replace("_post", '')}`);
+  })
 });
 
 // home 글 정보 불러오기
@@ -653,26 +710,28 @@ app.get('/writeList', async function (req, res) {
 app.get('/content/:id', function (req, res) {
   // collection 선택
   const collection = req.query.type + "_post";
-  console.log(req.params.id);
   const targetId = new ObjId(req.params.id);
   mydb
     .collection(collection)
     .findOne({ _id: targetId })
     .then((result) => {
-      console.log(result);
+      if(!result)
+        return res.status(404).send("해당 글을 찾을 수 없습니다.");
       res.render("content.ejs", { post: result });
+    })
+    .catch((err)=>{
+      console.error(err);
+      res.status(500).send("서버 오류");
     });
 });
 // 소모임 정보 페이지 라우팅
 app.get('/smclubInfo/:id', function (req, res) {
   let smclubData;
-  console.log(req.params.id);
   const targetId = new ObjId(req.params.id);
   mydb
     .collection("smclub")
     .findOne({ _id: targetId })
     .then((result) => {
-      console.log(result);
       smclubData = result;
     }).then(() => {
       mydb.collection("smclub_post").find({ smclubId: targetId }).toArray().then((posts) => {

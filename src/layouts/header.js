@@ -57,7 +57,7 @@ window.addEventListener("DOMContentLoaded", () => {
                     <a href="/mypage" style="margin-bottom: 5px; text-decoration: none; color: inherit; font-weight: bold; cursor: pointer;">
                       ${studentId} 님
                     </a>
-                    <button onclick="logout()" class="login-button" style="background-color: #e93535; color: #fff; padding: 4px 8px; font-size: 16px;">로그아웃</button>
+                    <button onclick="logout()" class="login-button" style="background-color: #e93535; color: #fff; padding: 4px 8px; font-size: 12px;">로그아웃</button>
                   </div>
                 </div>
               `;

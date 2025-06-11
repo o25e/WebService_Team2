@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8" />
-    <title>메인 페이지</title>
+    <title>수정</title>
     <!-- 공통 헤더 CSS -->
     <link rel="stylesheet" href="/styles/header.css" />
     <!-- 전용 CSS -->
@@ -15,23 +15,29 @@
 </head>
 
 <body>
-    <form action="/save" method="post" enctype="multipart/form-data" class="wrapper" id="myForm">
-        <!-- 작성자 -->
+    <form action="/edit" method="post" enctype="multipart/form-data" class="wrapper" id="myForm">
+        <!-- 작성자와 글id -->
         <input hidden type="text" id="writer-input" name="writer">
-        <h1>글쓰기</h1><br>
+        <input hidden type="text" name="_id" value="<%= post._id %>">
+
+        <h1>글 수정</h1><br>
         <div>
             <label for="clubType">글 종류</label><br>
-            <select name="clubType" id="clubType" class="text-box">
-                <option value="club_post">동아리</option>
-                <option value="smclub_post">소모임</option>
-                <option value="etcclub_post">기타</option>
+            <select name="clubType" id="clubType" class="text-box" value="<%= clubType %>_post">
+                <option value="club_post" <%= clubType === "club" ? "selected" : "" %>>동아리</option>
+                <option value="smclub_post" <%= clubType === "smclub" ? "selected" : "" %>>소모임</option>
+                <option value="etcclub_post" <%= clubType === "etcclub" ? "selected" : "" %>>기타</option>
             </select>
         </div><br>
         <div class="smclub-select-wrap hidden">
             <label for="smclubName">소모임 선택</label><br>
             <select name="smclubName" id="smclubName" class="text-box">
                 <% for (let i = 0; i < smclubNames.length; i++) { %>
+                    <% if (clubType === "smclub") { %>
+                    <option value="<%=smclubNames[i]%>" <%= smclub === smclubNames[i] ? "selected" : "" %>><%=smclubNames[i]%></option>
+                    <% } else { %>
                     <option value="<%=smclubNames[i]%>"><%=smclubNames[i]%></option>
+                    <% } %>
                 <% } %>
             </select>
             <div style="float: right;">
@@ -41,32 +47,32 @@
         </div>
         <div>
             <label for="title">제목</label><br>
-            <input type="text" id="title" name="title" class="text-box" required>
+            <input type="text" id="title" name="title" class="text-box" required value="<%= post.title %>">
         </div><br>
         <div>
             <label for="content">내용</label><br>
             <textarea hidden id="content" name="content" class="text-box"></textarea>
             <!-- 에디터 컨테이너 -->
-            <div id="editor" style="height: 400px;"></div>
+            <div id="editor" style="height: 400px;"><%- post.content %></div>
         </div><br>
         <div>
             <label for="category">카테고리</label><br>
             <select id="category" name="category" class="text-box">
-                <option value="공연/댄스">공연/댄스</option>
-                <option value="학술/전공">학술/전공</option>
-                <option value="체육">체육</option>
-                <option value="여행/사진/산악">여행/사진/산악</option>
-                <option value="창업/비즈니스/홍보">창업/비즈니스/홍보</option>
-                <option value="국제/교류">국제/교류</option>
-                <option value="예술/문화">예술/문화</option>
-                <option value="봉사">봉사</option>
-                <option value="게임/보드/취미">게임/보드/취미</option>
-                <option value="사회참여/시사/토론">사회참여/시사/토론</option>
+                <option value="공연/댄스" <%= post.category === "공연/댄스" ? "selected" : "" %>>공연/댄스</option>
+                <option value="학술/전공" <%= post.category === "학술/전공" ? "selected" : "" %>>학술/전공</option>
+                <option value="체육" <%= post.category === "체육" ? "selected" : "" %>>체육</option>
+                <option value="여행/사진/산악" <%= post.category === "여행/사진/산악" ? "selected" : "" %>>여행/사진/산악</option>
+                <option value="창업/비즈니스/홍보" <%= post.category === "창업/비즈니스/홍보" ? "selected" : "" %>>창업/비즈니스/홍보</option>
+                <option value="국제/교류" <%= post.category === "국제/교류" ? "selected" : "" %>>국제/교류</option>
+                <option value="예술/문화" <%= post.category === "예술/문화" ? "selected" : "" %>>예술/문화</option>
+                <option value="봉사" <%= post.category === "봉사" ? "selected" : "" %>>봉사</option>
+                <option value="게임/보드/취미" <%= post.category === "게임/보드/취미" ? "selected" : "" %>>게임/보드/취미</option>
+                <option value="사회참여/시사/토론" <%= post.category === "사회참여/시사/토론" ? "selected" : "" %>>사회참여/시사/토론</option>
             </select>
         </div><br>
         <div>
             <label for="deadline">모집 마감일</label><br>
-            <input type="date" id="deadline" name="deadline" class="text-box">
+            <input type="date" id="deadline" name="deadline" class="text-box" value="<%= post.deadline %>">
         </div><br>
         <div>
             <label for="image">이미지</label><br>
@@ -79,20 +85,18 @@
             </div>
         </div><br>
         <div id="button-wrapper">
-            <button type="submit" class="button">저장</button>
+            <button type="submit" class="button">수정</button>
         </div>
     </form>
 
     <script>
         const selectedOption = document.querySelector("select#clubType");
         const smclubSelectWrap = document.querySelector(".smclub-select-wrap");
-        console.log(selectedOption);
-        // 글 종류 초기설정
-        selectedOption.value = "<%= selected %>_post";
+        const category = document.querySelector("#category");
         smclubSelect();
         // 글 종류 소모임이면 소모임 선택 뜨기
         selectedOption.addEventListener("change", () => {
-            smclubSelect();
+            smclubSelect()  ;
         });
         // smclub이면 나타나고 아니면 없애는 함수
         function smclubSelect(){
@@ -117,6 +121,13 @@
         }
     </script>
     <script src="/pages/enter.js"></script>
+    <script>
+        if("<%= post.image %>"){
+            preview.src = "<%= post.image %>";
+            preview.style.display = 'block';
+            dropText.textContent = '이미지가 선택되었습니다';
+        }
+    </script>
 
     <!-- Quill JS -->
     <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
