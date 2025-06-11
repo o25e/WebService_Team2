@@ -743,6 +743,9 @@ app.get('/smclubInfo/:id', function (req, res) {
     });
 });
 
+const sha = require('sha256');
+const { hash } = require('crypto');
+
 // 회원가입 처리 라우터
 app.post('/register', async (req, res) => {
   const { studentId, password, email } = req.body;
@@ -753,9 +756,12 @@ app.post('/register', async (req, res) => {
       return res.status(400).json({ message: '이미 존재하는 학번입니다.' });
     }
 
+    // 비밀번호 암호화
+    const hashedPassword = sha(password);
+
     const newUser = {
       studentId,
-      password, // 필요 시 해시 처리 가능
+      password: hashedPassword, // 필요 시 해시 처리 가능
       email,
       createdAt: new Date(),
       bookmarkList: [],
@@ -781,7 +787,8 @@ app.post('/login', async (req, res) => {
       return res.status(401).json({ message: '존재하지 않는 사용자입니다.' });
     }
 
-    if (user.password !== password) {
+    const hashedPassword = sha(password);
+    if (user.password !== hashedPassword) {
       return res.status(401).json({ message: '비밀번호가 일치하지 않습니다.' });
     }
 
