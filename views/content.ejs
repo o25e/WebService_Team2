@@ -23,15 +23,16 @@
             <div>
                 <% if(post.image) { %>
                     <img src="<%=post.image %>" alt="동아리 이미지" class="club-img">
-                    <% } %>
+                <% } %>
             </div>
-            <div>
+            <div style="display: flex; flex-direction: column; gap: 10px; padding: 10px 0;">
                 <h2>
                     <%= post.title %>
                 </h2>
-                <h4>마감일 <%= post.deadline %>
-                </h4>
-                <h4>카테고리 <span class="category">
+                <% if(post.deadline) { %>
+                    <h4>마감일 <%= post.deadline %></h4>
+                <% } %>
+                <h4 style="margin-top: auto;">카테고리 <span class="category">
                         <%= post.category %>
                     </span></h4>
             </div>
