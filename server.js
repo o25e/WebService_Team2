@@ -103,6 +103,17 @@ app.use(express.static("public"));
 const path = require('path');
 app.use(express.static(path.join(__dirname, 'src')));
 
+app.get("/", function (req, res){
+    // res.render("index.ejs");
+    if (req.session.user) {
+        console.log("세션 유지");
+        res.render("home.ejs", {user: req.session.user});
+    }else{
+        console.log("user : null");
+        res.render("home.ejs", {user : null});
+    }
+});
+
 // 소개 페이지 라우팅
 app.get('/aboutus', function (req, res) {
   res.render("aboutus.ejs");
