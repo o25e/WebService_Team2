@@ -36,11 +36,15 @@ function renderPosts(posts, targetId, typePath) {
     .slice(0, 3);
 
   sorted.forEach(post => {
+    const rawHtml = post.content; // 글 내용 가져오기
+    const plainText = rawHtml.replace(/<[^>]*>?/gm, ''); // 모든 HTML 태그 제거
+    const length = plainText.trim().length; // 텍스트 길이
+
     const box = document.createElement('div');
     box.className = `contentbox ${boxClass}`;
     box.innerHTML = `
       <div class="club_name">${post.title}</div>
-      <div class="club_exp">${post.content.length > 50 ? post.content.slice(0, 50) + "..." : post.content}</div>
+      <div class="club_exp">${length > 50 ? plainText.slice(0, 47) + "..." : post.content}</div>
     `;
     box.addEventListener("click", () => {
       window.location.href = `/content/${post._id}?type=${typePath}`;

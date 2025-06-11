@@ -104,7 +104,7 @@ function renderPosts(data) {
                 <span>${post.bookmarkNum}</span></i>
             </div>
             <div class="club_name" onclick="location.href='/content/${post._id}?type=club'">${post.title}</div>
-            <div class="club_exp">${length > 50 ? plainText.slice(0, 50) + "..." : plainText}</div>`;
+            <div class="club_exp">${length > 40 ? plainText.slice(0, 40) + "..." : plainText}</div>`;
         area.appendChild(box);
     });
 }
