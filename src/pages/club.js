@@ -27,7 +27,7 @@ if(localStorage.getItem("loggedInUser")){
         });
 }
 
-//필터
+// 필터 체크 처리
 function showFilter(type, element) {
     const menus = document.querySelectorAll('.menu');
     menus.forEach(menu => menu.classList.remove('active'));
@@ -39,6 +39,7 @@ function showFilter(type, element) {
     const target = document.querySelector(`.${type}`);
     if (target) target.classList.add('active');
 }
+
 //글 임시로 보여주기
 // const posts = [
 //     {
@@ -83,11 +84,20 @@ function getStatus(deadline) {
 //posts 글 contentbox 맞춰서 보여주기
 function renderPosts(data) {
     const area = document.getElementById('contentArea');
+    const sortLatest = document.querySelector('.sort-latest');
+    const sortDeadline = document.querySelector('.sort-deadline');
     area.innerHTML = '';
 
-    data.sort(function(a, b){
-        return new Date(b.createdAt) - new Date(a.createdAt); 
-    })
+    if(sortLatest.classList.contains("active") && !sortDeadline.classList.contains("active")){
+        data.sort(function(a, b){
+            return new Date(b.createdAt) - new Date(a.createdAt);
+        });
+    } else {
+        data.sort(function(a, b){
+            return new Date(a.deadline) - new Date(b.deadline);
+        });
+    }
+
     data.forEach(post => {
         const rawHtml = post.content; // 글 내용 가져오기
         const plainText = rawHtml.replace(/<[^>]*>?/gm, ''); // 모든 HTML 태그 제거
@@ -252,3 +262,34 @@ $(document).on('click', '.heart-icon', function (e) {
         });
     }
 });
+function fetchAndRender(page = 1) {
+  fetch(`/api/clubPosts?page=${page}`)
+    .then(res => res.json())
+    .then(data => {
+      renderPosts(data.posts);
+      renderPagination(data.currentPage, data.totalPages);
+    });
+}
+function renderPagination(currentPage, totalPages) {
+  console.log("pagination 렌더링 시작", currentPage, totalPages);
+  const pagination = document.getElementById("pagination");
+  pagination.innerHTML = "";
+
+  for (let i = 1; i <= totalPages; i++) {
+    const pageLink = document.createElement("a");
+    pageLink.innerText = i;
+    pageLink.href = "#";
+    pageLink.style.margin = "0 8px";
+    pageLink.style.fontWeight = i === currentPage ? "bold" : "normal";
+    pageLink.style.color = i === currentPage ? "black" : "#4285f4";
+
+    pageLink.addEventListener("click", (e) => {
+      e.preventDefault();
+      fetchAndRender(i);
+    });
+
+    pagination.appendChild(pageLink);
+  }
+}
+
+fetchAndRender(window.currentPageFromServer || 1);
