@@ -166,6 +166,7 @@ body {
 }
 
 .home-sidebar-right {
+  position: relative;
   width: 25%;
   display: flex;
   flex-direction: column;
@@ -173,6 +174,9 @@ body {
 }
 
 .home-calendar {
+  position: sticky;
+  top: 100px;
+  z-index: 10;
   background-color: #ffffff;
   border-radius: 10px;
   padding: 16px;
