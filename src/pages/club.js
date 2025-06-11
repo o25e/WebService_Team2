@@ -262,3 +262,34 @@ $(document).on('click', '.heart-icon', function (e) {
         });
     }
 });
+function fetchAndRender(page = 1) {
+  fetch(`/api/clubPosts?page=${page}`)
+    .then(res => res.json())
+    .then(data => {
+      renderPosts(data.posts);
+      renderPagination(data.currentPage, data.totalPages);
+    });
+}
+function renderPagination(currentPage, totalPages) {
+  console.log("pagination 렌더링 시작", currentPage, totalPages);
+  const pagination = document.getElementById("pagination");
+  pagination.innerHTML = "";
+
+  for (let i = 1; i <= totalPages; i++) {
+    const pageLink = document.createElement("a");
+    pageLink.innerText = i;
+    pageLink.href = "#";
+    pageLink.style.margin = "0 8px";
+    pageLink.style.fontWeight = i === currentPage ? "bold" : "normal";
+    pageLink.style.color = i === currentPage ? "black" : "#4285f4";
+
+    pageLink.addEventListener("click", (e) => {
+      e.preventDefault();
+      fetchAndRender(i);
+    });
+
+    pagination.appendChild(pageLink);
+  }
+}
+
+fetchAndRender(window.currentPageFromServer || 1);

@@ -323,13 +323,47 @@ app.patch('/api/notifications/markAsRead', async (req, res) => {
 });
 
 // 동아리 페이지 라우팅
-app.get('/club', function (req, res) {
-  // user 정보 보기
-  // mydb.collection('user').find().toArray().then(result=>{
-  //   console.log(result);
-  //   res.render("club.ejs");
-  // });
-  res.render("club.ejs");
+app.get("/club", async (req, res) => {
+  try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = 8;
+    const skip = (page - 1) * limit;
+
+    const collection = mydb.collection("club_post");
+    const totalPosts = await collection.countDocuments({ clubType: "club_post" });
+    const totalPages = Math.ceil(totalPosts / limit);
+
+    res.render("club", {
+      currentPage: page,
+      totalPages: totalPages
+    });
+  } catch (err) {
+    console.error("클럽 페이지 로딩 중 오류 발생:", err);
+    res.status(500).send("페이지 로딩 오류");
+  }
+});
+app.get("/api/clubPosts", async (req, res) => {
+  try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = 8;
+    const skip = (page - 1) * limit;
+
+    const db = mydb;
+    const collection = db.collection("club_post");
+
+    const totalPosts = await collection.countDocuments({ clubType: "club_post" });
+    const posts = await collection.find({ clubType: "club_post" })
+                                  .sort({ createdAt: -1 })
+                                  .skip(skip)
+                                  .limit(limit)
+                                  .toArray();
+
+    const totalPages = Math.ceil(totalPosts / limit);
+    res.json({ posts, currentPage: page, totalPages });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("서버 에러");
+  }
 });
 // 소모임 데이터 요청 응답
 app.get('/smclubData', function (req, res) {
