@@ -1,5 +1,6 @@
 // 서버
 const express = require('express');
+const session = require('express-session');
 const app = express();
 
 // JSON 파싱을 위한 미들웨어
@@ -80,8 +81,7 @@ mongoclient.connect(url)
 const bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({ extended: true }));
 app.set('view engine', 'ejs');
-// // 세션 생성
-// let session = require('express-session');
+
 // app.use(session({
 //     secret : 'b34m352jo2nfosd',
 //     resave : false,
@@ -104,14 +104,8 @@ const path = require('path');
 app.use(express.static(path.join(__dirname, 'src')));
 
 app.get("/", function (req, res){
-    // res.render("index.ejs");
-    if (req.session.user) {
-        console.log("세션 유지");
-        res.render("home.ejs", {user: req.session.user});
-    }else{
-        console.log("user : null");
-        res.render("home.ejs", {user : null});
-    }
+    console.log("user : null");
+    res.render("home.ejs", { user: null });
 });
 
 // 소개 페이지 라우팅
