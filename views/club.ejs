@@ -6,7 +6,8 @@
     <title>동아리 - 동아링</title>
     <link rel="stylesheet" href="/styles/club.css">
     <link rel="stylesheet" href="../styles/header.css" />
-    <script src="../layouts/header.js" defer></script>
+    <!-- header.js는 아래로 옮김 -->
+    <!-- font awesome 아이콘 css 가져오기 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
         integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -18,7 +19,7 @@
         <div class="menu" onclick="showFilter('status', this)">접수상태</div>
     </div>
 
-    
+
     <div class="filter-box field active">
         <input type='checkbox' name='field' value='공연/댄스' class="category-filter" />공연/댄스
         <input type='checkbox' name='field' value='학술/전공' class="category-filter" />학술/전공
@@ -32,26 +33,65 @@
         <input type='checkbox' name='field' value='사회참여/시사/토론' class="category-filter" />사회참여/시사/토론
     </div>
 
-    
+
     <div class="filter-box status">
-        <input type='checkbox' name='application' value='ing' class="status-filter" />모집중
+        <input type='checkbox' name='application' value='ing' class="status-filter" checked/>모집중
         <input type='checkbox' name='application' value='done' class="status-filter" />모집완료
     </div>
 
-
-
-    <form class="search-box" action="" method="get">
-        <input class="search-txt" type="text" name="" placeholder="검색어를 입력하세요" id="searchInput">
-        <button class="search-btn" type="submit">
-            <i class="fa-solid fa-magnifying-glass"></i>
-        </button>
-    </form>
-
+    <div class="center-wrapper">
+        <div class="search-sort-box">
+            <form class="search-box" action="" method="get">
+                <input class="search-txt" type="text" name="" placeholder="검색어를 입력하세요" id="searchInput">
+                <button class="search-btn" type="submit">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </button>
+            </form>
+            <!-- 최신순, 마감순 -->
+            <div class="sort-box">
+                <span class="sort-latest active">최신순</span>
+                <span>|</span>
+                <span class="sort-deadline">마감순</span>
+            </div>
+        </div>
+    </div>
     <!-- 글쓰기 버튼 -->
-    <a href="/enter?selected=club" class="btn"><i class="fa-solid fa-pen-to-square"></i> 글쓰기</a>
-
+    <a id="write-button" class="btn"><i class="fa-solid fa-pen-to-square"></i> 글쓰기</a>
+    
+    <!-- 동아리들 -->
     <div id="contentArea" style="display: flex; flex-wrap: wrap;"></div>
-
+    <div id="pagination" style="text-align: center; margin-top: 30px;"></div>
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
     <script src="/pages/club.js"></script>
+    <!-- 헤더 -->
+    <script src="../layouts/header.js" defer></script>
+    <script>
+        // 글쓰기 버튼 링크
+        const writeButton = document.querySelector("#write-button");
+        writeButton.onclick = function (e) {
+            if (!localStorage.getItem("loggedInUser")) {
+                alert("로그인 해주세요");
+                return;
+            }
+            window.location.href = "/enter?selected=club";
+        };
 
+        // sort 액티브 처리
+        const sortLatest = document.querySelector(".sort-latest");
+        const sortDeadline = document.querySelector(".sort-deadline");
+        sortLatest.addEventListener("click", function(e){
+            sortLatest.classList.add("active");
+            sortDeadline.classList.remove("active");
+            filterPosts();
+        });
+        sortDeadline.addEventListener("click", function(e){
+            sortDeadline.classList.add("active");
+            sortLatest.classList.remove("active");
+            filterPosts();
+        });
+    </script>
+    <script>
+        window.currentPageFromServer = <%= JSON.stringify(currentPage || 1) %>;
+        window.totalPagesFromServer = <%= JSON.stringify(totalPages || 1) %>;
+    </script>
 </body>

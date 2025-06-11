@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <title>숭실대학교 동아리 플랫폼</title>
+    <!-- 공통 헤더 CSS -->
+    <link rel="stylesheet" href="/styles/header.css" />
+    <!-- 전용 css -->
+    <link rel="stylesheet" href="/styles/smclubInfo.css">
+    <!-- font awesome 아이콘 css 가져오기 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
+        integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- 헤더 js -->
+    <script src="/layouts/header.js" defer></script>
+</head>
+
+<body>
+    <!-- 소모임 박스 -->
+    <div class="smclub-box">
+        <div class="flex-box">
+            <div>
+                <% if(data.image) { %>
+                    <img src=<%= data.image %> alt="동아리 이미지" class="club-img">
+                <% } %>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 10px; padding: 10px 0;">
+                <h2><%= data.title %></h2>
+                <!-- <h4>마감일 <%= data.deadline %></h4>  -->
+                <p><%- data.content %></p>
+
+                <h4 style="margin-top: auto;">카테고리 <span class="category"><%= data.category %></span></h4>
+            </div>
+            <div style="margin-left: auto;">
+                <div class="icon-box" data-data-id="<%= data._id %>" data-bookmark-num="<%= data.bookmarkNum %>">
+                    <!-- 스크립트가 채워줌-->
+                </div>
+            </div>
+        </div>
+        <div class="post-list-wrap">
+            
+            <!-- 최신 글 -->
+            <div class="latest-posts">
+                <h3 class="latest-title">게시글</h3>
+                <hr class="divider">
+                <% for(let i = 0; i < posts.length; i++) { %>
+                    <!-- 게시글 -->
+                    <div class="post-list">
+                        <div onclick="document.location.href = '/content/<%= posts[i]._id %>?type=smclub'" class="post-item">
+                            <span class="post-title"><%= posts[i].title %></span>
+                            <span><%= posts[i].createdDate %></span>
+                        </div>
+                        <hr class="divider">
+                    </div>
+                <% } %>
+            </div>
+            
+        </div>
+
+    </div>
+
+    <script>
+        let bookmarkList = [];
+        // 북마크 리스트 가져오기
+        if(localStorage.getItem("loggedInUser")){
+            fetch(`/bookmarkList?studentId=${localStorage.getItem("loggedInUser")}`)
+            .then(data=>data.json())
+            .then(data=>{
+                if(data){
+                    bookmarkList = data;
+                }
+            }).then(()=>{
+                // 가져온 뒤 동작
+                const box = document.querySelector(".icon-box");
+                const dataId = box.dataset.dataId;
+                const bookmarkNum = box.dataset.bookmarkNum;
+                console.log(typeof dataId, typeof bookmarkNum);
+                const isInBookmarkList = bookmarkList.includes(dataId);
+                box.innerHTML = `
+                    <i class="${isInBookmarkList ? " fa-solid" : "fa-regular" } fa-heart heart-icon"
+                        data-id="${dataId}">
+                        <span>${bookmarkNum}</span>
+                    </i>`
+            })
+        }
+    </script>
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script>
+        // jquery ajax로 하트 클릭하면 post 요청 보내기
+        $(document).on('click', '.heart-icon', function (e) {
+            if (!localStorage.getItem("loggedInUser")) {
+                alert("로그인이 필요합니다");
+                return;
+            }
+            let sid = e.currentTarget.dataset.id; // 포스트 id
+            let item = e.currentTarget;
+
+            // 북마크리스트에 있는지 확인
+            if (bookmarkList.includes(sid)) {
+                // 있으면 제거
+                bookmarkList = bookmarkList.filter(elem => elem !== sid);
+                console.log(bookmarkList);
+                $.ajax({
+                    type: 'post',
+                    url: '/deleteBookmark?type=smclub_post',
+                    data: {
+                        bookmarkList: bookmarkList,
+                        studentId: localStorage.getItem("loggedInUser"),
+                        _id: sid,
+                    }
+                }).done(function (result) {
+                    item.classList.replace('fa-solid', 'fa-regular');
+                    let bookmarkNum = item.querySelector("span").innerText;
+                    item.querySelector("span").innerText = Number(bookmarkNum) - 1;
+                    console.log("북마크 제거 표시");
+                }).fail(function (xhr, textStatus, errorThrown) {
+                    console.log("북마크 제거 실패");
+                    console.log(xhr, textStatus, errorThrown);
+                });
+            } else {
+                // 없으면 추가
+                bookmarkList.push(sid);
+                $.ajax({
+                    type: 'post',
+                    url: '/addBookmark?type=smclub_post',
+                    data: {
+                        bookmarkList: bookmarkList,
+                        studentId: localStorage.getItem("loggedInUser"),
+                        _id: sid,
+                    }
+                }).done(function (result) {
+                    item.classList.replace('fa-regular', 'fa-solid');
+                    let bookmarkNum = item.querySelector("span").innerText;
+                    item.querySelector("span").innerText = Number(bookmarkNum) + 1;
+                    console.log("북마크 추가 표시");
+                }).fail(function (xhr, textStatus, errorThrown) {
+                    console.log("북마크 추가 실패");
+                    console.log(xhr, textStatus, errorThrown);
+                });
+            }
+        });
+    </script>
+</body>
+
+</html>

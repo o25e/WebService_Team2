@@ -16,6 +16,8 @@
 
 <body>
     <form action="/save" method="post" enctype="multipart/form-data" class="wrapper" id="myForm">
+        <!-- 작성자 -->
+        <input hidden type="text" id="writer-input" name="writer">
         <h1>글쓰기</h1><br>
         <div>
             <label for="clubType">글 종류</label><br>
@@ -25,13 +27,25 @@
                 <option value="etcclub_post">기타</option>
             </select>
         </div><br>
+        <div class="smclub-select-wrap hidden">
+            <label for="smclubName">소모임 선택</label><br>
+            <select name="smclubName" id="smclubName" class="text-box">
+                <% for (let i = 0; i < smclubNames.length; i++) { %>
+                    <option value="<%=smclubNames[i]%>"><%=smclubNames[i]%></option>
+                <% } %>
+            </select>
+            <div style="float: right;">
+                <span class="question">원하는 소모임이 없다면?</span>
+                <a class="button" href="/enterSmclub">소모임 등록</a>
+            </div>
+        </div>
         <div>
-            <label for="title">동아리 이름</label><br>
+            <label for="title">제목</label><br>
             <input type="text" id="title" name="title" class="text-box" required>
         </div><br>
         <div>
             <label for="content">내용</label><br>
-            <textarea hidden id="content" name="content" class="text-box" required></textarea>
+            <textarea hidden id="content" name="content" class="text-box"></textarea>
             <!-- 에디터 컨테이너 -->
             <div id="editor" style="height: 400px;"></div>
         </div><br>
@@ -70,12 +84,39 @@
     </form>
 
     <script>
-        const selectedOption = document.querySelector("select");
+        const selectedOption = document.querySelector("select#clubType");
+        const smclubSelectWrap = document.querySelector(".smclub-select-wrap");
         console.log(selectedOption);
+        // 글 종류 초기설정
         selectedOption.value = "<%= selected %>_post";
+        smclubSelect();
+        // 글 종류 소모임이면 소모임 선택 뜨기
+        selectedOption.addEventListener("change", () => {
+            smclubSelect();
+        });
+        // smclub이면 나타나고 아니면 없애는 함수
+        function smclubSelect(){
+            if (selectedOption.value === "smclub_post") {
+                smclubSelectWrap.classList.remove("hidden");
+                // <br> 생성
+                const br = document.createElement("br");
+                br.id = "smclub-br"; // 중복 생성 방지용 ID
+                // 이미 존재하지 않을 때만 추가
+                if (!document.getElementById("smclub-br")) {
+                    smclubSelectWrap.after(br);
+                }
+            } else {
+                smclubSelectWrap.classList.add("hidden");
+
+                // <br> 제거
+                const existingBr = document.getElementById("smclub-br");
+                if (existingBr) {
+                    existingBr.remove();
+                }
+            }
+        }
     </script>
     <script src="/pages/enter.js"></script>
-
 
     <!-- Quill JS -->
     <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
@@ -95,11 +136,18 @@
                 ]
             }
         });
-        
+
         const form = document.getElementById('myForm');
         form.onsubmit = function () {
             // 에디터 내용 HTML을 숨겨진 input에 넣음
             document.getElementById('content').value = quill.root.innerHTML;
+        }
+    </script>
+    <script>
+        const writer = localStorage.getItem("loggedInUser");
+        if (writer) {
+            const writerInput = document.getElementById("writer-input");
+            writerInput.value = writer;
         }
     </script>
 </body>

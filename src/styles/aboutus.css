@@ -17,7 +17,7 @@ body {
   flex-direction: column;
   align-items: center; /* 본문 내부 요소 중앙 정렬 */
   width: 100%;
-  max-width: 1304px;  /* 본문 최대 너비 */
+  max-width: 1154px;  /* 본문 최대 너비 */
   margin: 106px auto 0 auto; /* 상단 여백, 좌우 중앙 정렬 */
 }
 
@@ -57,7 +57,7 @@ body {
 .features-container {
   display: flex;
   flex-direction: column;
-  gap: 50px;
+  gap: 70px;
   margin-top: 244px;
   width: 100%;
 }
@@ -72,7 +72,7 @@ body {
 
 .feature-text {
   color: #000;
-  font-size: 96px;
+  font-size: 85px;
   font-weight: 700;
   font-family: "Pretendard", "Arial", sans-serif;
   max-width: 495px;
@@ -80,8 +80,12 @@ body {
 }
 
 .feature-image {
+  display: flex;
+  justify-content: center; /* 수평 중앙 정렬 */
+  align-items: center;     /* 수직 중앙 정렬 */
   width: 548px;
   height: 474px;
+  top: 200px;
   background-color: #d9d9d9;
 }
 

@@ -1,0 +1,88 @@
+/* 기본 리셋 및 공통 스타일 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Arial', sans-serif;
+}
+
+body {
+    background: #ffffff;
+}
+
+
+.logo {
+    width: 180px;
+    height: 45px;
+    object-fit: contain;
+}
+
+/* 글쓰기 박스 */
+.wrapper {
+    width: 800px;
+    background-color: white;
+    border-radius: 10px;
+    margin: 20px auto;
+}
+
+/* .wrapper h1, .wrapper div {
+    text-align: center;
+} */
+
+#title {
+    width: 100%;
+}
+
+#content {
+    width: 100%;
+}
+
+#button-wrapper {
+    text-align: end;
+}
+
+.button {
+    color: #fff;
+    font-size: 15px;
+    font-weight: 600;
+    font-family: "Inter", "Arial", sans-serif;
+    letter-spacing: 0.46px;
+    background-color: #3563e9;
+    border-radius: 5px;
+    padding: 6px 15px;
+    text-decoration: none;
+    cursor: pointer;
+    border: none;
+}
+
+/* 드래그 앤 드롭 */
+.drop-area {
+    border: 2px dashed #ccc;
+    border-radius: 25px;
+    padding: 20px;
+    text-align: center;
+    width: 300px;
+    transition: 0.2s;
+}
+
+.drop-area.dragover {
+    border-color: #4a90e2;
+    background-color: #f0f8ff;
+}
+
+.text-box {
+    border: 2px solid #ccc;
+    border-radius: 25px;
+    font-size: 15px;
+    padding: 5px;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+.text-box:focus {
+    box-shadow: 0 0 5px #4a90e2;
+}
+
+.hidden {
+    display: none;
+}

@@ -55,6 +55,11 @@ body {
     border: none;
 }
 
+.question {
+    font-size: 12px;
+    margin-right: 10px;
+}
+
 /* 드래그 앤 드롭 */
 .drop-area {
     border: 2px dashed #ccc;
@@ -81,4 +86,8 @@ body {
 
 .text-box:focus {
     box-shadow: 0 0 5px #4a90e2;
+}
+
+.hidden {
+    display: none;
 }

@@ -19,7 +19,8 @@ body {
 
 /* 동아리 사진 */
 .club-img {
-    width: 350px;
+    height: 150px;
+    max-width: 400px;
     border-radius: 20px;
 }
 /* 포스트 상자 */
@@ -33,7 +34,7 @@ body {
 
 /* 모집글 */
 .content {
-    margin: 10px 0px;
+    margin: 20px 10px;
 }
 
 .flex-box {
@@ -42,8 +43,51 @@ body {
 }
 
 .category {
+    margin-left: 10px;
+    font-size: 14px;
     padding: 5px;
     border-radius: 5px;
     color: white;
     background-color: #3563e9;
+}
+
+.full {
+    width: 100%;
+}
+
+/* 하트 */
+.heart-icon {
+  background-color: white;
+  padding: 10px;
+  border-radius: 30px;
+  transition: all 0.3s ease;
+  float: right;
+}
+.heart-icon span {
+  font-size: 12px;
+  color: black;
+  font-weight: 2;
+}
+
+.heart-icon:hover {
+  background-color: #dbdbdb;
+  cursor: pointer;
+}
+
+.heart-icon.fa-solid {
+  color: red;
+}
+
+.text-box {
+    font-size: 13px;
+    color: #333;
+}
+
+#edit:hover, #delete:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.hidden {
+    display: none;
 }

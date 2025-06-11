@@ -1,57 +1,57 @@
 /* 기본 리셋 및 공통 스타일 */
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Arial', sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Arial', sans-serif;
 }
 
 body {
-    background: #f5f5f5;
+  padding-top: 80px; /* 헤더 높이만큼 띄워주기 */
+  background: #f5f5f5;
 }
 
-
 .logo {
-    width: 180px;
-    height: 45px;
-    object-fit: contain;
+  width: 180px;
+  height: 45px;
+  object-fit: contain;
 }
 
 /* 네비게이션 버튼 */
 .nav-container {
-    flex: 1;
-    display: flex;
-    justify-content: center;
-    margin: 0 50px;
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  margin: 0 50px;
 }
 
 .nav-buttons {
-    display: flex;
-    gap: 30px;
-    justify-content: center;
+  display: flex;
+  gap: 30px;
+  justify-content: center;
 }
 
 .nav-button {
-    padding: 12px 30px;
-    background: #f8f8f8;
-    border: 1px solid #e0e0e0;
-    border-radius: 10px;
-    font-size: 15px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    color: #444;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  padding: 12px 30px;
+  background: #f8f8f8;
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  font-size: 15px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  color: #444;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
 }
 
 .nav-button:hover {
-    border-color: #007BFF;
-    color: #007BFF;
+  border-color: #007BFF;
+  color: #007BFF;
 }
 
 .nav-button.active {
-    background: #007BFF;
-    color: white !important;
-    border-color: #007BFF;
+  background: #007BFF;
+  color: white !important;
+  border-color: #007BFF;
 }
 
 .home-page-container {
@@ -80,15 +80,58 @@ body {
 
 .home-popular h3,
 .home-bookmarks h3 {
-  font-size: 18px;
+  font-size: 20px;
   margin-bottom: 12px;
   color: #222;
 }
 
-.home-popular ul li,
-.home-bookmarks ul li {
-  font-size: 14px;
-  margin-bottom: 10px;
+/* 왼쪽 박스 내부 항목 스타일 */
+.sidebar-item {
+  cursor: pointer;
+  border-radius: 15px;
+  padding: 8px 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+
+/* 마감 임박 동아리 사이드바 아이템 (하늘색) */
+#contentArea-populared .sidebar-item {
+  background-color: #E3F4FF;
+}
+#contentArea-populared .sidebar-item:hover {
+  background-color: #acd0ea;
+}
+
+/* 즐겨찾기 사이드바 아이템 (노란색) */
+#contentArea-bookmarked .sidebar-item {
+  background-color:rgb(255, 250, 205);
+}
+#contentArea-bookmarked .sidebar-item:hover {
+  background-color:rgb(219, 213, 157);
+}
+
+/* 마감일 뱃지 */
+.sidebar-item .d-day {
+  font-family: "Pretendard Variable";
+  font-weight: bold;
+  color: #333;
+  background-color: white;
+  font-size: 12px;
+  padding: 3px 6px;
+  border-radius: 15px;
+  margin-bottom: 5px;
+  width: fit-content;
+  text-align: left;
+}
+
+/* 동아리 제목 */
+.sidebar-item .club_name {
+  font-size: 18px;
+  font-weight: bold;
+  color: #222;
 }
 
 .home-main-content {
@@ -106,27 +149,30 @@ body {
 }
 
 .home-section h3 {
-  font-size: 18px;
+  font-size: 20px;
   margin-bottom: 12px;
   color: #222;
 }
 
-.home-section ul li {
+.home-section h5 {
   font-size: 14px;
-  margin-bottom: 10px;
+  color: #555;
+  margin-bottom: 12px;
 }
 
 .section-link {
-  text-decoration: none;   /* 밑줄 제거 */
-  color: inherit;          /* 글자색은 부모(h3)의 색상 사용 */
-  cursor: pointer;         /* 마우스 올리면 손가락 모양 */
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
 }
 
 .section-link h3:hover {
-  // text-decoration: underline; /* hover 시 강조 원하면 유지 */
+  /* hover 시 강조 원하면 아래 주석 해제 */
+  /* text-decoration: underline; */
 }
 
 .home-sidebar-right {
+  position: relative;
   width: 25%;
   display: flex;
   flex-direction: column;
@@ -134,6 +180,9 @@ body {
 }
 
 .home-calendar {
+  position: sticky;
+  top: 100px;
+  z-index: 10;
   background-color: #ffffff;
   border-radius: 10px;
   padding: 16px;
@@ -194,9 +243,10 @@ body {
 }
 
 .contentbox {
-  width: 100%; /* 부모 요소 너비에 맞게 */
-  max-width: 100%; /* 최대 폭 제한 */
-  height: auto; /* 고정 높이 제거 */
+  cursor: pointer;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
   border-radius: 15px;
   background-color: #E3F4FF;
   margin: 15px 0;
@@ -204,22 +254,31 @@ body {
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  align-items: flex-start; /* 왼쪽 정렬로 변경 */
+  align-items: flex-start;
 }
 
 /* 동아리용 배경색 */
 .club-box {
-  background-color: #E3F4FF; /* 연한 파랑 */
+  background-color: #E3F4FF;
+}
+.club-box:hover {
+ background-color: #acd0ea;
 }
 
 /* 소모임용 배경색 */
 .group-box {
-  background-color: #E6F8E0; /* 연한 연두 */
+  background-color: #E6F8E0;
+}
+.group-box:hover {
+  background-color: #c1dfb8;
 }
 
 /* 기타용 배경색 */
 .etc-box {
-  background-color: #FFF3E3; /* 연한 주황 */
+  background-color:rgb(255, 227, 232);
+}
+.etc-box:hover {
+  background-color:rgb(231, 186, 194);
 }
 
 .contentbox .d-day {
@@ -238,7 +297,7 @@ body {
 .contentbox .club_name {
   width: 100%;
   font-family: "Pretendard Variable";
-  font-size: 28px;
+  font-size: 18px;
   font-weight: bold;
   margin-bottom: 5px;
   text-align: left;
@@ -247,7 +306,7 @@ body {
 .contentbox .club_exp {
   width: 100%;
   font-family: "Pretendard Variable";
-  font-size: 16px;
+  font-size: 14px;
   color: #444;
   text-align: left;
   margin-bottom: 0;

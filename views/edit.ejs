@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>수정</title>
+    <!-- 공통 헤더 CSS -->
+    <link rel="stylesheet" href="/styles/header.css" />
+    <!-- 전용 CSS -->
+    <link rel="stylesheet" href="/styles/enter.css" />
+    <!-- 헤더 js -->
+    <script src="/layouts/header.js" defer></script>
+    <!-- Quill 스타일 시트 -->
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+</head>
+
+<body>
+    <form action="/edit" method="post" enctype="multipart/form-data" class="wrapper" id="myForm">
+        <!-- 작성자와 글id -->
+        <input hidden type="text" id="writer-input" name="writer">
+        <input hidden type="text" name="_id" value="<%= post._id %>">
+
+        <h1>글 수정</h1><br>
+        <div>
+            <label for="clubType">글 종류</label><br>
+            <select name="clubType" id="clubType" class="text-box" value="<%= clubType %>_post">
+                <option value="club_post" <%= clubType === "club" ? "selected" : "" %>>동아리</option>
+                <option value="smclub_post" <%= clubType === "smclub" ? "selected" : "" %>>소모임</option>
+                <option value="etcclub_post" <%= clubType === "etcclub" ? "selected" : "" %>>기타</option>
+            </select>
+        </div><br>
+        <div class="smclub-select-wrap hidden">
+            <label for="smclubName">소모임 선택</label><br>
+            <select name="smclubName" id="smclubName" class="text-box">
+                <% for (let i = 0; i < smclubNames.length; i++) { %>
+                    <% if (clubType === "smclub") { %>
+                    <option value="<%=smclubNames[i]%>" <%= smclub === smclubNames[i] ? "selected" : "" %>><%=smclubNames[i]%></option>
+                    <% } else { %>
+                    <option value="<%=smclubNames[i]%>"><%=smclubNames[i]%></option>
+                    <% } %>
+                <% } %>
+            </select>
+            <div style="float: right;">
+                <span class="question">원하는 소모임이 없다면?</span>
+                <a class="button" href="/enterSmclub">소모임 등록</a>
+            </div>
+        </div>
+        <div>
+            <label for="title">제목</label><br>
+            <input type="text" id="title" name="title" class="text-box" required value="<%= post.title %>">
+        </div><br>
+        <div>
+            <label for="content">내용</label><br>
+            <textarea hidden id="content" name="content" class="text-box"></textarea>
+            <!-- 에디터 컨테이너 -->
+            <div id="editor" style="height: 400px;"><%- post.content %></div>
+        </div><br>
+        <div>
+            <label for="category">카테고리</label><br>
+            <select id="category" name="category" class="text-box">
+                <option value="공연/댄스" <%= post.category === "공연/댄스" ? "selected" : "" %>>공연/댄스</option>
+                <option value="학술/전공" <%= post.category === "학술/전공" ? "selected" : "" %>>학술/전공</option>
+                <option value="체육" <%= post.category === "체육" ? "selected" : "" %>>체육</option>
+                <option value="여행/사진/산악" <%= post.category === "여행/사진/산악" ? "selected" : "" %>>여행/사진/산악</option>
+                <option value="창업/비즈니스/홍보" <%= post.category === "창업/비즈니스/홍보" ? "selected" : "" %>>창업/비즈니스/홍보</option>
+                <option value="국제/교류" <%= post.category === "국제/교류" ? "selected" : "" %>>국제/교류</option>
+                <option value="예술/문화" <%= post.category === "예술/문화" ? "selected" : "" %>>예술/문화</option>
+                <option value="봉사" <%= post.category === "봉사" ? "selected" : "" %>>봉사</option>
+                <option value="게임/보드/취미" <%= post.category === "게임/보드/취미" ? "selected" : "" %>>게임/보드/취미</option>
+                <option value="사회참여/시사/토론" <%= post.category === "사회참여/시사/토론" ? "selected" : "" %>>사회참여/시사/토론</option>
+            </select>
+        </div><br>
+        <div>
+            <label for="deadline">모집 마감일</label><br>
+            <input type="date" id="deadline" name="deadline" class="text-box" value="<%= post.deadline %>">
+        </div><br>
+        <div>
+            <label for="image">이미지</label><br>
+            <input type="file" id="imageInput" name="image" accept="image/*" style="display: none" />
+            <!-- 드래그 앤 드롭과 미리보기 -->
+            <div id="dropArea" class="drop-area">
+                <p id="dropText">여기에 이미지를 드래그하거나</p>
+                <button type="button" id="customBtn" class="button">파일 선택</button>
+                <img id="preview" src="" alt="미리보기" style="display: none; max-width: 100%; margin-top: 10px;" />
+            </div>
+        </div><br>
+        <div id="button-wrapper">
+            <button type="submit" class="button">수정</button>
+        </div>
+    </form>
+
+    <script>
+        const selectedOption = document.querySelector("select#clubType");
+        const smclubSelectWrap = document.querySelector(".smclub-select-wrap");
+        const category = document.querySelector("#category");
+        smclubSelect();
+        // 글 종류 소모임이면 소모임 선택 뜨기
+        selectedOption.addEventListener("change", () => {
+            smclubSelect()  ;
+        });
+        // smclub이면 나타나고 아니면 없애는 함수
+        function smclubSelect(){
+            if (selectedOption.value === "smclub_post") {
+                smclubSelectWrap.classList.remove("hidden");
+                // <br> 생성
+                const br = document.createElement("br");
+                br.id = "smclub-br"; // 중복 생성 방지용 ID
+                // 이미 존재하지 않을 때만 추가
+                if (!document.getElementById("smclub-br")) {
+                    smclubSelectWrap.after(br);
+                }
+            } else {
+                smclubSelectWrap.classList.add("hidden");
+
+                // <br> 제거
+                const existingBr = document.getElementById("smclub-br");
+                if (existingBr) {
+                    existingBr.remove();
+                }
+            }
+        }
+    </script>
+    <script src="/pages/enter.js"></script>
+    <script>
+        if("<%= post.image %>"){
+            preview.src = "<%= post.image %>";
+            preview.style.display = 'block';
+            dropText.textContent = '이미지가 선택되었습니다';
+        }
+    </script>
+
+    <!-- Quill JS -->
+    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+
+    <!-- 스크립트: Quill 초기화 -->
+    <script>
+        const quill = new Quill('#editor', {
+            theme: 'snow',  // 'snow' 테마 (가장 흔한 스타일)
+            modules: {
+                toolbar: [
+                    [{ header: [1, 2, 3, false] }],
+                    ['bold', 'italic', 'underline', 'strike'],        // 굵게, 기울임, 밑줄, 취소선
+                    ['blockquote', 'code-block'],
+                    [{ list: 'ordered' }, { list: 'bullet' }],
+                    ['link', 'image'],
+                    ['clean']  // 서식 제거 버튼
+                ]
+            }
+        });
+
+        const form = document.getElementById('myForm');
+        form.onsubmit = function () {
+            // 에디터 내용 HTML을 숨겨진 input에 넣음
+            document.getElementById('content').value = quill.root.innerHTML;
+        }
+    </script>
+    <script>
+        const writer = localStorage.getItem("loggedInUser");
+        if (writer) {
+            const writerInput = document.getElementById("writer-input");
+            writerInput.value = writer;
+        }
+    </script>
+</body>
+
+</html>
