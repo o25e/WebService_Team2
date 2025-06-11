@@ -15,7 +15,7 @@ window.addEventListener("DOMContentLoaded", () => {
       document.body.insertBefore(headerContainer, document.body.firstChild);
 
       const studentId = localStorage.getItem("loggedInUser");
-      
+
       // 알림 수 불러오기
       fetch(`/api/unread-count?studentId=${studentId}`)
         .then(res => res.json())
@@ -32,9 +32,8 @@ window.addEventListener("DOMContentLoaded", () => {
 
                   <div style="position: relative; cursor: pointer;" onclick="goToNotifications()" title="알림 확인">
                     <img src="../assets/notification-icon.png" alt="알림" style="width: 60px; height: 54px;" />
-                    ${
-                      unreadNotifications > 0
-                        ? `<span style="
+                    ${unreadNotifications > 0
+                  ? `<span style="
                             position: absolute;
                             top: 7px;
                             right: 4px;
@@ -49,8 +48,8 @@ window.addEventListener("DOMContentLoaded", () => {
                             line-height: 1;
                             box-shadow: 0 0 2px rgba(0,0,0,0.3);
                           ">${unreadNotifications}</span>`
-                        : ''
-                    }
+                  : ''
+                }
                   </div>
 
                   <div style="display: flex; flex-direction: column; align-items: flex-start;">
@@ -75,6 +74,9 @@ window.addEventListener("DOMContentLoaded", () => {
             if (linkHref === "/" + currentPage) {
               link.classList.add("active");
             }
+          });
+          document.querySelector("#logo").addEventListener("click", function (e) {
+            location.href = "/home";
           });
         });
     })

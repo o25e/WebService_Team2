@@ -69,8 +69,13 @@ function showFilter(type, element) {
 function getDDay(deadline) {
     const today = new Date();
     const end = new Date(deadline);
+    // 시, 분, 초, 밀리초 제거
+    today.setHours(0, 0, 0, 0);
+    end.setHours(0, 0, 0, 0);
+
     const diff = Math.ceil((end - today) / (1000 * 60 * 60 * 24));
-    return diff >= 0 ? `D-${diff}` : `마감`;
+    return diff === 0 ? "D-day": 
+            diff > 0 ? `D-${diff}` : `마감`;
 }
 
 //dday value값 반환
@@ -110,7 +115,7 @@ function renderPosts(data) {
         box.innerHTML = `
             <div class="club_pic">
                 ${post.image ? `<img src="${post.image}" alt="동아리 이미지">` : ''}
-                <div class="icon-box">
+                <div class="icon-box ${post.image ? '' : "no-image"}">
                     ${post.deadline ? `<div class="d-day">${getDDay(post.deadline)}</div>` : ''}
                     <i class="${isInBookmarkList ? "fa-solid" : "fa-regular"} fa-heart heart-icon" data-id=${post._id}>
                     <span>${post.bookmarkNum}</span></i>

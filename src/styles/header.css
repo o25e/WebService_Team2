@@ -37,10 +37,12 @@ body {
   align-items: center;
   gap: 11px;
 }
-
+#logo:hover {
+  cursor: pointer;
+}
 .logo-text {
-  color: #000;
-  font-size: 24px;
+  color: #3563e9;
+  font-size: 22px;
   font-weight: 700;
   font-family: "Pretendard", "Arial", sans-serif;
 }

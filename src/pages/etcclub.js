@@ -90,7 +90,19 @@ function getStatus(deadline) {
 function renderPosts(data) {
 
     const area = document.getElementById('contentArea');
+    const sortLatest = document.querySelector('.sort-latest');
+    const sortDeadline = document.querySelector('.sort-deadline');
     area.innerHTML = '';
+
+    if(sortLatest.classList.contains("active") && !sortDeadline.classList.contains("active")){
+        data.sort(function(a, b){
+            return new Date(b.createdAt) - new Date(a.createdAt);
+        });
+    } else {
+        data.sort(function(a, b){
+            return new Date(a.deadline) - new Date(b.deadline);
+        });
+    }
 
     data.forEach(post => {
         const rawHtml = post.content; // 글 내용 가져오기
@@ -113,8 +125,7 @@ function renderPosts(data) {
                 <p class="meeting-description">${length > 50 ? plainText.slice(0, 50) + "..." : plainText}</p>
                 <!-- 해시태그들 -->
                 <div class="hashtags">
-                    <span class="hashtag">#디자인</span>
-                    <span class="hashtag">#화목</span>
+                    <span class="hashtag">${post.category}</span>
                     <!-- 추가 해시태그 -->
                 </div>
             </div>

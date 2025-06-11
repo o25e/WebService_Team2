@@ -163,6 +163,16 @@ body {
   flex-direction: row;
   padding: 0 5px;
 }
+.icon-box.no-image {
+  z-index: 9;
+  position: static;
+  margin: 0 auto;
+  opacity: 0.9;
+  display: flex;
+  width: 100%;
+  flex-direction: row;
+  padding: 0 5px;
+}
 
 .contentbox .d-day {
   width: fit-content;

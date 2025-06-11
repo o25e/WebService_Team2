@@ -25,10 +25,12 @@
                     <img src=<%= data.image %> alt="동아리 이미지" class="club-img">
                 <% } %>
             </div>
-            <div>
+            <div style="display: flex; flex-direction: column; gap: 10px; padding: 10px 0;">
                 <h2><%= data.title %></h2>
-                <h4>마감일 <%= data.deadline %></h4> 
-                <h4>카테고리 <span class="category"><%= data.category %></span></h4>
+                <!-- <h4>마감일 <%= data.deadline %></h4>  -->
+                <p><%- data.content %></p>
+
+                <h4 style="margin-top: auto;">카테고리 <span class="category"><%= data.category %></span></h4>
             </div>
             <div style="margin-left: auto;">
                 <div class="icon-box" data-data-id="<%= data._id %>" data-bookmark-num="<%= data.bookmarkNum %>">

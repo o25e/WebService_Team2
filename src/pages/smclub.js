@@ -148,17 +148,17 @@ function renderPosts(data) {
                     <h2 class="title" onclick="location.href='/smclubInfo/${post._id}'">${post.title}</h2>
                     <p class="description">${length > 50 ? plainText.slice(0, 50) + "..." : plainText}</p>
 
-                    <div class="period-wrapper">
+                    <!-- <div class="period-wrapper">
                         <div class="period">
                             <span class="period-label">모집 기간</span>
                             <span class="period-dates"> ~ ${post.deadline}</span>
                         </div>
-                    </div>
+                    </div> -->
 
                     <!-- 해시태그들 -->
                     <div class="hashtags">
-                        <span class="hashtag">#디자인</span>
-                        <span class="hashtag">#화목</span>
+                        <span class="hashtag">${post.category}</span>
+                        <!-- <span class="hashtag">#화목</span> -->
                         <!-- 추가 해시태그 -->
                     </div>
                 </div>
