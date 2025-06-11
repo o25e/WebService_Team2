@@ -121,14 +121,21 @@ body {
   width: 270px;
   height: 280px;
   border-radius: 15px;
-  margin-bottom: 10px;
 }
-
+.club_pic {
+  position: relative;
+}
 /* d-day와 하트 아이콘 */
 .icon-box {
-    display: flex;
-    width: 100%;
-    flex-direction: row;
+  z-index: 9;
+  position: absolute;
+  bottom: 8px;
+  margin: 0 auto;
+  opacity: 0.9;
+  display: flex;
+  width: 100%;
+  flex-direction: row;
+  padding: 0 5px;
 }
 
 .contentbox .d-day {
@@ -140,14 +147,16 @@ body {
   background-color: white;
   font-size: 14px;
   padding: 8px;
-  border-radius: 15px;
+  border-radius: 12px;
   text-align: left;
   margin-right: auto;
+  border: solid gray 1px;
 }
 
 .heart-icon {
   background-color: white;
   padding: 10px;
+  border: solid gray 1px;
   border-radius: 30px;
   transition: all 0.3s ease;
 }

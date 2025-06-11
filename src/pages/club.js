@@ -85,6 +85,9 @@ function renderPosts(data) {
     const area = document.getElementById('contentArea');
     area.innerHTML = '';
 
+    data.sort(function(a, b){
+        return new Date(b.createdAt) - new Date(a.createdAt); 
+    })
     data.forEach(post => {
         const rawHtml = post.content; // 글 내용 가져오기
         const plainText = rawHtml.replace(/<[^>]*>?/gm, ''); // 모든 HTML 태그 제거
@@ -97,11 +100,11 @@ function renderPosts(data) {
         box.innerHTML = `
             <div class="club_pic">
                 ${post.image ? `<img src="${post.image}" alt="동아리 이미지">` : ''}
-            </div>
-            <div class="icon-box">
-                ${post.deadline ? `<div class="d-day">${getDDay(post.deadline)}</div>` : ''}
-                <i class="${isInBookmarkList ? "fa-solid" : "fa-regular"} fa-heart heart-icon" data-id=${post._id}>
-                <span>${post.bookmarkNum}</span></i>
+                <div class="icon-box">
+                    ${post.deadline ? `<div class="d-day">${getDDay(post.deadline)}</div>` : ''}
+                    <i class="${isInBookmarkList ? "fa-solid" : "fa-regular"} fa-heart heart-icon" data-id=${post._id}>
+                    <span>${post.bookmarkNum}</span></i>
+                </div>
             </div>
             <div class="club_name" onclick="location.href='/content/${post._id}?type=club'">${post.title}</div>
             <div class="club_exp">${length > 40 ? plainText.slice(0, 40) + "..." : plainText}</div>`;

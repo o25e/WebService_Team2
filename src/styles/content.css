@@ -43,6 +43,8 @@ body {
 }
 
 .category {
+    margin-left: 10px;
+    font-size: 14px;
     padding: 5px;
     border-radius: 5px;
     color: white;
