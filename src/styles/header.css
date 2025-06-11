@@ -1,12 +1,19 @@
 .header {
+  position: fixed;
+  top: 0;
+  z-index: 10;
   width: 100%;
   flex-shrink: 0;
   align-self: stretch;
-  height: 91px;
+  height: 80px;
   background-color: #fff;
   box-shadow: 0px -1px 1px 0px rgba(0, 0, 0, 0.1) inset;
   display: flex;
   align-items: center;
+}
+/* 본문 공간 띄워주기 */
+body {
+  padding-top: 80px;
 }
 
 .section-link {
@@ -46,11 +53,14 @@
 
 .nav-link {
   color: #424242;
-  font-size: 24px;
+  font-size: 22px;
   font-weight: 500;
   font-family: "Inter", "Arial", sans-serif;
   letter-spacing: 0.2px;
   text-decoration: none;
+}
+.nav-link:hover {
+  color: #929292;
 }
 
 .nav-link.active {
